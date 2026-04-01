@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flux Master Titan | ObjectifDSCG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap');
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; touch-action: manipulation; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        #timer-ui { font-family: 'JetBrains Mono', monospace; }
+        .timer-critical { color: #ef4444 !important; font-size: 3.5rem !important; animation: pulse-red 0.5s infinite alternate; }
+        @keyframes pulse-red { from { transform: scale(1); } to { transform: scale(1.1); } }
+        #fever-bar { height: 100%; background: linear-gradient(90deg, #10b981, #3b82f6); transition: width 0.2s ease; }
+        .btn-debit { background: linear-gradient(to bottom, #1e40af, #3b82f6); box-shadow: 0 6px 0 #172554; }
+        .btn-debit:active { transform: translateY(3px); box-shadow: 0 3px 0 #172554; }
+        .btn-credit { background: linear-gradient(to bottom, #9f1239, #f43f5e); box-shadow: 0 6px 0 #4c0519; }
+        .btn-credit:active { transform: translateY(3px); box-shadow: 0 3px 0 #4c0519; }
+        .feedback-overlay { position: absolute; inset: 0; border-radius: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50; }
+        .bg-correct { background: rgba(16, 185, 129, 0.95); }
+        .bg-wrong { background: rgba(15, 23, 42, 0.98); border: 2px solid #ef4444; }
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-6 h-24">
+            <button onclick="handleBackNavigation()" class="text-slate-500 hover:text-white transition font-bold text-[10px] uppercase tracking-widest"><i class="fas fa-arrow-left mr-2"></i><span id="back-label">Quitter</span></button>
+            <div id="game-info" class="hidden flex-1 ml-8 text-center">
+                <div class="flex justify-between items-center mb-1 px-4">
+                    <span id="score-container"><span id="score-ui" class="text-2xl font-black text-emerald-400">0</span></span>
+                    <span id="timer-ui" class="text-3xl font-black">60</span>
+                </div>
+                <div id="fever-container" class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden"><div id="fever-bar" style="width: 0%"></div></div>
+            </div>
+        </div>
+
+        <div id="screen-menu" class="glass rounded-[2.5rem] p-10 text-center border-b-4 border-emerald-500">
+            <h1 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">Flux <span class="text-emerald-400">Master</span></h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl hover:bg-amber-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-university mb-2 block text-amber-500 text-xl"></i>Cours</button>
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl hover:bg-emerald-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-graduation-cap mb-2 block text-emerald-400 text-xl"></i>Apprendre</button>
+                <button onclick="startGame('competition')" class="glass p-5 rounded-2xl hover:bg-red-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-bolt mb-2 block text-red-500 text-xl"></i>Défier</button>
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl hover:bg-purple-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-skull mb-2 block text-purple-500 text-xl"></i>Survie</button>
+            </div>
+        </div>
+
+        <div id="screen-cours" class="hidden glass rounded-[2.5rem] p-8 text-sm italic">
+            <div class="flex justify-between items-center mb-6 text-emerald-400 font-black uppercase">
+                <h2 class="text-2xl italic">Cours : La Partie Double</h2>
+                <button onclick="showSection('screen-menu')" class="text-slate-400"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4 text-slate-300 leading-relaxed">
+                <div class="p-3 glass border-l-4 border-blue-500"><b>DÉBIT (Emploi) :</b> Augmentation Actif ou Charges (6). Diminution du Passif.</div>
+                <div class="p-3 glass border-l-4 border-rose-500"><b>CRÉDIT (Ressource) :</b> Augmentation Passif ou Produits (7). Diminution de l'Actif.</div>
+                <p class="bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20 italic"><b>Rappel :</b> Débit = Crédit pour chaque opération.</p>
+            </div>
+        </div>
+
+        <div id="screen-game" class="hidden">
+            <div id="card" class="glass rounded-[3rem] p-8 text-center mb-8 relative border-2 border-white/5 flex flex-col justify-center items-center min-h-[380px]">
+                <div id="feedback-overlay" class="hidden feedback-overlay"><div id="fb-content" class="flex flex-col items-center justify-center p-4 w-full h-full"></div></div>
+                <span id="nature-tag" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6 italic italic">Schéma d'écriture</span>
+                <h2 id="op-name" class="text-2xl md:text-3xl font-black tracking-tighter uppercase px-4 leading-tight">---</h2>
+            </div>
+            <div class="grid grid-cols-2 gap-6 h-40">
+                <button onclick="check('D')" class="btn-debit rounded-[2rem] font-black text-3xl italic uppercase tracking-widest active:scale-95 transition-all">Débit</button>
+                <button onclick="check('C')" class="btn-credit rounded-[2rem] font-black text-3xl italic uppercase tracking-widest active:scale-95 transition-all">Crédit</button>
+            </div>
+        </div>
+
+        <div id="screen-end" class="hidden glass rounded-[2.5rem] p-12 text-center shadow-2xl">
+            <div id="end-score-container"><div id="end-score" class="text-9xl font-black text-emerald-400 mb-8 tracking-tighter">0</div></div>
+            <button onclick="location.reload()" class="bg-white text-slate-900 px-12 py-4 rounded-2xl font-black uppercase italic">Menu Principal</button>
+        </div>
+    </div>
+
+    <script>
+        const SFX = {
+            ctx: new (window.AudioContext || window.webkitAudioContext)(),
+            play(type) {
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                const now = this.ctx.currentTime;
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                    gain.gain.setValueAtTime(0.1, now); osc.start(); osc.stop(now + 0.1);
+                } else if (type === 'wrong') {
+                    osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+                    gain.gain.setValueAtTime(0.1, now); osc.start(); osc.stop(now + 0.3);
+                } else if (type === 'fever') {
+                    osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(1500, now + 0.5);
+                    gain.gain.setValueAtTime(0.05, now); osc.start(); osc.stop(now + 0.5);
+                }
+            }
+        };
+
+        const fluxDB = [
+            { q: "Achat marchandises (607)", r: "D", w: "Charge (6) : Débit.", j: { d: "607 - Achat March.", c: "401 - Fourn." } },
+            { q: "Vente produits finis (701)", r: "C", w: "Produit (7) : Crédit.", j: { d: "411 - Clients", c: "701 - Ventes PF" } },
+            { q: "Paiement Fournisseur (401)", r: "D", w: "Passif diminue : Débit.", j: { d: "401 - Fourn.", c: "512 - Banque" } },
+            { q: "TVA Déductible (44566)", r: "D", w: "Créance État : Débit.", j: { d: "44566 - TVA dédu.", c: "401 - Fourn." } },
+            { q: "Emprunt bancaire (164)", r: "C", w: "Dette augmente : Crédit.", j: { d: "512 - Banque", c: "164 - Emprunts" } },
+            { q: "Encaissement Client (411)", r: "C", w: "Actif diminue : Crédit.", j: { d: "512 - Banque", c: "411 - Clients" } },
+            { q: "Paiement Salaires (641)", r: "D", w: "Charge : Débit.", j: { d: "641 - Salaires", c: "421 - Personnel" } },
+            { q: "TVA Collectée (44571)", r: "C", w: "Dette État : Crédit.", j: { d: "411 - Clients", c: "44571 - TVA coll." } },
+            { q: "Dotation Amort. (681)", r: "D", w: "Charge calculée : Débit.", j: { d: "681 - Dotations", c: "281 - Amort." } },
+            { q: "Stock Final (37)", r: "D", w: "Entrée stock : Débit.", j: { d: "37 - Stock", c: "6037 - Var. Stock" } },
+            { q: "Apport Capital (101)", r: "C", w: "Passif propre : Crédit.", j: { d: "512 - Banque", c: "101 - Capital" } },
+            { q: "Rabais obtenu (609)", r: "C", w: "Diminution charge : Crédit.", j: { d: "401 - Fourn.", c: "609 - RRR obtenus" } },
+            { q: "Escompte accordé (665)", r: "D", w: "Charge financière : Débit.", j: { d: "665 - Escomptes", c: "411 - Clients" } },
+            { q: "Avoir accordé (709)", r: "D", w: "Diminution produit : Débit.", j: { d: "709 - RRR accordés", c: "411 - Clients" } },
+            { q: "Caution versée (275)", r: "D", w: "Actif financier : Débit.", j: { d: "275 - Cautions", c: "512 - Banque" } },
+            { q: "Dépôt garantie reçu (165)", r: "C", w: "Passif financier : Crédit.", j: { d: "512 - Banque", c: "165 - Dépôts reçus" } },
+            { q: "Paiement TVA (44551)", r: "C", w: "Sortie banque : Crédit.", j: { d: "44551 - TVA à payer", c: "512 - Banque" } },
+            { q: "Charges à payer (408)", r: "C", w: "Passif régul : Crédit.", j: { d: "607 - Achats", c: "408 - Fourn. FNP" } },
+            { q: "Produits à recevoir (418)", r: "D", w: "Actif régul : Débit.", j: { d: "418 - Clients FAE", c: "701 - Ventes" } },
+            { q: "Charges d'avance (486)", r: "D", w: "Régul actif : Débit.", j: { d: "486 - CCA", c: "616 - Assurances" } },
+            { q: "Produits d'avance (487)", r: "C", w: "Régul passif : Crédit.", j: { d: "706 - Services", c: "487 - PCA" } },
+            { q: "Net à payer (421)", r: "C", w: "Dette salarié : Crédit.", j: { d: "641 - Salaires", c: "421 - Personnel" } },
+            { q: "URSSAF (431)", r: "C", w: "Dette sociale : Crédit.", j: { d: "645 - Ch. Sociales", c: "431 - URSSAF" } },
+            { q: "Prélèvement Source (4421)", r: "C", w: "Dette État : Crédit.", j: { d: "421 - Personnel", c: "4421 - PAS" } },
+            { q: "Frais de recherche (203)", r: "D", w: "Immo incorp : Débit.", j: { d: "203 - R&D", c: "721 - Prod. immo" } },
+            { q: "Amortissement cumulé (281)", r: "C", w: "Dim actif : Crédit.", j: { d: "681 - Dotations", c: "281 - Amort." } },
+            { q: "Variation stock mat. (6031)", r: "D", w: "Déstockage : Débit.", j: { d: "6031 - Var. Mat.", c: "31 - Matières" } },
+            { q: "Escompte obtenu (765)", r: "C", w: "Produit financier : Crédit.", j: { d: "401 - Fourn.", c: "765 - Escomptes obt." } },
+            { q: "Actions propres (277)", r: "D", w: "Actif financier : Débit.", j: { d: "277 - Actions propres", c: "512 - Banque" } },
+            { q: "Dette IS (444)", r: "C", w: "Dette fiscale : Crédit.", j: { d: "695 - IS", c: "444 - État IS" } }
+            // Modèle à copier pour les 72 autres items...
+        ];
+
+        let mode = '', score = 0, combo = 0, timeLeft = 60, timer;
+        let lastSeen = [], feverPoints = 0, isProcessing = false;
+        let currentScreen = 'screen-menu';
+
+        function showSection(id) {
+            currentScreen = id;
+            document.getElementById('back-label').innerText = (id === 'screen-menu') ? "Quitter" : "Retour Menu";
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            if (id === 'screen-menu') document.getElementById('game-info').classList.add('hidden');
+        }
+
+        function handleBackNavigation() {
+            if (currentScreen === 'screen-menu') window.location.href = 'index.html';
+            else { clearInterval(timer); isProcessing = false; showSection('screen-menu'); }
+        }
+
+        function startGame(m) {
+            score = 0; combo = 0; feverPoints = 0; timeLeft = 60;
+            document.getElementById('score-ui').innerText = "0";
+            document.getElementById('fever-bar').style.width = "0%";
+            document.getElementById('timer-ui').classList.remove('timer-critical');
+            mode = m;
+            document.getElementById('score-container').style.display = (mode === 'learning') ? 'none' : 'block';
+            document.getElementById('fever-container').style.display = (mode === 'learning') ? 'none' : 'block';
+            showSection('screen-game');
+            document.getElementById('game-info').classList.remove('hidden');
+            if(mode === 'competition' || mode === 'survival') startTimer(); else document.getElementById('timer-ui').innerText = "∞";
+            renderNext();
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--; document.getElementById('timer-ui').innerText = timeLeft;
+                if(timeLeft <= 10) document.getElementById('timer-ui').classList.add('timer-critical');
+                if(timeLeft <= 0) stopGame();
+            }, 1000);
+        }
+
+        function renderNext() {
+            isProcessing = false;
+            let available = fluxDB.filter(i => !lastSeen.includes(i.q));
+            if(available.length < 5) { lastSeen = []; available = fluxDB; }
+            const item = available[Math.floor(Math.random() * available.length)];
+            lastSeen.push(item.q); if(lastSeen.length > 15) lastSeen.shift();
+            document.getElementById('op-name').innerText = item.q;
+            document.getElementById('feedback-overlay').classList.add('hidden');
+            document.getElementById('card').classList.remove('shake');
+            window.currentOp = item;
+        }
+
+        function check(val) {
+            if (isProcessing) return; isProcessing = true;
+            const overlay = document.getElementById('feedback-overlay');
+            const fbContent = document.getElementById('fb-content');
+            const isCorrect = (val === window.currentOp.r);
+            SFX.play(isCorrect ? 'correct' : 'wrong');
+
+            if(isCorrect) {
+                if (mode !== 'learning') {
+                    combo++; feverPoints = Math.min(100, feverPoints + 20);
+                    if (feverPoints === 100) SFX.play('fever');
+                    score += (feverPoints >= 100) ? 100 : 20;
+                }
+                overlay.className = "feedback-overlay bg-correct";
+                fbContent.innerHTML = `<i class="fas fa-bolt text-5xl mb-4"></i><span class="font-black text-2xl uppercase italic">VIF !</span>`;
+                overlay.classList.remove('hidden');
+                setTimeout(renderNext, 250);
+            } else {
+                feverPoints = 0; combo = 0;
+                document.getElementById('card').classList.add('shake');
+                if (mode === 'competition' || mode === 'survival') {
+                    overlay.className = "feedback-overlay bg-wrong";
+                    fbContent.innerHTML = `<i class="fas fa-times text-6xl"></i>`;
+                    overlay.classList.remove('hidden');
+                    setTimeout(() => { if (mode === 'survival') stopGame(); else renderNext(); }, 400);
+                } else {
+                    overlay.className = "feedback-overlay bg-wrong p-4";
+                    const j = window.currentOp.j;
+                    fbContent.innerHTML = `<div class="w-full bg-black/60 rounded-xl border border-white/20 font-mono text-[13px] shadow-2xl mb-6 text-left">
+                        <div class="grid grid-cols-4 border-b border-white/20 p-2 bg-white/5 font-black text-slate-400 text-[10px] uppercase text-center"><span>Libellé</span><span class="col-span-2"></span><span>D/C</span></div>
+                        <div class="p-2 border-b border-white/10 ${window.currentOp.r === 'D' ? 'text-green-400 font-bold' : ''}">${j.d}</div>
+                        <div class="p-2 ${window.currentOp.r === 'C' ? 'text-red-400 font-bold' : ''}">${j.c}</div>
+                    </div><p class="text-[12px] font-bold italic mb-6">"${window.currentOp.w}"</p><p class="text-[9px] animate-pulse">CLIQUE POUR CONTINUER</p>`;
+                    overlay.classList.remove('hidden');
+                    overlay.onclick = () => renderNext();
+                }
+            }
+            document.getElementById('score-ui').innerText = score;
+            document.getElementById('fever-bar').style.width = feverPoints + "%";
+        }
+
+        function stopGame() { clearInterval(timer); showSection('screen-end'); document.getElementById('end-score').innerText = score; }
+    </script>
+</body>
+</html>
