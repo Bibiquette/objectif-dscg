@@ -51,7 +51,7 @@
 
         <div id="screen-cours" class="hidden glass rounded-[2.5rem] p-8 text-sm italic">
             <div class="flex justify-between items-center mb-6 text-purple-400 font-black uppercase">
-                <h2 class="text-2xl italic text-amber-500">Classification Actif</h2>
+                <h2 class="text-2xl italic text-amber-500">Aide Mémoire</h2>
                 <button onclick="showSection('screen-menu')" class="text-slate-400"><i class="fas fa-times"></i></button>
             </div>
             <div class="space-y-4 text-slate-300 leading-relaxed">
@@ -65,11 +65,10 @@
         <div id="screen-game" class="hidden">
             <div id="card" class="glass rounded-[3rem] p-8 text-center mb-8 relative border-2 border-white/5 flex flex-col justify-center items-center min-h-[350px]">
                 <div id="feedback-overlay" class="hidden feedback-overlay"><div id="fb-content" class="flex flex-col items-center justify-center p-4 w-full h-full"></div></div>
-                <span id="nature-tag" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6 italic italic">Classification</span>
+                <span id="nature-tag" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6 italic">Classification</span>
                 <h2 id="op-name" class="text-2xl md:text-3xl font-black tracking-tighter uppercase px-4 leading-tight">---</h2>
             </div>
-            <div id="options-grid" class="grid grid-cols-2 gap-4">
-                </div>
+            <div id="options-grid" class="grid grid-cols-2 gap-4"></div>
         </div>
 
         <div id="screen-end" class="hidden glass rounded-[2.5rem] p-12 text-center shadow-2xl">
@@ -113,7 +112,6 @@
             { q: "Ordinateur (490€ HT)", r: "Charge", w: "Bien < 500€ (Compte 606)." },
             { q: "Marque commerciale", r: "Incorporelle", w: "Propriété industrielle (Compte 205)." },
             { q: "Prêt au personnel", r: "Financière", w: "Créance financière (Compte 274)." },
-            { q: "Climatiseur amovible", r: "Charge", w: "Souvent < 500€ ou entretien." },
             { q: "Frais de constitution", r: "Incorporelle", w: "Frais d'établissement (Compte 201)." }
         ];
 
@@ -127,7 +125,6 @@
         }
 
         function startGame(m) {
-            // RESET FORCE
             score = 0; feverPoints = 0; timeLeft = 60; isProcessing = false; lastSeen = [];
             document.getElementById('score-ui').innerText = "0";
             document.getElementById('fever-bar').style.width = "0%";
@@ -135,8 +132,6 @@
             
             mode = m;
             const isLearning = (mode === 'learning');
-            
-            // UI ADAPTATION
             document.getElementById('score-container').style.display = isLearning ? 'none' : 'block';
             document.getElementById('fever-container').style.display = isLearning ? 'none' : 'block';
             document.getElementById('timer-ui').style.display = isLearning ? 'none' : 'block';
@@ -224,8 +219,8 @@
         }
 
         function handleBackNavigation() {
-            if (document.getElementById('screen-menu').classList.contains('hidden')) showSection('screen-menu');
-            else window.location.href = 'index.html';
+            if (document.getElementById('screen-menu').classList.contains('hidden')) window.location.href = 'index.html';
+            else showSection('screen-menu');
         }
     </script>
 </body>
