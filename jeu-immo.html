@@ -1,36 +1,232 @@
-// ... (Garder tout le début du code et la base de données)
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Immo Master | ObjectifDSCG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap');
+        body { background: #020617; color: white; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; touch-action: manipulation; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        #timer-ui { font-family: 'JetBrains Mono', monospace; }
+        .timer-critical { color: #ef4444 !important; font-size: 3.5rem !important; animation: pulse-red 0.5s infinite alternate; }
+        @keyframes pulse-red { from { transform: scale(1); } to { transform: scale(1.1); } }
+        #fever-bar { height: 100%; background: linear-gradient(90deg, #a855f7, #3b82f6); transition: width 0.2s ease; }
+        .btn-opt { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
+        .btn-opt:active { transform: scale(0.95); background: rgba(168, 85, 247, 0.2); }
+        .feedback-overlay { position: absolute; inset: 0; border-radius: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50; }
+        .bg-correct { background: rgba(16, 185, 129, 0.95); }
+        .bg-wrong { background: rgba(15, 23, 42, 0.98); border: 2px solid #ef4444; }
+        .shake { animation: shake 0.4s ease-in-out; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+    </style>
+</head>
+<body class="p-4 md:p-8">
 
-function startGame(m) {
-    // RESET TOTAL DES STATS
-    score = 0; 
-    feverPoints = 0; 
-    timeLeft = 60;
-    isProcessing = false;
-    lastSeen = [];
+    <div class="max-w-2xl mx-auto">
+        <div class="flex justify-between items-center mb-6 h-24">
+            <button onclick="handleBackNavigation()" class="text-slate-500 hover:text-white transition font-bold text-[10px] uppercase tracking-widest">
+                <i class="fas fa-arrow-left mr-2"></i><span id="back-label">Quitter</span>
+            </button>
+            <div id="game-info" class="hidden flex-1 ml-8 text-center">
+                <div class="flex justify-between items-center mb-1 px-4">
+                    <span id="score-container"><span id="score-ui" class="text-2xl font-black text-purple-400">0</span></span>
+                    <span id="timer-ui" class="text-3xl font-black">60</span>
+                </div>
+                <div id="fever-container" class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden"><div id="fever-bar" style="width: 0%"></div></div>
+            </div>
+        </div>
 
-    document.getElementById('score-ui').innerText = "0";
-    document.getElementById('fever-bar').style.width = "0%";
-    document.getElementById('timer-ui').classList.remove('timer-critical');
-    
-    mode = m;
-    
-    // GESTION DE L'AFFICHAGE SELON LE MODE
-    const isLearning = (mode === 'learning');
-    document.getElementById('score-container').style.display = isLearning ? 'none' : 'block';
-    document.getElementById('fever-container').style.display = isLearning ? 'none' : 'block';
-    document.getElementById('timer-ui').style.display = isLearning ? 'none' : 'block';
+        <div id="screen-menu" class="glass rounded-[2.5rem] p-10 text-center border-b-4 border-purple-500 shadow-2xl">
+            <h1 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">Tri d'<span class="text-purple-500">Immo</span></h1>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl hover:bg-amber-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-university mb-2 block text-amber-500 text-xl"></i>Cours</button>
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl hover:bg-purple-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-graduation-cap mb-2 block text-purple-400 text-xl"></i>Apprendre</button>
+                <button onclick="startGame('competition')" class="glass p-5 rounded-2xl hover:bg-red-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-bolt mb-2 block text-red-500 text-xl"></i>Défier</button>
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl hover:bg-sky-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-skull mb-2 block text-sky-400 text-xl"></i>Survie</button>
+            </div>
+        </div>
 
-    showSection('screen-game');
-    document.getElementById('game-info').classList.remove('hidden');
-    
-    // LANCER LE CHRONO UNIQUEMENT EN COMPETITION / SURVIE
-    if(mode === 'competition' || mode === 'survival') {
-        startTimer();
-    } else {
-        clearInterval(timer);
-    }
-    
-    renderNext();
-}
+        <div id="screen-cours" class="hidden glass rounded-[2.5rem] p-8 text-sm italic">
+            <div class="flex justify-between items-center mb-6 text-purple-400 font-black uppercase">
+                <h2 class="text-2xl italic text-amber-500">Classification Actif</h2>
+                <button onclick="showSection('screen-menu')" class="text-slate-400"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="space-y-4 text-slate-300 leading-relaxed">
+                <div class="p-3 glass border-l-4 border-purple-500"><b>INCORPORELLE :</b> Logiciels, Brevets, Marques, Fonds commercial.</div>
+                <div class="p-3 glass border-l-4 border-emerald-500"><b>CORPORELLE :</b> Terrains, Matériel, Camions, Immeubles.</div>
+                <div class="p-3 glass border-l-4 border-blue-500"><b>FINANCIÈRE :</b> Actions filiales, Prêts, Cautions (Cl. 26/27).</div>
+                <div class="p-3 glass border-l-4 border-red-500"><b>CHARGE :</b> Matériel < 500€ HT, consommables, services.</div>
+            </div>
+        </div>
 
-// ... (Garder le reste de la logique check et renderNext)
+        <div id="screen-game" class="hidden">
+            <div id="card" class="glass rounded-[3rem] p-8 text-center mb-8 relative border-2 border-white/5 flex flex-col justify-center items-center min-h-[350px]">
+                <div id="feedback-overlay" class="hidden feedback-overlay"><div id="fb-content" class="flex flex-col items-center justify-center p-4 w-full h-full"></div></div>
+                <span id="nature-tag" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6 italic italic">Classification</span>
+                <h2 id="op-name" class="text-2xl md:text-3xl font-black tracking-tighter uppercase px-4 leading-tight">---</h2>
+            </div>
+            <div id="options-grid" class="grid grid-cols-2 gap-4">
+                </div>
+        </div>
+
+        <div id="screen-end" class="hidden glass rounded-[2.5rem] p-12 text-center shadow-2xl">
+            <div id="end-score-container"><div id="end-score" class="text-9xl font-black text-purple-500 mb-8 tracking-tighter">0</div></div>
+            <button onclick="location.reload()" class="bg-white text-slate-900 px-12 py-4 rounded-2xl font-black uppercase italic">Menu Principal</button>
+        </div>
+    </div>
+
+    <script>
+        const SFX = {
+            ctx: new (window.AudioContext || window.webkitAudioContext)(),
+            play(type) {
+                if (this.ctx.state === 'suspended') this.ctx.resume();
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.connect(gain); gain.connect(this.ctx.destination);
+                const now = this.ctx.currentTime;
+                if (type === 'correct') {
+                    osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                    gain.gain.setValueAtTime(0.1, now); osc.start(); osc.stop(now + 0.1);
+                } else if (type === 'wrong') {
+                    osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
+                    gain.gain.setValueAtTime(0.1, now); osc.start(); osc.stop(now + 0.3);
+                } else if (type === 'fever') {
+                    osc.type = 'square'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(1800, now + 0.5);
+                    gain.gain.setValueAtTime(0.05, now); osc.start(); osc.stop(now + 0.5);
+                }
+            }
+        };
+
+        const immoDB = [
+            { q: "Logiciel de paie", r: "Incorporelle", w: "Immatériel (Compte 205)." },
+            { q: "Véhicule utilitaire", r: "Corporelle", w: "Bien physique (Compte 2182)." },
+            { q: "Actions filiale (60%)", r: "Financière", w: "Titres immobilisés (Compte 261)." },
+            { q: "Papier bureau", r: "Charge", w: "Consommable < 500€ (Compte 606)." },
+            { q: "Droit au bail", r: "Incorporelle", w: "Fonds de commerce (Compte 206)." },
+            { q: "Terrain d'usine", r: "Corporelle", w: "Bien tangible (Compte 211)." },
+            { q: "Dépôt de garantie", r: "Financière", w: "Créance bloquée (Compte 275)." },
+            { q: "Brevet déposé", r: "Incorporelle", w: "Actif immatériel (Compte 205)." },
+            { q: "Outillage industriel", r: "Corporelle", w: "Matériel technique (Compte 215)." },
+            { q: "Ordinateur (490€ HT)", r: "Charge", w: "Bien < 500€ (Compte 606)." },
+            { q: "Marque commerciale", r: "Incorporelle", w: "Propriété industrielle (Compte 205)." },
+            { q: "Prêt au personnel", r: "Financière", w: "Créance financière (Compte 274)." },
+            { q: "Climatiseur amovible", r: "Charge", w: "Souvent < 500€ ou entretien." },
+            { q: "Frais de constitution", r: "Incorporelle", w: "Frais d'établissement (Compte 201)." }
+        ];
+
+        let mode = '', score = 0, feverPoints = 0, lastSeen = [], isProcessing = false, timer, timeLeft = 60;
+
+        function showSection(id) {
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById('back-label').innerText = (id === 'screen-menu') ? "Quitter" : "Retour Menu";
+            if (id === 'screen-menu') document.getElementById('game-info').classList.add('hidden');
+        }
+
+        function startGame(m) {
+            // RESET FORCE
+            score = 0; feverPoints = 0; timeLeft = 60; isProcessing = false; lastSeen = [];
+            document.getElementById('score-ui').innerText = "0";
+            document.getElementById('fever-bar').style.width = "0%";
+            document.getElementById('timer-ui').classList.remove('timer-critical');
+            
+            mode = m;
+            const isLearning = (mode === 'learning');
+            
+            // UI ADAPTATION
+            document.getElementById('score-container').style.display = isLearning ? 'none' : 'block';
+            document.getElementById('fever-container').style.display = isLearning ? 'none' : 'block';
+            document.getElementById('timer-ui').style.display = isLearning ? 'none' : 'block';
+
+            showSection('screen-game');
+            document.getElementById('game-info').classList.remove('hidden');
+            
+            if(mode === 'competition' || mode === 'survival') startTimer();
+            else clearInterval(timer);
+            
+            renderNext();
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timer = setInterval(() => {
+                timeLeft--; document.getElementById('timer-ui').innerText = timeLeft;
+                if(timeLeft <= 10) document.getElementById('timer-ui').classList.add('timer-critical');
+                if(timeLeft <= 0) stopGame();
+            }, 1000);
+        }
+
+        function renderNext() {
+            isProcessing = false;
+            document.getElementById('feedback-overlay').classList.add('hidden');
+            document.getElementById('card').classList.remove('shake');
+            let available = immoDB.filter(i => !lastSeen.includes(i.q));
+            if(available.length < 5) { lastSeen = []; available = immoDB; }
+            const item = available[Math.floor(Math.random() * available.length)];
+            lastSeen.push(item.q); if(lastSeen.length > 10) lastSeen.shift();
+            document.getElementById('op-name').innerText = item.q;
+            window.currentOp = item;
+
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            ['Incorporelle', 'Corporelle', 'Financière', 'Charge'].forEach(opt => {
+                const b = document.createElement('button');
+                b.className = "btn-opt glass p-5 rounded-2xl font-black text-[10px] uppercase tracking-widest";
+                b.innerText = opt;
+                b.onclick = () => check(opt);
+                grid.appendChild(b);
+            });
+        }
+
+        function check(val) {
+            if (isProcessing) return; isProcessing = true;
+            const isCorrect = (val === window.currentOp.r);
+            SFX.play(isCorrect ? 'correct' : 'wrong');
+            const overlay = document.getElementById('feedback-overlay');
+            const fbContent = document.getElementById('fb-content');
+
+            if(isCorrect) {
+                if (mode !== 'learning') {
+                    feverPoints = Math.min(100, feverPoints + 20);
+                    if (feverPoints === 100) SFX.play('fever');
+                    score += (feverPoints >= 100) ? 100 : 20;
+                }
+                overlay.className = "feedback-overlay bg-correct";
+                fbContent.innerHTML = `<i class="fas fa-check text-6xl"></i>`;
+                overlay.classList.remove('hidden');
+                setTimeout(renderNext, 250);
+            } else {
+                feverPoints = 0; document.getElementById('card').classList.add('shake');
+                if (mode === 'competition' || mode === 'survival') {
+                    overlay.className = "feedback-overlay bg-wrong";
+                    fbContent.innerHTML = `<i class="fas fa-times text-6xl"></i>`;
+                    overlay.classList.remove('hidden');
+                    setTimeout(() => { if (mode === 'survival') stopGame(); else renderNext(); }, 400);
+                } else {
+                    overlay.className = "feedback-overlay bg-wrong p-6";
+                    fbContent.innerHTML = `<h3 class="text-2xl font-black mb-2">${window.currentOp.r}</h3><p class="italic text-sm">"${window.currentOp.w}"</p><p class="mt-8 text-[10px] animate-pulse">CLIQUE POUR CONTINUER</p>`;
+                    overlay.classList.remove('hidden');
+                    overlay.onclick = renderNext;
+                }
+            }
+            document.getElementById('score-ui').innerText = score;
+            document.getElementById('fever-bar').style.width = feverPoints + "%";
+        }
+
+        function stopGame() {
+            clearInterval(timer);
+            showSection('screen-end');
+            document.getElementById('end-score').innerText = score;
+            document.getElementById('end-score-container').style.display = (mode === 'learning') ? 'none' : 'block';
+        }
+
+        function handleBackNavigation() {
+            if (document.getElementById('screen-menu').classList.contains('hidden')) showSection('screen-menu');
+            else window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
