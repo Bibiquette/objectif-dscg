@@ -3,177 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ObjectifDSCG | Dashboard</title>
+    <title>ObjectifDSCG | Pro Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        
-        body { 
-            background: radial-gradient(circle at top left, #0f172a, #020617); 
-            min-height: 100vh; 
-            color: white; 
-            font-family: 'Inter', sans-serif; 
-            overflow-x: hidden;
-        }
-
-        .glass { 
-            background: rgba(255, 255, 255, 0.03); 
-            backdrop-filter: blur(12px); 
-            border: 1px solid rgba(255, 255, 255, 0.08); 
-        }
-
-        .glass-card { 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-        }
-
-        .glass-card:hover { 
-            transform: translateY(-10px); 
-            border-color: rgba(56, 189, 248, 0.4); 
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
-        }
-
-        .record-badge {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Animation d'entrée */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-in { animation: fadeIn 0.6s ease-out forwards; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { background: #020617; color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; }
+        .glass { background: rgba(30, 41, 59, 0.5); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .card-grad { background: linear-gradient(135deg, rgba(56, 189, 248, 0.1) 0%, rgba(0, 0, 0, 0) 100%); }
+        .btn-primary { background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px #38bdf8; }
     </style>
 </head>
-<body class="p-6 md:p-12">
+<body class="p-6 md:p-12 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
 
-    <div id="auth-modal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] flex items-center justify-center hidden">
-        <div class="glass p-10 rounded-[2.5rem] text-center max-w-sm w-full mx-4 border-t-4 border-sky-500 shadow-2xl">
-            <div class="w-20 h-20 bg-sky-500/10 text-sky-400 rounded-full flex items-center justify-center mx-auto mb-6">
-                <i class="fas fa-user-graduate text-4xl"></i>
-            </div>
-            <h2 class="text-2xl font-black italic uppercase mb-2 tracking-tighter">Bienvenue</h2>
-            <p class="text-slate-400 text-xs mb-8 italic">Tes scores seront sauvegardés localement sur cet appareil.</p>
-            
-            <input type="text" id="username-input" 
-                class="w-full bg-white/5 border border-white/10 rounded-2xl p-4 text-center font-bold mb-4 focus:border-sky-500 outline-none transition-all" 
-                placeholder="Ton Pseudo">
-            
-            <button onclick="saveUser()" 
-                class="w-full bg-sky-500 hover:bg-sky-400 text-white py-4 rounded-2xl font-black uppercase italic transition-all shadow-lg shadow-sky-500/20">
-                Commencer
-            </button>
+    <div id="auth-modal" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] flex items-center justify-center hidden">
+        <div class="glass p-10 rounded-[3rem] text-center max-w-sm w-full mx-4 shadow-2xl border-t-2 border-sky-500">
+            <h2 class="text-3xl font-extrabold mb-2 tracking-tight">Bienvenue</h2>
+            <p class="text-slate-400 text-sm mb-8">Prépare ton DSCG avec style.</p>
+            <input type="text" id="username-input" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-4 text-center font-bold mb-6 focus:ring-2 focus:ring-sky-500 outline-none transition-all" placeholder="Ton Pseudo">
+            <button onclick="saveUser()" class="btn-primary w-full py-4 rounded-2xl font-bold uppercase tracking-widest">Entrer dans l'Arène</button>
         </div>
     </div>
 
-    <header class="max-w-6xl mx-auto flex justify-between items-center mb-12 animate-in">
+    <header class="max-w-6xl mx-auto flex justify-between items-center mb-16">
         <div>
-            <h1 class="text-3xl font-black italic uppercase tracking-tighter">Objectif<span class="text-sky-500">DSCG</span></h1>
-            <p id="welcome-msg" class="text-slate-500 text-xs font-bold uppercase tracking-widest mt-1">Chargement...</p>
+            <h1 class="text-4xl font-extrabold tracking-tighter italic uppercase">Obj.<span class="text-sky-500 font-black">DSCG</span></h1>
+            <p id="welcome-msg" class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2 ml-1">Session Initialisée</p>
         </div>
-        <button onclick="resetUser()" class="text-slate-600 hover:text-red-400 text-[10px] uppercase font-bold transition">
-            <i class="fas fa-sign-out-alt mr-1"></i> Changer de profil
-        </button>
+        <div class="flex items-center gap-8 glass px-6 py-3 rounded-2xl">
+            <div class="text-center"><p class="text-[9px] text-slate-500 uppercase font-black mb-1">Streak</p><p id="streak-val" class="text-xl font-extrabold text-orange-500">0 🔥</p></div>
+            <button onclick="resetUser()" class="text-slate-600 hover:text-red-500 transition-colors"><i class="fas fa-power-off"></i></button>
+        </div>
     </header>
 
-    <main class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            <div class="glass glass-card p-8 rounded-[2.5rem] flex flex-col h-full animate-in" style="animation-delay: 0.1s">
-                <div class="flex justify-between items-start mb-8">
-                    <div class="w-14 h-14 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center border border-purple-500/20">
-                        <i class="fas fa-boxes-stacked text-2xl"></i>
-                    </div>
-                    <div class="record-badge px-4 py-2 rounded-xl text-right">
-                        <p class="text-[8px] uppercase font-black text-slate-500 tracking-widest">Meilleur Score</p>
-                        <p id="record-immo" class="text-lg font-black text-purple-400">0 pts</p>
-                    </div>
-                </div>
-                <h3 class="text-2xl font-black mb-2 uppercase italic tracking-tight">Tri d'Immo</h3>
-                <p class="text-slate-400 text-sm mb-10 leading-relaxed">Classez les actifs de la classe 2 (Incorporel, Corporel, Financier) et évitez les charges.</p>
-                <div class="mt-auto">
-                    <a href="jeu-immo.html" onclick="playClick()" 
-                        class="bg-purple-600 hover:bg-purple-500 text-white px-8 py-4 rounded-2xl font-black transition-all block text-center uppercase italic shadow-lg shadow-purple-500/20">
-                        Lancer le module
-                    </a>
+    <main class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div class="glass card-grad p-10 rounded-[3.5rem] border-l-4 border-sky-500 group transition-all hover:bg-slate-900/50">
+            <div class="flex justify-between items-start mb-8">
+                <div class="w-16 h-16 bg-sky-500/10 text-sky-400 rounded-2xl flex items-center justify-center shadow-inner"><i class="fas fa-bolt text-3xl"></i></div>
+                <div class="text-right">
+                    <p class="text-[9px] text-slate-500 uppercase font-black">Record</p>
+                    <p id="record-flux" class="text-2xl font-extrabold text-sky-400">0</p>
                 </div>
             </div>
+            <h3 class="text-2xl font-extrabold mb-4 uppercase italic tracking-tighter">Flux Master</h3>
+            <p class="text-slate-400 text-sm mb-10 leading-relaxed">Maîtrisez les écritures complexes en mode survie. +100 flux disponibles.</p>
+            <a href="jeu-flux.html" class="btn-primary inline-block w-full py-4 rounded-2xl text-center font-bold uppercase italic tracking-widest text-sm">Lancer le module</a>
+        </div>
 
-            <div class="glass glass-card p-8 rounded-[2.5rem] flex flex-col h-full border-emerald-500/20 animate-in" style="animation-delay: 0.2s">
-                <div class="flex justify-between items-start mb-8">
-                    <div class="w-14 h-14 bg-emerald-500/10 text-emerald-400 rounded-2xl flex items-center justify-center border border-emerald-500/20">
-                        <i class="fas fa-exchange-alt text-2xl"></i>
-                    </div>
-                    <div class="record-badge px-4 py-2 rounded-xl text-right">
-                        <p class="text-[8px] uppercase font-black text-slate-500 tracking-widest">Meilleur Score</p>
-                        <p id="record-flux" class="text-lg font-black text-emerald-400">0 pts</p>
-                    </div>
-                </div>
-                <h3 class="text-2xl font-black mb-2 uppercase italic tracking-tight text-emerald-400">Flux Master</h3>
-                <p class="text-slate-400 text-sm mb-10 leading-relaxed">Plus de 100 écritures comptables pour automatiser vos réflexes Débit/Crédit instantanément.</p>
-                <div class="mt-auto">
-                    <a href="jeu-flux.html" onclick="playClick()" 
-                        class="bg-emerald-600 hover:bg-emerald-500 text-white px-8 py-4 rounded-2xl font-black transition-all block text-center uppercase italic shadow-lg shadow-emerald-500/20">
-                        Lancer le module
-                    </a>
+        <div class="glass card-grad p-10 rounded-[3.5rem] border-l-4 border-purple-500 group transition-all hover:bg-slate-900/50">
+            <div class="flex justify-between items-start mb-8">
+                <div class="w-16 h-16 bg-purple-500/10 text-purple-400 rounded-2xl flex items-center justify-center shadow-inner"><i class="fas fa-layer-group text-3xl"></i></div>
+                <div class="text-right">
+                    <p class="text-[9px] text-slate-500 uppercase font-black">Record</p>
+                    <p id="record-immo" class="text-2xl font-extrabold text-purple-400">0</p>
                 </div>
             </div>
-
+            <h3 class="text-2xl font-extrabold mb-4 uppercase italic tracking-tighter">Tri d'Immo</h3>
+            <p class="text-slate-400 text-sm mb-10 leading-relaxed">Différenciez les actifs et les charges instantanément sans faire d'erreur.</p>
+            <a href="jeu-immo.html" class="btn-primary inline-block w-full py-4 rounded-2xl text-center font-bold uppercase italic tracking-widest text-sm" style="background: linear-gradient(135deg, #a855f7 0%, #6b21a8 100%);">Lancer le module</a>
         </div>
     </main>
 
     <script>
-        // Moteur sonore minimaliste pour le menu
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        function playClick() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.connect(gain); gain.connect(audioCtx.destination);
-            osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-            gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.05);
-            osc.start(); osc.stop(audioCtx.currentTime + 0.05);
-        }
-
-        // Logique d'identification Offline
         window.onload = () => {
             const user = localStorage.getItem('dscg_user');
-            
-            if (!user) {
-                document.getElementById('auth-modal').classList.remove('hidden');
-            } else {
-                document.getElementById('welcome-msg').innerText = "Ravi de vous revoir, " + user + " !";
-                loadRecords();
+            if (!user) document.getElementById('auth-modal').classList.remove('hidden');
+            else {
+                document.getElementById('welcome-msg').innerText = "Ravi de vous revoir, " + user;
+                document.getElementById('record-flux').innerText = localStorage.getItem('record_flux') || 0;
+                document.getElementById('record-immo').innerText = localStorage.getItem('record_immo') || 0;
+                document.getElementById('streak-val').innerText = (localStorage.getItem('streak_val') || 1) + " 🔥";
             }
-        }
-
+        };
         function saveUser() {
-            const name = document.getElementById('username-input').value.trim();
-            if (name.length >= 2) {
-                localStorage.setItem('dscg_user', name);
-                location.reload();
-            } else {
-                alert("Choisis un pseudo d'au moins 2 lettres !");
-            }
+            const val = document.getElementById('username-input').value.trim();
+            if(val.length > 1) { localStorage.setItem('dscg_user', val); location.reload(); }
         }
-
-        function resetUser() {
-            if(confirm("Voulez-vous changer de profil ? (Cela ne supprimera pas vos records)")) {
-                localStorage.removeItem('dscg_user');
-                location.reload();
-            }
-        }
-
-        function loadRecords() {
-            // Récupération des records depuis le localStorage
-            const immo = localStorage.getItem('record_immo') || 0;
-            const flux = localStorage.getItem('record_flux') || 0;
-            
-            document.getElementById('record-immo').innerText = immo + " pts";
-            document.getElementById('record-flux').innerText = flux + " pts";
-        }
+        function resetUser() { localStorage.removeItem('dscg_user'); location.reload(); }
     </script>
 </body>
 </html>

@@ -3,224 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Immo Master | ObjectifDSCG</title>
+    <title>Tri d'Immo | Cyber-Compta</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@700&display=swap');
-        body { background: #020617; color: white; font-family: 'Inter', sans-serif; min-height: 100vh; overflow-x: hidden; touch-action: manipulation; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        #timer-ui { font-family: 'JetBrains Mono', monospace; }
-        .timer-critical { color: #ef4444 !important; font-size: 3.5rem !important; animation: pulse-red 0.5s infinite alternate; }
-        @keyframes pulse-red { from { transform: scale(1); } to { transform: scale(1.1); } }
-        #fever-bar { height: 100%; background: linear-gradient(90deg, #a855f7, #3b82f6); transition: width 0.2s ease; }
-        .btn-opt { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.1); transition: all 0.2s; }
-        .btn-opt:active { transform: scale(0.95); background: rgba(168, 85, 247, 0.2); }
-        .feedback-overlay { position: absolute; inset: 0; border-radius: 2.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 50; }
-        .bg-correct { background: rgba(16, 185, 129, 0.95); }
-        .bg-wrong { background: rgba(15, 23, 42, 0.98); border: 2px solid #ef4444; }
-        .shake { animation: shake 0.4s ease-in-out; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-8px); } 75% { transform: translateX(8px); } }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=JetBrains+Mono:wght@700&display=swap');
+        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; touch-action: manipulation; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        
+        /* Boutons Néons Violets */
+        .btn-neon-purple { border: 2px solid #a855f7; box-shadow: 0 0 10px rgba(168, 85, 247, 0.3); transition: all 0.2s; }
+        .btn-neon-purple:active { background: #a855f7; box-shadow: 0 0 25px #a855f7; transform: translateY(2px); }
+
+        .btn-neon-amber { border: 2px solid #fbbf24; box-shadow: 0 0 15px rgba(251, 191, 36, 0.3); }
+
+        .timer-low { color: #f43f5e; text-shadow: 0 0 10px #f43f5e; animation: pulse 0.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-4 flex flex-col items-center justify-center min-h-screen">
 
-    <div class="max-w-2xl mx-auto">
-        <div class="flex justify-between items-center mb-6 h-24">
-            <button onclick="handleBackNavigation()" class="text-slate-500 hover:text-white transition font-bold text-[10px] uppercase tracking-widest">
-                <i class="fas fa-arrow-left mr-2"></i><span id="back-label">Quitter</span>
-            </button>
-            <div id="game-info" class="hidden flex-1 ml-8 text-center">
-                <div class="flex justify-between items-center mb-1 px-4">
-                    <span id="score-container"><span id="score-ui" class="text-2xl font-black text-purple-400">0</span></span>
-                    <span id="timer-ui" class="text-3xl font-black">60</span>
+    <div class="w-full max-w-lg">
+        <header class="flex justify-between items-center mb-8 px-2 h-16">
+            <button onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-purple-500/30 border-2"><i class="fas fa-chevron-left"></i></button>
+            <div id="game-info" class="hidden flex items-center gap-6 glass px-6 py-2 rounded-2xl border-2 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.2)]">
+                <div id="score-container" class="text-center">
+                    <p class="text-[8px] uppercase font-black text-purple-500 italic italic">Score</p>
+                    <p id="score-ui" class="text-xl font-extrabold text-white italic italic">0</p>
                 </div>
-                <div id="fever-container" class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden"><div id="fever-bar" style="width: 0%"></div></div>
+                <div id="timer-container" class="text-center font-mono">
+                    <p class="text-[8px] uppercase font-black text-slate-500 italic italic">Chrono</p>
+                    <p id="timer-ui" class="text-xl font-extrabold text-white transition-all italic italic">60s</p>
+                </div>
+            </div>
+        </header>
+
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center shadow-2xl border-2 border-purple-500/20">
+            <h1 class="text-4xl font-extrabold italic uppercase mb-10 text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-indigo-600">Tri d'Immo</h1>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="showSection('screen-cours')" class="btn-neon-amber glass p-4 rounded-3xl flex items-center gap-4 text-left group">
+                    <span class="text-amber-500 text-xl"><i class="fas fa-scroll"></i></span>
+                    <div><p class="font-extrabold uppercase text-[10px]">Fiche Catégories</p><p class="text-[9px] text-slate-500 italic italic">PCG : 20, 21, 26, 27</p></div>
+                </button>
+                <button onclick="startGame('learning')" class="glass border-2 border-emerald-500/20 p-4 rounded-3xl flex items-center gap-4 text-left">
+                    <span class="text-emerald-500 text-xl"><i class="fas fa-brain"></i></span>
+                    <div><p class="font-extrabold uppercase text-[10px]">Apprendre</p><p class="text-[9px] text-slate-500 italic italic">Entraînement libre</p></div>
+                </button>
+                <button onclick="startGame('competition')" class="btn-neon-purple glass p-4 rounded-3xl flex items-center gap-4 text-left">
+                    <span class="text-purple-400 text-xl"><i class="fas fa-stopwatch"></i></span>
+                    <div><p class="font-extrabold uppercase text-[10px]">Défier</p><p class="text-[9px] text-slate-500 italic italic">Vitesse pure</p></div>
+                </button>
+                <button onclick="startGame('survival')" class="glass border-2 border-rose-500/30 p-4 rounded-3xl flex items-center gap-4 text-left">
+                    <span class="text-rose-500 text-xl"><i class="fas fa-skull"></i></span>
+                    <div><p class="font-extrabold uppercase text-[10px]">Survie</p><p class="text-[9px] text-slate-500 italic italic">Une faute = Fin</p></div>
+                </button>
             </div>
         </div>
 
-        <div id="screen-menu" class="glass rounded-[2.5rem] p-10 text-center border-b-4 border-purple-500 shadow-2xl">
-            <h1 class="text-4xl font-black mb-8 italic uppercase tracking-tighter">Tri d'<span class="text-purple-500">Immo</span></h1>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl hover:bg-amber-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-university mb-2 block text-amber-500 text-xl"></i>Cours</button>
-                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl hover:bg-purple-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-graduation-cap mb-2 block text-purple-400 text-xl"></i>Apprendre</button>
-                <button onclick="startGame('competition')" class="glass p-5 rounded-2xl hover:bg-red-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-bolt mb-2 block text-red-500 text-xl"></i>Défier</button>
-                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl hover:bg-sky-500/10 font-bold text-xs uppercase transition-all"><i class="fas fa-skull mb-2 block text-sky-400 text-xl"></i>Survie</button>
-            </div>
-        </div>
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto border-2 border-amber-500/50">
+            <h2 class="text-2xl font-black text-amber-500 mb-6 uppercase italic">📚 Fiche : Immobilisations</h2>
+            
+            <div class="space-y-5 text-xs">
+                <section class="bg-white/5 p-4 rounded-xl border-l-4 border-blue-500">
+                    <h3 class="text-blue-400 font-bold mb-1 uppercase">1. Incorporelles (Compte 20)</h3>
+                    <p class="text-slate-400 italic">Actifs sans substance physique mais avec une valeur juridique/économique.</p>
+                    <p class="mt-2 text-white">Exemples : Brevets, Logiciels, Droit au bail, Frais R&D.</p>
+                </section>
 
-        <div id="screen-cours" class="hidden glass rounded-[2.5rem] p-8 text-sm italic">
-            <div class="flex justify-between items-center mb-6 text-purple-400 font-black uppercase">
-                <h2 class="text-2xl italic text-amber-500">Aide Mémoire</h2>
-                <button onclick="showSection('screen-menu')" class="text-slate-400"><i class="fas fa-times"></i></button>
+                <section class="bg-white/5 p-4 rounded-xl border-l-4 border-emerald-500">
+                    <h3 class="text-emerald-400 font-bold mb-1 uppercase">2. Corporelles (Compte 21)</h3>
+                    <p class="text-slate-400 italic italic">Actifs tangibles utilisés durablement.</p>
+                    <p class="mt-2 text-white">Exemples : Terrains, Immeubles, Camions, PC, Machines.</p>
+                </section>
+
+                <section class="bg-white/5 p-4 rounded-xl border-l-4 border-purple-500">
+                    <h3 class="text-purple-400 font-bold mb-1 uppercase">3. Financières (Compte 26/27)</h3>
+                    <p class="text-slate-400 italic italic">Titres conservés à long terme pour le contrôle ou le rendement.</p>
+                    <p class="mt-2 text-white italic">Exemples : Actions filiales, Titres de participation, Cautions.</p>
+                </section>
+
+                <section class="bg-slate-800/50 p-4 rounded-xl border-l-4 border-slate-500 italic">
+                    <h3 class="text-slate-300 font-bold mb-1 uppercase">⚠️ Règle des 500€ (Charges)</h3>
+                    <p class="text-slate-400 italic italic">Si la valeur HT < 500€ (petit matériel), on peut l'enregistrer en <b>Charge (606)</b> au lieu d'Immo.</p>
+                </section>
             </div>
-            <div class="space-y-4 text-slate-300 leading-relaxed">
-                <div class="p-3 glass border-l-4 border-purple-500"><b>INCORPORELLE :</b> Logiciels, Brevets, Marques, Fonds commercial.</div>
-                <div class="p-3 glass border-l-4 border-emerald-500"><b>CORPORELLE :</b> Terrains, Matériel, Camions, Immeubles.</div>
-                <div class="p-3 glass border-l-4 border-blue-500"><b>FINANCIÈRE :</b> Actions filiales, Prêts, Cautions (Cl. 26/27).</div>
-                <div class="p-3 glass border-l-4 border-red-500"><b>CHARGE :</b> Matériel < 500€ HT, consommables, services.</div>
-            </div>
+            
+            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-2xl font-black mt-8 uppercase shadow-lg">Retour</button>
         </div>
 
         <div id="screen-game" class="hidden">
-            <div id="card" class="glass rounded-[3rem] p-8 text-center mb-8 relative border-2 border-white/5 flex flex-col justify-center items-center min-h-[350px]">
-                <div id="feedback-overlay" class="hidden feedback-overlay"><div id="fb-content" class="flex flex-col items-center justify-center p-4 w-full h-full"></div></div>
-                <span id="nature-tag" class="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500 mb-6 italic">Classification</span>
-                <h2 id="op-name" class="text-2xl md:text-3xl font-black tracking-tighter uppercase px-4 leading-tight">---</h2>
+            <div class="glass rounded-[3.5rem] p-10 min-h-[350px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner italic">
+                <div id="feedback" class="hidden feedback-overlay"></div>
+                <h2 id="op-name" class="text-2xl font-extrabold uppercase px-4 tracking-tighter italic italic">---</h2>
             </div>
-            <div id="options-grid" class="grid grid-cols-2 gap-4"></div>
+            <div class="grid grid-cols-2 gap-4 mt-8 italic italic">
+                <button onclick="check('Incorporelle')" class="btn-neon-purple py-6 rounded-[2rem] text-[10px] font-black uppercase italic italic">Incorporelle</button>
+                <button onclick="check('Corporelle')" class="btn-neon-purple py-6 rounded-[2rem] text-[10px] font-black uppercase italic italic">Corporelle</button>
+                <button onclick="check('Financière')" class="btn-neon-purple py-6 rounded-[2rem] text-[10px] font-black uppercase italic italic">Financière</button>
+                <button onclick="check('Charge')" class="btn-neon-purple py-6 rounded-[2rem] text-[10px] font-black uppercase italic italic">Charge</button>
+            </div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[2.5rem] p-12 text-center shadow-2xl">
-            <div id="end-score-container"><div id="end-score" class="text-9xl font-black text-purple-500 mb-8 tracking-tighter">0</div></div>
-            <button onclick="location.reload()" class="bg-white text-slate-900 px-12 py-4 rounded-2xl font-black uppercase italic">Menu Principal</button>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-emerald-500/30">
+            <div id="end-grade" class="text-8xl font-black text-emerald-400 mb-6 italic tracking-tighter italic">0/20</div>
+            <p id="end-score-label" class="text-xl font-bold mb-12 text-slate-500 italic italic">---</p>
+            <button onclick="location.reload()" class="btn-neon-purple w-full bg-white/5 py-5 rounded-2xl font-black uppercase italic italic">Menu Principal</button>
         </div>
     </div>
 
     <script>
-        const SFX = {
-            ctx: new (window.AudioContext || window.webkitAudioContext)(),
-            play(type) {
-                if (this.ctx.state === 'suspended') this.ctx.resume();
-                const osc = this.ctx.createOscillator();
-                const gain = this.ctx.createGain();
-                osc.connect(gain); gain.connect(this.ctx.destination);
-                const now = this.ctx.currentTime;
-                if (type === 'correct') {
-                    osc.frequency.setValueAtTime(600, now); osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
-                    gain.gain.setValueAtTime(0.1, now); osc.start(); osc.stop(now + 0.1);
-                } else if (type === 'wrong') {
-                    osc.frequency.setValueAtTime(150, now); osc.frequency.exponentialRampToValueAtTime(50, now + 0.3);
-                    gain.gain.setValueAtTime(0.1, now); osc.start(); osc.stop(now + 0.3);
-                } else if (type === 'fever') {
-                    osc.type = 'square'; osc.frequency.setValueAtTime(200, now); osc.frequency.exponentialRampToValueAtTime(1800, now + 0.5);
-                    gain.gain.setValueAtTime(0.05, now); osc.start(); osc.stop(now + 0.5);
-                }
-            }
-        };
-
-        const immoDB = [
-            { q: "Logiciel de paie", r: "Incorporelle", w: "Immatériel (Compte 205)." },
-            { q: "Véhicule utilitaire", r: "Corporelle", w: "Bien physique (Compte 2182)." },
-            { q: "Actions filiale (60%)", r: "Financière", w: "Titres immobilisés (Compte 261)." },
-            { q: "Papier bureau", r: "Charge", w: "Consommable < 500€ (Compte 606)." },
-            { q: "Droit au bail", r: "Incorporelle", w: "Fonds de commerce (Compte 206)." },
-            { q: "Terrain d'usine", r: "Corporelle", w: "Bien tangible (Compte 211)." },
-            { q: "Dépôt de garantie", r: "Financière", w: "Créance bloquée (Compte 275)." },
-            { q: "Brevet déposé", r: "Incorporelle", w: "Actif immatériel (Compte 205)." },
-            { q: "Outillage industriel", r: "Corporelle", w: "Matériel technique (Compte 215)." },
-            { q: "Ordinateur (490€ HT)", r: "Charge", w: "Bien < 500€ (Compte 606)." },
-            { q: "Marque commerciale", r: "Incorporelle", w: "Propriété industrielle (Compte 205)." },
-            { q: "Prêt au personnel", r: "Financière", w: "Créance financière (Compte 274)." },
-            { q: "Frais de constitution", r: "Incorporelle", w: "Frais d'établissement (Compte 201)." }
+        const db = [
+            { q: "Logiciel de paie (SaaS)", r: "Incorporelle" },
+            { q: "Camionnette 12m3", r: "Corporelle" },
+            { q: "Actions filiale (+50%)", r: "Financière" },
+            { q: "Petit outillage (80€)", r: "Charge" },
+            { q: "Immeuble de bureaux", r: "Corporelle" },
+            { q: "Droit au bail commerc.", r: "Incorporelle" }
         ];
 
-        let mode = '', score = 0, feverPoints = 0, lastSeen = [], isProcessing = false, timer, timeLeft = 60;
+        let mode, score=0, timer, timeLeft=60, total=0, correct=0, isProc=false;
 
         function showSection(id) {
             ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-            document.getElementById('back-label').innerText = (id === 'screen-menu') ? "Quitter" : "Retour Menu";
-            if (id === 'screen-menu') document.getElementById('game-info').classList.add('hidden');
         }
 
         function startGame(m) {
-            score = 0; feverPoints = 0; timeLeft = 60; isProcessing = false; lastSeen = [];
+            mode = m; score = 0; total = 0; correct = 0; timeLeft = 60;
             document.getElementById('score-ui').innerText = "0";
-            document.getElementById('fever-bar').style.width = "0%";
-            document.getElementById('timer-ui').classList.remove('timer-critical');
-            
-            mode = m;
-            const isLearning = (mode === 'learning');
-            document.getElementById('score-container').style.display = isLearning ? 'none' : 'block';
-            document.getElementById('fever-container').style.display = isLearning ? 'none' : 'block';
-            document.getElementById('timer-ui').style.display = isLearning ? 'none' : 'block';
-
             showSection('screen-game');
             document.getElementById('game-info').classList.remove('hidden');
             
-            if(mode === 'competition' || mode === 'survival') startTimer();
-            else clearInterval(timer);
-            
-            renderNext();
+            const timerText = document.getElementById('timer-ui');
+            if(mode === 'competition' || mode === 'survival') {
+                timerText.parentElement.classList.remove('hidden');
+                timer = setInterval(() => {
+                    timeLeft--; 
+                    timerText.innerText = timeLeft+"s";
+                    if(timeLeft <= 10) timerText.classList.add('timer-low');
+                    if(timeLeft <= 0) stopGame();
+                }, 1000);
+            } else { timerText.parentElement.classList.add('hidden'); }
+            next();
         }
 
-        function startTimer() {
-            clearInterval(timer);
-            timer = setInterval(() => {
-                timeLeft--; document.getElementById('timer-ui').innerText = timeLeft;
-                if(timeLeft <= 10) document.getElementById('timer-ui').classList.add('timer-critical');
-                if(timeLeft <= 0) stopGame();
-            }, 1000);
-        }
-
-        function renderNext() {
-            isProcessing = false;
-            document.getElementById('feedback-overlay').classList.add('hidden');
-            document.getElementById('card').classList.remove('shake');
-            let available = immoDB.filter(i => !lastSeen.includes(i.q));
-            if(available.length < 5) { lastSeen = []; available = immoDB; }
-            const item = available[Math.floor(Math.random() * available.length)];
-            lastSeen.push(item.q); if(lastSeen.length > 10) lastSeen.shift();
+        function next() {
+            isProc = false;
+            document.getElementById('feedback').classList.add('hidden');
+            const item = db[Math.floor(Math.random()*db.length)];
             document.getElementById('op-name').innerText = item.q;
-            window.currentOp = item;
-
-            const grid = document.getElementById('options-grid');
-            grid.innerHTML = '';
-            ['Incorporelle', 'Corporelle', 'Financière', 'Charge'].forEach(opt => {
-                const b = document.createElement('button');
-                b.className = "btn-opt glass p-5 rounded-2xl font-black text-[10px] uppercase tracking-widest";
-                b.innerText = opt;
-                b.onclick = () => check(opt);
-                grid.appendChild(b);
-            });
+            window.curr = item;
         }
 
-        function check(val) {
-            if (isProcessing) return; isProcessing = true;
-            const isCorrect = (val === window.currentOp.r);
-            SFX.play(isCorrect ? 'correct' : 'wrong');
-            const overlay = document.getElementById('feedback-overlay');
-            const fbContent = document.getElementById('fb-content');
+        function check(v) {
+            if(isProc) return; isProc = true;
+            total++;
+            const isOk = (v === window.curr.r);
+            const f = document.getElementById('feedback');
+            f.classList.remove('hidden');
 
-            if(isCorrect) {
-                if (mode !== 'learning') {
-                    feverPoints = Math.min(100, feverPoints + 20);
-                    if (feverPoints === 100) SFX.play('fever');
-                    score += (feverPoints >= 100) ? 100 : 20;
-                }
-                overlay.className = "feedback-overlay bg-correct";
-                fbContent.innerHTML = `<i class="fas fa-check text-6xl"></i>`;
-                overlay.classList.remove('hidden');
-                setTimeout(renderNext, 250);
+            if(isOk) {
+                correct++; 
+                if(mode !== 'learning') score += 20;
+                f.className="feedback-overlay bg-emerald-500/90";
+                f.innerHTML="<i class='fas fa-check text-6xl'></i>";
+                setTimeout(next, 200);
             } else {
-                feverPoints = 0; document.getElementById('card').classList.add('shake');
-                if (mode === 'competition' || mode === 'survival') {
-                    overlay.className = "feedback-overlay bg-wrong";
-                    fbContent.innerHTML = `<i class="fas fa-times text-6xl"></i>`;
-                    overlay.classList.remove('hidden');
-                    setTimeout(() => { if (mode === 'survival') stopGame(); else renderNext(); }, 400);
-                } else {
-                    overlay.className = "feedback-overlay bg-wrong p-6";
-                    fbContent.innerHTML = `<h3 class="text-2xl font-black mb-2">${window.currentOp.r}</h3><p class="italic text-sm">"${window.currentOp.w}"</p><p class="mt-8 text-[10px] animate-pulse">CLIQUE POUR CONTINUER</p>`;
-                    overlay.classList.remove('hidden');
-                    overlay.onclick = renderNext;
+                if(mode === 'survival') { stopGame(); return; }
+                if(mode === 'competition') {
+                    score = Math.max(0, score - 10);
+                    timeLeft = Math.max(0, timeLeft - 3);
                 }
+                
+                f.className="feedback-overlay bg-red-600/95";
+                f.innerHTML="<div class='text-center'><i class='fas fa-times text-5xl mb-2'></i><p class='font-black uppercase italic italic text-xs'>${mode === 'learning' ? 'ERREUR' : '-3s | -10 pts'}</p></div>";
+                setTimeout(next, 600);
             }
             document.getElementById('score-ui').innerText = score;
-            document.getElementById('fever-bar').style.width = feverPoints + "%";
         }
 
         function stopGame() {
             clearInterval(timer);
             showSection('screen-end');
-            document.getElementById('end-score').innerText = score;
-            document.getElementById('end-score-container').style.display = (mode === 'learning') ? 'none' : 'block';
-        }
-
-        function handleBackNavigation() {
-            if (document.getElementById('screen-menu').classList.contains('hidden')) window.location.href = 'index.html';
-            else showSection('screen-menu');
+            const g = total > 0 ? Math.round((correct/total)*20) : 0;
+            document.getElementById('end-grade').innerText = g+"/20";
+            document.getElementById('end-score-label').innerText = (mode === 'learning') ? "Révision Terminée" : "Score : " + score;
+            if(mode !== 'learning') {
+                const best = parseInt(localStorage.getItem('record_immo')) || 0;
+                if(score > best) localStorage.setItem('record_immo', score);
+            }
         }
     </script>
 </body>
