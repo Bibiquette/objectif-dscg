@@ -28,8 +28,8 @@
         </header>
 
         <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-indigo-500/20 shadow-2xl italic font-bold">
-            <p class="text-[10px] text-indigo-400 font-bold uppercase mb-2">UE 12 | UE 6</p>
-            <h1 class="text-4xl font-black italic uppercase mb-8 text-indigo-400 tracking-tighter">English</h1>
+            <p class="text-[10px] text-indigo-400 font-bold uppercase mb-2">UE 12 | Business English</p>
+            <h1 class="text-4xl font-black italic uppercase mb-8 text-indigo-400 tracking-tighter">Lexique Pro</h1>
             <div class="grid grid-cols-1 gap-3">
                 <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
                     <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book-open"></i></div>
@@ -51,17 +51,15 @@
         </div>
 
         <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-6 max-h-[75vh] overflow-y-auto border-2 border-amber-500/50 italic">
-            <h2 class="text-xl font-bold mb-4 text-amber-500 uppercase text-center">📚 Les 7 Thèmes DSCG</h2>
+            <h2 class="text-xl font-bold mb-4 text-amber-500 uppercase text-center">📚 Vocabulaire DSCG</h2>
             <div id="cours-content" class="space-y-3 mb-6 text-[9px]">
-                <div class="theme-card"><b>1. Finance :</b> Money supply, Venture capital, IPO, Bonds, Yield, Bull/Bear market.</div>
+                <div class="theme-card"><b>1. Finance :</b> Venture capital, IPO, Bonds, Yield, Bull/Bear market.</div>
                 <div class="theme-card"><b>2. Accounting :</b> Balance sheet, Assets, Liabilities, Equity, Depreciation.</div>
-                <div class="theme-card"><b>3. Governance/CSR :</b> Stakeholders, Sustainability, Greenwashing, Whistleblowing.</div>
-                <div class="theme-card"><b>4. IT & Tech :</b> Big data, Blockchain, Cloud computing, AI, Cybersecurity.</div>
-                <div class="theme-card"><b>5. Management/HR :</b> Leadership, Trade union, Burnout, Remote work, Onboarding.</div>
-                <div class="theme-card"><b>6. Marketing :</b> Supply chain, Market share, Outsourcing, Product life cycle.</div>
-                <div class="theme-card"><b>7. International :</b> Globalization, Free trade, Protectionism, Tariffs, MNC.</div>
+                <div class="theme-card"><b>3. Governance/CSR :</b> Stakeholders, Sustainability, Greenwashing.</div>
+                <div class="theme-card"><b>4. IT & Tech :</b> Big data, Blockchain, AI, Cybersecurity.</div>
+                <div class="theme-card"><b>5. Management/HR :</b> Leadership, Trade union, Burnout, Remote work.</div>
             </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-4 uppercase">Retour au choix</button>
+            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-4 uppercase">Retour</button>
         </div>
 
         <div id="screen-game" class="hidden relative italic font-bold">
@@ -74,10 +72,16 @@
             <div id="options-grid" class="grid grid-cols-1 gap-3 mt-6"></div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-indigo-500/30">
-            <div id="end-visual" class="text-7xl font-black text-indigo-400 mb-6 italic tracking-tighter">---</div>
-            <p id="end-score-label" class="text-xl font-bold mb-12 text-slate-400 italic">Score Final</p>
-            <button onclick="showSection('screen-menu')" class="w-full bg-indigo-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white tracking-widest italic">Menu du jeu</button>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-indigo-500/30 font-bold italic">
+            <div id="end-visual" class="text-7xl font-black text-indigo-400 mb-2 italic tracking-tighter">0</div>
+            <p id="end-score-label" class="text-sm font-bold mb-10 text-slate-400 uppercase tracking-widest">Points récoltés</p>
+            
+            <button id="btn-share" onclick="shareScore()" class="w-full bg-indigo-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white mb-4 flex items-center justify-center gap-3 hover:bg-indigo-500 transition-all">
+                <i class="fas fa-share-nodes"></i>
+                Partager mon record
+            </button>
+
+            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase text-white tracking-widest">Menu Principal</button>
         </div>
     </div>
 
@@ -85,19 +89,12 @@
         let mode, score=0, timer, timeLeft=60, combo=1, consecutive=0, isProc=false, lastIndices=[];
         
         const officialDB = [
-            // Thème 1 - Finance
             {t:"Finance", q:"Money supply", r:"Masse monétaire"}, {t:"Finance", q:"Venture capital", r:"Capital-risque"}, {t:"Finance", q:"Yield", r:"Rendement"}, {t:"Finance", q:"Bonds", r:"Obligations"}, {t:"Finance", q:"Initial Public Offering (IPO)", r:"Introduction en bourse"},
-            // Thème 2 - Accounting
             {t:"Accounting", q:"Balance sheet", r:"Bilan"}, {t:"Accounting", q:"Assets", r:"Actif"}, {t:"Accounting", q:"Liabilities", r:"Passif"}, {t:"Accounting", q:"Equity", r:"Capitaux propres"}, {t:"Accounting", q:"Depreciation", r:"Amortissement"},
-            // Thème 3 - CSR
             {t:"CSR", q:"Stakeholders", r:"Parties prenantes"}, {t:"CSR", q:"Sustainability", r:"Durabilité"}, {t:"CSR", q:"Greenwashing", r:"Éco-blanchiment"}, {t:"CSR", q:"Whistleblowing", r:"Alerte éthique"},
-            // Thème 4 - IT
             {t:"IT & Tech", q:"AI", r:"Intelligence artificielle"}, {t:"IT & Tech", q:"Big data", r:"Données massives"}, {t:"IT & Tech", q:"Blockchain", r:"Chaîne de blocs"}, {t:"IT & Tech", q:"Cloud computing", r:"Informatique en nuage"},
-            // Thème 5 - HR
             {t:"Management", q:"Leadership", r:"Direction"}, {t:"Management", q:"Trade union", r:"Syndicat"}, {t:"Management", q:"Burnout", r:"Épuisement"}, {t:"Management", q:"Remote work", r:"Télétravail"},
-            // Thème 6 - Marketing
             {t:"Marketing", q:"Supply chain", r:"Chaîne logistique"}, {t:"Marketing", q:"Market share", r:"Part de marché"}, {t:"Marketing", q:"Outsourcing", r:"Externalisation"}, {t:"Marketing", q:"Product life cycle", r:"Cycle de vie produit"},
-            // Thème 7 - International
             {t:"International", q:"Globalization", r:"Mondialisation"}, {t:"International", q:"Free trade", r:"Libre-échange"}, {t:"International", q:"Tariff", r:"Droit de douane"}, {t:"International", q:"Trade deficit", r:"Déficit commercial"}
         ];
 
@@ -107,7 +104,10 @@
             const isMenu = id === 'screen-menu';
             document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
             document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
-            if(isMenu) document.getElementById('game-info').classList.add('hidden');
+            if(isMenu) {
+                document.getElementById('game-info').classList.add('hidden');
+                if(timer) clearInterval(timer);
+            }
         }
 
         function exitToModeSelection() { if(timer) clearInterval(timer); showSection('screen-menu'); }
@@ -176,7 +176,40 @@
             }
         }
 
-        function stopGame() { if(timer) clearInterval(timer); showSection('screen-end'); document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score; localStorage.setItem('record_anglais', Math.max(score, parseInt(localStorage.getItem('record_anglais')||0))); }
+        function stopGame() { 
+            if(timer) clearInterval(timer); 
+            showSection('screen-end'); 
+            document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
+            
+            // Sauvegarde du record pour le dashboard
+            if(mode !== 'learning') {
+                const best = parseInt(localStorage.getItem('record_anglais') || 0);
+                if(score > best) localStorage.setItem('record_anglais', score);
+            }
+        }
+
+        function shareScore() {
+            const message = `🏆 BILINGUE DCG !\n\nJe viens de scorer ${score} points sur le lexique "English Pro" (ObjectifDCG).\n\nReady to challenge me? 🇬🇧🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mon record English DCG',
+                    text: message,
+                    url: 'https://bibiquette.github.io/objectif-dscg/'
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(message).then(() => {
+                    const btn = document.getElementById('btn-share');
+                    const oldHtml = btn.innerHTML;
+                    btn.innerHTML = "<i class='fas fa-check'></i> Copié !";
+                    btn.classList.replace('bg-indigo-600', 'bg-emerald-600');
+                    setTimeout(() => {
+                        btn.innerHTML = oldHtml;
+                        btn.classList.replace('bg-emerald-600', 'bg-indigo-600');
+                    }, 2000);
+                });
+            }
+        }
     </script>
 </body>
 </html>

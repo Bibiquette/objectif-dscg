@@ -2,134 +2,193 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ObjectifDCG/DSCG | Dashboard Pro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ObjectifDCG | Business Tycoon</title>
+    
+    <script>
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
+
+    <link rel="manifest" href="manifest.json">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { background: radial-gradient(circle at top right, #1e293b, #0f172a); color: #f8fafc; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .ue-card { transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); border-top: 4px solid transparent; }
-        .ue-card:hover { transform: translateY(-8px); background: rgba(30, 41, 59, 0.9); }
-        .streak-badge { background: linear-gradient(45deg, #f59e0b, #ef4444); box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-        .game-link { transition: all 0.2s; border-left: 2px solid transparent; }
-        .game-link:hover { border-left-color: currentColor; background: rgba(255,255,255,0.05); padding-left: 1rem; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --bg-gradient: radial-gradient(circle at top right, #f8fafc, #cbd5e1);
+            --text-main: #1e293b;
+            --glass-bg: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --ue9-grad: linear-gradient(135deg, #0284c7, #0ea5e9);
+            --ue6-grad: linear-gradient(135deg, #d97706, #f59e0b);
+            --ue10-grad: linear-gradient(135deg, #7c3aed, #a78bfa);
+            --ue12-grad: linear-gradient(135deg, #4f46e5, #6366f1);
+        }
+
+        .dark {
+            --bg-gradient: radial-gradient(circle at top right, #1e293b, #0f172a);
+            --text-main: #f8fafc;
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --ue9-grad: linear-gradient(135deg, #38bdf8, #7dd3fc);
+            --ue6-grad: linear-gradient(135deg, #fbbf24, #fcd34d);
+            --ue10-grad: linear-gradient(135deg, #a78bfa, #c4b5fd);
+            --ue12-grad: linear-gradient(135deg, #818cf8, #a5b4fc);
+        }
+
+        body { 
+            background: var(--bg-gradient); 
+            color: var(--text-main); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            min-height: 100vh; 
+            transition: all 0.5s ease;
+        }
+
+        .glass { 
+            background: var(--glass-bg); 
+            backdrop-filter: blur(16px); 
+            border: 1px solid var(--glass-border); 
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        }
+
+        .text-gradient-9 { background: var(--ue9-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .text-gradient-6 { background: var(--ue6-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .text-gradient-10 { background: var(--ue10-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .text-gradient-12 { background: var(--ue12-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+
+        .ue-card { transition: all 0.4s ease; border-top: 6px solid transparent; position: relative; overflow: hidden; }
+        .ue-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1); }
+        
+        .ue-9 { border-top-color: #0ea5e9; }
+        .ue-6 { border-top-color: #f59e0b; }
+        .ue-10 { border-top-color: #a78bfa; }
+        .ue-12 { border-top-color: #6366f1; }
+
+        .game-link { transition: all 0.2s; font-weight: 700; color: var(--text-main); opacity: 0.8; }
+        .game-link:hover { opacity: 1; padding-left: 0.5rem; background: rgba(0,0,0,0.02); }
+        .dark .game-link:hover { background: rgba(255,255,255,0.05); }
+
+        .streak-badge { background: linear-gradient(45deg, #f59e0b, #ef4444); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3); }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div id="auth-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden">
-        <div class="glass p-12 rounded-[3.5rem] text-center max-w-md w-full border-t-4 border-sky-500 italic">
-            <h2 class="text-3xl font-extrabold mb-2 text-white uppercase tracking-tighter italic">Objectif<span class="text-sky-400">DCG/DSCG</span></h2>
-            <input type="text" id="username-input" class="w-full bg-slate-900 border border-slate-700 rounded-2xl p-5 text-center font-bold mb-6 text-white outline-none focus:ring-2 focus:ring-sky-500" placeholder="Ton Pseudo">
-            <button onclick="saveUser()" class="w-full py-4 bg-sky-500 text-white rounded-2xl font-black uppercase tracking-widest italic transition-all">Lancer l'App</button>
+    <div id="auth-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl hidden">
+        <div class="glass p-10 rounded-[3rem] text-center max-w-md w-full italic">
+            <h2 class="text-3xl font-black mb-2 text-slate-800 dark:text-white uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span></h2>
+            <input type="text" id="username-input" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl p-5 text-center font-bold mb-6 text-slate-800 dark:text-white outline-none" placeholder="Ton Pseudo">
+            <button onclick="saveUser()" class="w-full py-5 bg-sky-600 text-white rounded-2xl font-black uppercase tracking-widest italic hover:bg-sky-500 transition-all">Lancer l'App</button>
         </div>
     </div>
 
-    <header class="max-w-6xl mx-auto flex justify-between items-center mb-16 italic font-bold">
+    <header class="max-w-6xl mx-auto flex justify-between items-start mb-12 italic font-bold">
         <div>
-            <h1 class="text-2xl md:text-4xl font-black italic uppercase tracking-tighter">Objectif<span class="text-sky-500">DCG/DSCG</span></h1>
-            <p id="user-greeting" class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1 italic">Chargement...</p>
+            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">Objectif<span class="text-sky-500">DCG</span></h1>
+            <p id="user-greeting" class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Chargement...</p>
+            <div class="flex items-center gap-2 mt-3">
+                <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
+                <p class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest"><span id="online-count">14</span> Étudiants en ligne</p>
+            </div>
         </div>
         
-        <div class="flex items-center gap-4">
-            <div id="streak-container" class="streak-badge flex items-center gap-2 px-5 py-2 rounded-2xl text-white shadow-lg">
-                <i class="fas fa-fire text-lg"></i>
-                <span id="streak-count" class="font-black text-sm">0</span>
+        <div class="flex items-center gap-3">
+            <div id="streak-container" class="streak-badge flex items-center gap-2 px-4 py-2 rounded-2xl text-white">
+                <i class="fas fa-fire"></i><span id="streak-count">0</span>
             </div>
-            <button onclick="clearUser()" class="glass p-3 rounded-xl hover:text-red-400 transition-colors shadow-lg"><i class="fa-solid fa-user-gear"></i></button>
+            <button onclick="toggleTheme()" class="glass p-3 rounded-xl hover:scale-110 transition-transform"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
+            <button onclick="clearUser()" class="glass p-3 rounded-xl hover:text-red-500"><i class="fa-solid fa-user-gear"></i></button>
         </div>
     </header>
 
     <main class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 italic font-bold mb-20">
-        
-        <div class="glass p-6 rounded-[2.5rem] ue-card border-sky-500 shadow-xl">
-            <span class="bg-sky-500/10 text-sky-400 text-[10px] font-black px-3 py-1 rounded-full uppercase mb-6 inline-block">UE 9 - DCG</span>
-            <h3 class="text-lg font-extrabold uppercase text-white mb-6 italic">Comptabilité</h3>
+        <div class="glass p-6 rounded-[2.5rem] ue-card ue-9">
+            <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 9 - DCG</span>
+            <h3 class="text-xl font-black uppercase mb-6 text-gradient-9">Comptabilité</h3>
             <div class="space-y-2">
-                <a href="jeu-flux.html" class="game-link flex justify-between items-center p-3 rounded-xl text-sky-100">
-                    <span><i class="fa-solid fa-bolt mr-2 text-xs"></i> Flux Master</span>
-                    <span id="rec-flux" class="text-[9px] opacity-50">0 PTS</span>
-                </a>
-                <a href="jeu-immo.html" class="game-link flex justify-between items-center p-3 rounded-xl text-sky-100">
-                    <span><i class="fa-solid fa-boxes-stacked mr-2 text-xs"></i> Tri d'Immo</span>
-                    <span id="rec-immo" class="text-[9px] opacity-50">0 PTS</span>
-                </a>
+                <a href="jeu-flux.html" class="game-link flex justify-between items-center p-3 rounded-xl"><span>Flux Master</span><span id="rec-flux" class="text-[8px] opacity-40">0 PTS</span></a>
+                <a href="jeu-immo.html" class="game-link flex justify-between items-center p-3 rounded-xl"><span>Tri d'Immo</span><span id="rec-immo" class="text-[8px] opacity-40">0 PTS</span></a>
             </div>
         </div>
 
-        <div class="glass p-6 rounded-[2.5rem] ue-card border-amber-500 shadow-xl">
-            <span class="bg-amber-500/10 text-amber-400 text-[10px] font-black px-3 py-1 rounded-full uppercase mb-6 inline-block">UE 6 - DCG</span>
-            <h3 class="text-lg font-extrabold uppercase text-white mb-6 italic">Finance</h3>
-            <a href="jeu-bfr-tycoon.html" class="game-link flex justify-between items-center p-3 rounded-xl text-amber-100">
-                <span><i class="fa-solid fa-vault mr-2 text-xs"></i> BFR Tycoon</span>
-                <span id="rec-bfr" class="text-[9px] opacity-50">0 PTS</span>
-            </a>
+        <div class="glass p-6 rounded-[2.5rem] ue-card ue-6">
+            <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 6 - DCG</span>
+            <h3 class="text-xl font-black uppercase mb-6 text-gradient-6">Finance</h3>
+            <a href="jeu-bfr-tycoon.html" class="game-link flex justify-between items-center p-3 rounded-xl"><span>BFR Tycoon</span><span id="rec-bfr" class="text-[8px] opacity-40">0 PTS</span></a>
         </div>
 
-        <div class="glass p-6 rounded-[2.5rem] ue-card border-purple-500 shadow-xl">
-            <span class="bg-purple-500/10 text-purple-400 text-[10px] font-black px-3 py-1 rounded-full uppercase mb-6 inline-block">UE 10 - DCG</span>
-            <h3 class="text-lg font-extrabold uppercase text-white mb-6 italic">Compta. Appro</h3>
-            <a href="jeu-prov.html" class="game-link flex justify-between items-center p-3 rounded-xl text-purple-100">
-                <span><i class="fa-solid fa-shield-halved mr-2 text-xs"></i> Provisions</span>
-                <span id="rec-prov" class="text-[9px] opacity-50">0 PTS</span>
-            </a>
+        <div class="glass p-6 rounded-[2.5rem] ue-card ue-10">
+            <span class="bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 10 - DCG</span>
+            <h3 class="text-xl font-black uppercase mb-6 text-gradient-10">Compta. Appro</h3>
+            <a href="jeu-prov.html" class="game-link flex justify-between items-center p-3 rounded-xl"><span>Provisions</span><span id="rec-prov" class="text-[8px] opacity-40">0 PTS</span></a>
         </div>
 
-        <div class="glass p-6 rounded-[2.5rem] ue-card border-indigo-500 shadow-xl">
-            <span class="bg-indigo-500/10 text-indigo-400 text-[10px] font-black px-3 py-1 rounded-full uppercase mb-6 inline-block">UE 12 - DCG</span>
-            <h3 class="text-lg font-extrabold uppercase text-white mb-6 italic">Business English</h3>
-            <a href="jeu-anglais.html" class="game-link flex justify-between items-center p-3 rounded-xl text-indigo-100">
-                <span><i class="fa-solid fa-language mr-2 text-xs"></i> Lexique Pro</span>
-                <span id="rec-anglais" class="text-[9px] opacity-50">0 PTS</span>
-            </a>
+        <div class="glass p-6 rounded-[2.5rem] ue-card ue-12">
+            <span class="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 12 - DCG</span>
+            <h3 class="text-xl font-black uppercase mb-6 text-gradient-12">English Pro</h3>
+            <a href="jeu-anglais.html" class="game-link flex justify-between items-center p-3 rounded-xl"><span>Lexique Pro</span><span id="rec-anglais" class="text-[8px] opacity-40">0 PTS</span></a>
         </div>
     </main>
 
     <section class="max-w-6xl mx-auto mt-16 italic font-bold">
-        <h3 class="text-xl font-black uppercase tracking-tighter mb-6 text-slate-500 italic">🏆 Succès Débloqués</h3>
-        <div id="badges-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div id="badge-bfr" class="glass p-6 rounded-[2rem] text-center opacity-20 grayscale transition-all duration-1000">
-                <div class="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl shadow-lg"><i class="fas fa-crown"></i></div>
-                <p class="text-[9px] uppercase font-black italic">As du BFR</p>
-                <p class="text-[7px] text-slate-500 mt-1 italic">Score > 2000</p>
+        <h3 class="text-lg font-black uppercase text-slate-400 mb-8">🏆 Succès de Promotion</h3>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div id="badge-bfr" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000">
+                <div class="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-crown"></i></div>
+                <p class="text-[8px] uppercase font-black">As du BFR</p>
             </div>
-            <div id="badge-survivor" class="glass p-6 rounded-[2rem] text-center opacity-20 grayscale transition-all duration-1000">
-                <div class="w-12 h-12 bg-rose-500/20 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl shadow-lg"><i class="fas fa-skull"></i></div>
-                <p class="text-[9px] uppercase font-black italic">Survivant</p>
-                <p class="text-[7px] text-slate-500 mt-1 italic">50 tours vécus</p>
+            <div id="badge-survivor" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000">
+                <div class="w-12 h-12 bg-rose-500/20 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-skull"></i></div>
+                <p class="text-[8px] uppercase font-black">Survivant</p>
             </div>
-            <div id="badge-english" class="glass p-6 rounded-[2rem] text-center opacity-20 grayscale transition-all duration-1000">
-                <div class="w-12 h-12 bg-indigo-500/20 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl shadow-lg"><i class="fas fa-graduation-cap"></i></div>
-                <p class="text-[9px] uppercase font-black italic">Bilingual</p>
-                <p class="text-[7px] text-slate-500 mt-1 italic">Lexique > 1500</p>
+            <div id="badge-english" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000">
+                <div class="w-12 h-12 bg-indigo-500/20 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-graduation-cap"></i></div>
+                <p class="text-[8px] uppercase font-black">Bilingual</p>
             </div>
-            <div id="badge-loyal" class="glass p-6 rounded-[2rem] text-center opacity-20 grayscale transition-all duration-1000">
-                <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl shadow-lg"><i class="fas fa-fire"></i></div>
-                <p class="text-[9px] uppercase font-black italic">Déterminé</p>
-                <p class="text-[7px] text-slate-500 mt-1 italic">Série 5 jours</p>
+            <div id="badge-loyal" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000">
+                <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-fire"></i></div>
+                <p class="text-[8px] uppercase font-black">Déterminé</p>
             </div>
         </div>
     </section>
 
-    <div class="mt-20 opacity-5 flex justify-center">
-        <img src="https://hitwebcounter.com/counter/counter.php?page=ObjectifDCG_Final&style=0007&nbdigits=5&type=ip&initCount=0" border="0">
+    <div class="mt-20 opacity-20 flex justify-center pb-10">
+        <a href="https://www.hitwebcounter.com" target="_blank"><img src="https://hitwebcounter.com/counter/counter.php?page=ObjectifDCG_PWA&style=0007&nbdigits=5&type=ip&initCount=0" border="0" /></a>
     </div>
 
     <script>
         window.onload = () => {
             const user = localStorage.getItem('dscg_username');
-            if(!user) {
-                document.getElementById('auth-modal').classList.remove('hidden');
-            } else {
+            if(!user) document.getElementById('auth-modal').classList.remove('hidden');
+            else {
                 document.getElementById('user-greeting').innerText = `Ravi de vous revoir, ${user}`;
-                updateStreak();
-                loadRecords();
-                checkBadges();
+                updateStreak(); loadRecords(); checkBadges(); updateThemeIcon();
             }
+            setInterval(updateOnlineCount, 5000);
         };
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = document.getElementById('theme-icon');
+            const isDark = document.documentElement.classList.contains('dark');
+            icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
+
+        function updateOnlineCount() {
+            const el = document.getElementById('online-count');
+            let current = parseInt(el.innerText);
+            el.innerText = Math.max(8, Math.min(45, current + (Math.floor(Math.random() * 3) - 1)));
+        }
 
         function updateStreak() {
             const today = new Date().toDateString();
@@ -137,18 +196,12 @@
             let streak = parseInt(localStorage.getItem('user_streak')) || 0;
             let jokerUsed = localStorage.getItem('joker_used') === 'true';
 
-            if (lastVisit) {
-                const diffTime = Math.abs(new Date(today) - new Date(lastVisit));
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-                if (lastVisit === today) { /* Rien */ } 
-                else if (diffDays === 1) { streak++; localStorage.setItem('joker_used', 'false'); } 
-                else if (diffDays === 2 && !jokerUsed) {
-                    localStorage.setItem('joker_used', 'true');
-                    alert("🔥 SECONDE CHANCE : Ta série est sauvée ! Ne rate pas demain.");
-                } 
+            if (lastVisit && lastVisit !== today) {
+                const diffDays = Math.ceil(Math.abs(new Date(today) - new Date(lastVisit)) / (1000 * 60 * 60 * 24));
+                if (diffDays === 1) { streak++; localStorage.setItem('joker_used', 'false'); } 
+                else if (diffDays === 2 && !jokerUsed) { localStorage.setItem('joker_used', 'true'); alert("🔥 SECONDE CHANCE : Ta série est sauvée !"); } 
                 else { streak = 1; localStorage.setItem('joker_used', 'false'); }
-            } else { streak = 1; }
+            } else if (!lastVisit) streak = 1;
 
             localStorage.setItem('last_visit', today);
             localStorage.setItem('user_streak', streak);
@@ -156,12 +209,9 @@
         }
 
         function loadRecords() {
-            const keys = { flux: 'record_flux', bfr: 'record_bfr', immo: 'record_immo', prov: 'record_prov', anglais: 'record_anglais' };
-            for(let key in keys) {
-                const val = localStorage.getItem(keys[key]) || 0;
-                const el = document.getElementById(`rec-${key}`);
-                if(el) el.innerText = val + " PTS";
-            }
+            ['flux', 'bfr', 'immo', 'prov', 'anglais'].forEach(key => {
+                document.getElementById(`rec-${key}`).innerText = (localStorage.getItem('record_' + key) || 0) + " PTS";
+            });
         }
 
         function checkBadges() {
@@ -173,10 +223,7 @@
 
         function unlockBadge(id) {
             const el = document.getElementById(id);
-            if(el) {
-                el.classList.remove('opacity-20', 'grayscale');
-                el.classList.add('opacity-100', 'scale-105', 'border-t-2', 'border-white/20');
-            }
+            if(el) { el.classList.remove('opacity-10', 'grayscale'); el.classList.add('opacity-100', 'scale-105'); }
         }
 
         function saveUser() {
@@ -184,7 +231,7 @@
             if(name.length > 1) { localStorage.setItem('dscg_username', name); location.reload(); }
         }
 
-        function clearUser() { if(confirm("Réinitialiser votre profil ?")) { localStorage.clear(); location.reload(); } }
+        function clearUser() { if(confirm("Réinitialiser profil ?")) { localStorage.clear(); location.reload(); } }
     </script>
 </body>
 </html>

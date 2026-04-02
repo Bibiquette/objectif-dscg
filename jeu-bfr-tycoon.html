@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BFR Tycoon | ObjectifDCG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        body { background: #0f172a; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; touch-action: manipulation; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        #cash-fill { height: 100%; width: 60%; background: linear-gradient(90deg, #f43f5e, #fbbf24, #10b981); transition: width 0.5s ease-in-out; }
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
+        @keyframes pulse-red { 0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); } 50% { box-shadow: 0 0 20px 5px rgba(244, 63, 94, 0.3); } }
+        .danger-zone { animation: pulse-red 1.5s infinite; border: 1px solid #f43f5e !important; }
+        .rule-card { background: rgba(255, 255, 255, 0.03); border-left: 4px solid #38bdf8; padding: 0.75rem; border-radius: 0.75rem; margin-bottom: 0.75rem; font-size: 11px; }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center">
+    <div class="w-full max-w-lg">
+        <header class="flex justify-between items-center mb-6 h-20 w-full italic font-bold">
+            <button id="btn-to-index" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 shadow-lg"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-to-menu" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-emerald-400 border-2 border-emerald-500/20 shadow-lg"><i class="fas fa-chevron-left text-xl"></i></button>
+            
+            <div id="game-stats" class="hidden flex-1 ml-4 glass px-6 py-4 rounded-3xl border-t-2 border-emerald-500/30">
+                <div class="flex justify-between items-center mb-2 text-[10px]">
+                    <div><p class="uppercase font-black text-emerald-400">Cash</p><p id="cash-text" class="text-sm font-black italic">60k €</p></div>
+                    <div class="text-right"><p class="uppercase font-black text-slate-500">Niveau</p><p id="level-ui" class="text-sm font-black italic text-amber-500">1</p></div>
+                </div>
+                <div class="h-2 bg-white/5 rounded-full overflow-hidden"><div id="cash-fill"></div></div>
+            </div>
+        </header>
+
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center italic font-bold">
+            <h1 class="text-4xl font-black uppercase mb-4 tracking-tighter italic">BFR <span class="text-emerald-500">Tycoon</span></h1>
+            <div class="space-y-3">
+                <button onclick="startGame()" class="w-full bg-emerald-600 p-6 rounded-2xl shadow-lg italic uppercase font-black">Lancer la simulation</button>
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="showSection('screen-rules')" class="glass p-4 rounded-2xl text-[10px] uppercase tracking-widest text-sky-400 border border-sky-500/30">📜 Règles</button>
+                    <button onclick="showSection('screen-cours')" class="glass p-4 rounded-2xl text-[10px] uppercase tracking-widest text-amber-400 border border-amber-500/30">📚 Cours</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="screen-rules" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto italic font-bold">
+            <h2 class="text-xl font-black text-sky-400 mb-6 uppercase text-center tracking-tighter italic">📜 Règles du Jeu</h2>
+            <div class="space-y-3">
+                <div class="rule-card"><b class="text-sky-300">Objectif :</b> Survivez le plus longtemps possible. Si votre cash atteint 0, c'est la faillite.</div>
+                <div class="rule-card" style="border-left-color: #f43f5e;"><b class="text-rose-400">Charges Fixes :</b> Vous perdez automatiquement <b class="text-white">1k€ par tour</b> pour payer vos frais courants.</div>
+                <div class="rule-card" style="border-left-color: #fbbf24;"><b class="text-amber-400">Paris Risqués :</b> Gain énorme mais risque de perte totale de la mise.</div>
+                <div class="rule-card" style="border-left-color: #10b981;"><b class="text-emerald-400">Impact BFR :</b> Accepter un contrat consomme du cash immédiatement.</div>
+            </div>
+            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black mt-6 uppercase italic">Retour</button>
+        </div>
+
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto italic font-bold">
+            <h2 class="text-xl font-black text-amber-500 mb-6 uppercase text-center tracking-tighter italic">📚 Fiche de Révision</h2>
+            <div class="space-y-4 text-[11px] leading-relaxed">
+                <p>• <b class="text-amber-400">BFR</b> = Stocks + Créances - Dettes Fournisseurs.</p>
+                <p>• <b class="text-emerald-400">Trésorerie Nette</b> = FRNG - BFR.</p>
+                <p>• Pour optimiser le cash : <b class="text-rose-400">Encaissez tôt</b> et <b class="text-rose-400">payez tard</b>.</p>
+            </div>
+            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black mt-8 uppercase italic">Retour</button>
+        </div>
+
+        <div id="screen-game" class="hidden relative italic font-bold">
+            <div id="event-box" class="glass rounded-[3rem] p-8 min-h-[380px] flex flex-col justify-center items-center text-center relative border border-white/5">
+                <div id="feedback" class="hidden feedback-overlay italic"></div>
+                <div id="current-event">
+                    <div id="event-icon" class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6"></div>
+                    <p id="event-type" class="text-[9px] uppercase font-black text-slate-500 mb-2 tracking-[0.3em]"></p>
+                    <h2 id="event-title" class="text-2xl font-black uppercase mb-4 tracking-tighter italic"></h2>
+                    <p id="event-desc" class="text-xs text-slate-400 font-medium italic px-4"></p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-6 mt-8 italic">
+                <button onclick="decide(false)" class="bg-slate-800 py-6 rounded-2xl font-black uppercase text-rose-400 shadow-xl italic">Refuser</button>
+                <button onclick="decide(true)" class="bg-emerald-600 py-6 rounded-2xl font-black uppercase text-white shadow-xl italic">Accepter</button>
+            </div>
+        </div>
+
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center italic font-bold">
+            <h2 class="text-4xl font-black uppercase mb-4 text-rose-500 tracking-tighter">Faillite</h2>
+            <p id="death-reason" class="text-slate-400 text-sm mb-8 italic font-medium"></p>
+            
+            <div class="glass p-6 rounded-3xl mb-8">
+                <p class="text-[10px] text-slate-500 uppercase font-black italic">Score Final</p>
+                <p id="final-score" class="text-5xl font-black text-emerald-400">0</p>
+            </div>
+
+            <button id="btn-share" onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase italic shadow-xl mb-4 text-white flex items-center justify-center gap-3 hover:bg-sky-500 transition-all">
+                <i class="fas fa-share-nodes text-xl"></i>
+                Partager mon record
+            </button>
+
+            <button onclick="location.reload()" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic">Réessayer</button>
+        </div>
+    </div>
+
+    <script>
+        let cash = 60, score = 0, turn = 0, level = 1, isProc = false;
+        const events = [
+            { t: "CLIENT", title: "Contrat Export", desc: "Paiement à 120j. Impact Cash immédiat -25k€.", impact: -25, pts: 500, icon: "fa-earth-americas", color: "text-sky-400" },
+            { t: "FOURNISSEUR", title: "Paiement Cash", desc: "Remise immédiate de 5%. Sortie de Cash -15k€.", impact: -15, pts: 200, icon: "fa-truck-fast", color: "text-purple-400" },
+            { t: "PARI", title: "R&D Risquée", desc: "Miser 15k€ pour tenter de gagner 45k€ de subvention.", impact: 45, penalty: -15, pts: 1000, icon: "fa-flask-vial", color: "text-yellow-500" }
+        ];
+
+        function showSection(id) {
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours', 'screen-rules'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            const isHome = id === 'screen-menu';
+            document.getElementById('btn-to-index').classList.toggle('hidden', !isHome);
+            document.getElementById('btn-to-menu').classList.toggle('hidden', isHome);
+            if (id === 'screen-game') document.getElementById('game-stats').classList.remove('hidden');
+            else if (isHome) document.getElementById('game-stats').classList.add('hidden');
+        }
+
+        function startGame() { cash = 60; score = 0; turn = 0; level = 1; showSection('screen-game'); updateUI(); nextEvent(); }
+
+        function updateUI() {
+            document.getElementById('cash-text').innerText = cash + "k €";
+            document.getElementById('level-ui').innerText = level;
+            document.getElementById('cash-fill').style.width = Math.max(0, Math.min(100, cash)) + "%";
+            if(cash <= 25) document.getElementById('event-box').classList.add('danger-zone');
+            else document.getElementById('event-box').classList.remove('danger-zone');
+        }
+
+        function nextEvent() {
+            isProc = false; turn++; document.getElementById('feedback').classList.add('hidden');
+            if(turn % 5 === 0) level++;
+            cash -= 1; updateUI();
+            if(cash <= 0) { stopGame("Vos charges fixes ont vidé vos caisses."); return; }
+            const ev = (Math.random() > 0.75) ? events[2] : events[Math.floor(Math.random()*2)];
+            window.currentEv = ev; renderEvent(ev);
+        }
+
+        function renderEvent(ev) {
+            document.getElementById('event-type').innerText = ev.t;
+            document.getElementById('event-title').innerText = ev.title;
+            document.getElementById('event-desc').innerText = ev.desc;
+            document.getElementById('event-icon').innerHTML = `<i class="fas ${ev.icon}"></i>`;
+            document.getElementById('event-icon').className = `w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6 ${ev.color}`;
+        }
+
+        function decide(accept) {
+            if(isProc) return; isProc = true;
+            const ev = window.currentEv;
+            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            if(accept) {
+                if(ev.t === "PARI") {
+                    if(Math.random() > 0.5) { cash += ev.impact; score += ev.pts; f.innerHTML = "<div class='text-emerald-400'><i class='fas fa-gem text-6xl'></i><p class='font-black mt-2 italic'>JACKPOT !</p></div>"; }
+                    else { cash += ev.penalty; f.innerHTML = "<div class='text-rose-500'><i class='fas fa-fire text-6xl'></i><p class='font-black mt-2 italic'>ÉCHEC</p></div>"; }
+                } else { cash += ev.impact; score += ev.pts; f.innerHTML = `<i class="fas ${ev.impact < 0 ? 'fa-arrow-trend-down' : 'fa-arrow-trend-up'} text-7xl ${ev.impact < 0 ? 'text-orange-400' : 'text-emerald-400'}"></i>`; }
+            } else { f.innerHTML = "<i class='fas fa-ban text-7xl text-slate-500'></i>"; }
+            updateUI();
+            if(cash <= 0) setTimeout(() => stopGame("Trésorerie épuisée."), 800);
+            else setTimeout(nextEvent, 1200);
+        }
+
+        function stopGame(reason) { 
+            // Sauvegarde du record pour l'index
+            const bestScore = localStorage.getItem('record_bfr') || 0;
+            if (score > bestScore) localStorage.setItem('record_bfr', score);
+            
+            // Sauvegarde du nombre de tours (pour badge survivant)
+            const maxTurns = localStorage.getItem('stat_max_turns') || 0;
+            if (turn > maxTurns) localStorage.setItem('stat_max_turns', turn);
+
+            document.getElementById('screen-game').classList.add('hidden'); 
+            document.getElementById('screen-end').classList.remove('hidden'); 
+            document.getElementById('death-reason').innerText = reason; 
+            document.getElementById('final-score').innerText = score; 
+        }
+
+        function shareScore() {
+            const message = `🏆 RECORD BATTU !\n\nJe viens de marquer ${score} points en tenant ${turn} tours sur BFR Tycoon (ObjectifDCG).\n\nQui peut faire mieux ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mon record ObjectifDCG',
+                    text: message,
+                    url: 'https://bibiquette.github.io/objectif-dscg/'
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(message).then(() => {
+                    const btn = document.getElementById('btn-share');
+                    const oldHtml = btn.innerHTML;
+                    btn.innerHTML = "<i class='fas fa-check'></i> Copié !";
+                    btn.classList.replace('bg-sky-600', 'bg-emerald-600');
+                    setTimeout(() => {
+                        btn.innerHTML = oldHtml;
+                        btn.classList.replace('bg-emerald-600', 'bg-sky-600');
+                    }, 2000);
+                });
+            }
+        }
+    </script>
+</body>
+</html>

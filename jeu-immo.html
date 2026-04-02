@@ -2,141 +2,149 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tri d'Immo | ObjectifDCG/DSCG</title>
+    <title>Tri d'Immo | ObjectifDCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
         body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-neon-purple { border: 2px solid #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); transition: 0.2s; }
-        .btn-neon-purple:active { background: #a855f7; transform: scale(0.95); }
+        .card-immo { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
+        .btn-choice { border: 2px solid rgba(255,255,255,0.1); transition: 0.2s; }
+        .btn-choice:active { transform: scale(0.95); }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center justify-center">
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full">
-            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-purple-500/30"><i class="fas fa-arrow-left"></i></button>
-            <button id="btn-mode-back" onclick="exitToModeSelection()" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-purple-400 border-2 border-purple-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
-            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-purple-500/50">
-                <div class="text-left"><p class="text-[8px] uppercase font-black text-purple-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
-                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full italic font-bold">
+            <button onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-sky-500/30"><i class="fas fa-arrow-left"></i></button>
+            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-sky-500/50">
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-sky-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+                <div class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Temps</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-purple-500/20 shadow-2xl italic font-bold">
-            <p class="text-[10px] text-purple-400 font-bold uppercase mb-2">UE 10 | UE 4</p>
-            <h1 class="text-4xl font-black italic uppercase mb-8 text-purple-500 tracking-tighter">Tri d'Immo</h1>
-            <div class="grid grid-cols-1 gap-4 italic font-bold">
-                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
-                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
-                    <div><p class="text-xs uppercase text-amber-400">Cours</p><p class="text-[9px] text-slate-500">Classification</p></div>
-                </button>
-                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
-                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
-                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN</p></div>
-                </button>
-                <button onclick="startGame('competition')" class="btn-neon-purple p-5 rounded-2xl flex items-center gap-4 text-left">
-                    <div class="w-10 h-10 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
-                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Score & Chrono</p></div>
-                </button>
-                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
-                    <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
-                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute</p></div>
-                </button>
-            </div>
-        </div>
-
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic font-bold">
-            <h2 class="text-2xl font-black text-amber-500 mb-6 uppercase text-center italic">📚 Catégories PCG</h2>
-            <div class="space-y-4 text-[10px] italic">
-                <p><b>Incorporelle :</b> Logiciels, Fonds commericaux, Brevets.</p>
-                <p><b>Corporelle :</b> Terrains, Matériel industriel, Camions, PC.</p>
-                <p><b>Financière :</b> Titres filiales, Prêts, Cautionnements.</p>
-                <p><b>Charge :</b> Biens consommables ou valeur < 500€ HT.</p>
-            </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-8 uppercase italic shadow-lg">Retour au choix</button>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-sky-500/20 shadow-2xl italic font-bold">
+            <p class="text-[10px] text-sky-400 font-bold uppercase mb-2">UE 9 | Comptabilité</p>
+            <h1 class="text-4xl font-black italic uppercase mb-8 text-sky-500 tracking-tighter">Tri d'Immo</h1>
+            <p class="text-slate-400 text-xs mb-8">Classez l'élément dans la bonne catégorie d'immobilisation.</p>
+            <button onclick="startGame()" class="w-full bg-sky-600 p-6 rounded-2xl shadow-lg italic uppercase font-black text-white">Démarrer le tri</button>
         </div>
 
         <div id="screen-game" class="hidden relative italic font-bold">
-            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[300px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner">
                 <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
-                <h2 id="op-name" class="text-2xl font-bold uppercase px-4 tracking-tighter">---</h2>
+                <p class="text-[9px] uppercase font-black text-sky-400 absolute top-8 tracking-[0.3em]">Élément à classer</p>
+                <h2 id="item-name" class="text-2xl font-black uppercase px-4 tracking-tighter">---</h2>
             </div>
-            <div class="grid grid-cols-2 gap-4 mt-8 italic font-bold">
-                <button onclick="check('Incorporelle')" class="btn-neon-purple py-6 rounded-2xl text-[10px] font-black uppercase">Incorporelle</button>
-                <button onclick="check('Corporelle')" class="btn-neon-purple py-6 rounded-2xl text-[10px] font-black uppercase">Corporelle</button>
-                <button onclick="check('Financière')" class="btn-neon-purple py-6 rounded-2xl text-[10px] font-black uppercase">Financière</button>
-                <button onclick="check('Charge')" class="btn-neon-purple py-6 rounded-2xl text-[10px] font-black uppercase text-rose-400">Charge</button>
+            
+            <div class="grid grid-cols-1 gap-3 mt-8 italic">
+                <button onclick="check('INC')" class="btn-choice glass p-5 rounded-2xl text-xs uppercase hover:bg-sky-500/20">Incorporelles (20)</button>
+                <button onclick="check('CORP')" class="btn-choice glass p-5 rounded-2xl text-xs uppercase hover:bg-emerald-500/20">Corporelles (21)</button>
+                <button onclick="check('FIN')" class="btn-choice glass p-5 rounded-2xl text-xs uppercase hover:bg-amber-500/20">Financières (26/27)</button>
             </div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-purple-500/30">
-            <div id="end-visual" class="text-7xl font-black text-purple-400 mb-6 italic tracking-tighter italic">---</div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-purple-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white italic">Menu du jeu</button>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-sky-500/30 italic font-bold">
+            <div id="end-visual" class="text-7xl font-black text-sky-400 mb-2 tracking-tighter">0</div>
+            <p class="text-sm font-bold mb-10 text-slate-400 uppercase tracking-widest">Points de tri</p>
+            
+            <button id="btn-share" onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white mb-4 flex items-center justify-center gap-3 hover:bg-sky-500 transition-all">
+                <i class="fas fa-share-nodes text-xl"></i>
+                Partager mon record
+            </button>
+
+            <button onclick="location.reload()" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase text-white italic">Rejouer</button>
         </div>
     </div>
 
     <script>
-        let mode, score=0, timer, timeLeft=60, isProc=false, lastIdx=-1;
+        let score = 0, timeLeft = 60, timer, isProc = false;
+        
         const db = [
-            {q:"Camionnette",r:"Corporelle",w:"Cl 21"},
-            {q:"Logiciel de paie",r:"Incorporelle",w:"Cl 20"},
-            {q:"Dépôt de garantie",r:"Financière",w:"Cl 27"},
-            {q:"Papier (40€)",r:"Charge",w:"Frais < 500€"}
+            {q:"Fonds commercial", r:"INC"}, {q:"Logiciels", r:"INC"}, {q:"Frais de R&D", r:"INC"}, {q:"Brevets", r:"INC"},
+            {q:"Terrains", r:"CORP"}, {q:"Matériel industriel", r:"CORP"}, {q:"Mobilier", r:"CORP"}, {q:"Ordinateurs", r:"CORP"}, {q:"Installations techniques", r:"CORP"},
+            {q:"Titres de participation", r:"FIN"}, {q:"Prêts au personnel", r:"FIN"}, {q:"Dépôts et cautionnements", r:"FIN"}, {q:"Actions (long terme)", r:"FIN"}
         ];
 
         function showSection(id) {
-            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            ['screen-menu', 'screen-game', 'screen-end'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-            const isMenu = id === 'screen-menu';
-            document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
-            document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
-            if(isMenu) document.getElementById('game-info').classList.add('hidden');
         }
 
-        function exitToModeSelection() { if(timer) clearInterval(timer); showSection('screen-menu'); }
-
-        function startGame(m) {
-            mode = m; score = 0; timeLeft = 60;
+        function startGame() {
+            score = 0; timeLeft = 60; isProc = false;
             showSection('screen-game');
-            if(mode === 'learning') return next();
             document.getElementById('game-info').classList.remove('hidden');
             document.getElementById('score-ui').innerText = "0";
-            if(mode === 'survival') { document.getElementById('timer-container').classList.add('hidden'); }
-            else {
-                document.getElementById('timer-container').classList.remove('hidden');
-                document.getElementById('timer-ui').innerText = "60s";
-                timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
-            }
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-ui').innerText = timeLeft + "s";
+                if(timeLeft <= 0) stopGame();
+            }, 1000);
             next();
         }
 
         function next() {
-            isProc = false; document.getElementById('feedback').classList.add('hidden');
-            let idx; do { idx = Math.floor(Math.random()*db.length); } while (idx === lastIdx);
-            lastIdx = idx;
-            document.getElementById('op-name').innerText = db[idx].q; window.curr = db[idx];
+            isProc = false;
+            document.getElementById('feedback').classList.add('hidden');
+            const item = db[Math.floor(Math.random() * db.length)];
+            window.curr = item;
+            document.getElementById('item-name').innerText = item.q;
         }
 
-        function check(v) {
+        function check(val) {
             if(isProc) return; isProc = true;
-            const isOk = (v === window.curr.r);
-            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            const isOk = (val === window.curr.r);
+            const f = document.getElementById('feedback');
+            f.classList.remove('hidden');
+
             if(isOk) {
-                if(mode !== 'learning') { score += 50; document.getElementById('score-ui').innerText = score; }
-                f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
-                setTimeout(next, 250);
+                score += 100;
+                document.getElementById('score-ui').innerText = score;
+                f.className = "feedback-overlay bg-emerald-500/90 text-white text-6xl";
+                f.innerHTML = "<i class='fas fa-check'></i>";
+                setTimeout(next, 300);
             } else {
-                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95"; f.innerHTML="<i class='fas fa-skull text-6xl'></i>"; setTimeout(stopGame, 1000); return; }
-                if(mode === 'competition') { score = Math.max(0, score-10); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
-                f.className="feedback-overlay bg-red-600/95 p-6 text-center text-white"; f.innerHTML=`<p class='text-xs font-bold uppercase'>${window.curr.w}</p>`;
-                setTimeout(next, 1000);
+                f.className = "feedback-overlay bg-rose-600/95 text-white text-6xl";
+                f.innerHTML = "<i class='fas fa-times'></i>";
+                setTimeout(next, 800);
             }
         }
 
-        function stopGame() { if(timer) clearInterval(timer); showSection('screen-end'); document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score; localStorage.setItem('record_immo', Math.max(score, parseInt(localStorage.getItem('record_immo')||0))); }
+        function stopGame() {
+            clearInterval(timer);
+            showSection('screen-end');
+            document.getElementById('end-visual').innerText = score;
+            
+            // Sauvegarde du record
+            const best = parseInt(localStorage.getItem('record_immo') || 0);
+            if(score > best) localStorage.setItem('record_immo', score);
+        }
+
+        function shareScore() {
+            const message = `🏆 EXPERT COMPTABLE !\n\nJe viens de trier ${score} points d'immobilisations sans erreur sur ObjectifDCG.\n\nQui connaît mieux son plan comptable ? 📂🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mon record Tri d\'Immo',
+                    text: message,
+                    url: 'https://bibiquette.github.io/objectif-dscg/'
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(message).then(() => {
+                    const btn = document.getElementById('btn-share');
+                    const oldHtml = btn.innerHTML;
+                    btn.innerHTML = "<i class='fas fa-check'></i> Copié !";
+                    btn.classList.replace('bg-sky-600', 'bg-emerald-600');
+                    setTimeout(() => {
+                        btn.innerHTML = oldHtml;
+                        btn.classList.replace('bg-emerald-600', 'bg-sky-600');
+                    }, 2000);
+                });
+            }
+        }
     </script>
 </body>
 </html>
