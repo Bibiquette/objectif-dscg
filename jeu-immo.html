@@ -18,12 +18,12 @@
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .btn-neon-sky { border: 2px solid #0ea5e9; box-shadow: 0 0 15px rgba(14, 165, 233, 0.3); transition: 0.2s; }
         .btn-neon-sky:active { background: #0ea5e9; transform: scale(0.95); }
-        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; flex-direction: column; }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center justify-center italic font-bold">
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full">
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full text-left">
             <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-sky-500/30"><i class="fas fa-arrow-left"></i></button>
             <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-sky-400 border-2 border-sky-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
             <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-sky-500/50">
@@ -35,27 +35,27 @@
         <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-sky-500/20 shadow-2xl">
             <p class="text-[10px] text-sky-400 font-bold uppercase mb-2">UE 9 | Comptabilité</p>
             <h1 class="text-4xl font-black uppercase mb-8 text-sky-400 tracking-tighter">Tri d'Immo</h1>
-            <div class="grid grid-cols-1 gap-3">
-                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
-                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
-                    <div><p class="text-xs uppercase text-amber-400">Voir le Cours</p><p class="text-[9px] text-slate-500">Révisions PCG Classe 2</p></div>
+            <div class="grid grid-cols-1 gap-3 text-left">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-amber-500/30 text-amber-400">
+                    <div class="w-10 h-10 bg-amber-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
+                    <div><p class="text-xs uppercase">Voir le Cours</p><p class="text-[9px] text-slate-500 italic">Révisions PCG Classe 2</p></div>
                 </button>
-                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-emerald-500/30 text-emerald-400">
                     <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
-                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN + Conseils</p></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500 italic">ZEN + Pourquoi ?</p></div>
                 </button>
-                <button onclick="startGame('competition')" class="btn-neon-sky p-5 rounded-2xl flex items-center gap-4 text-left">
+                <button onclick="startGame('competition')" class="btn-neon-sky p-5 rounded-2xl flex items-center gap-4">
                     <div class="w-10 h-10 bg-sky-500/10 text-sky-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
-                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Score & Chrono</p></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500 italic">Score & Chrono</p></div>
                 </button>
-                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-rose-500/30 text-rose-400">
                     <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
-                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute + Conseils</p></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500 italic">0 Faute + Pourquoi ?</p></div>
                 </button>
             </div>
         </div>
 
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic text-sm">
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic text-sm text-left">
             <h2 class="text-xl font-bold mb-6 text-amber-500 uppercase text-center">📚 PCG : Classe 2</h2>
             <div class="space-y-4">
                 <div class="p-4 bg-white/5 rounded-xl border-l-4 border-sky-400">
@@ -66,30 +66,25 @@
                     <h3 class="text-emerald-400 mb-1 uppercase text-xs">21. Corporelles</h3>
                     <p class="text-[10px] text-slate-300">Actifs physiques tangibles. Ex: Terrains, Matériel, Ordinateurs, Mobilier.</p>
                 </div>
-                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-amber-400">
-                    <h3 class="text-amber-400 mb-1 uppercase text-xs">26/27. Financières</h3>
-                    <p class="text-[10px] text-slate-300">Titres de participation, Prêts, Dépôts et cautionnements.</p>
-                </div>
             </div>
             <button onclick="showSection('screen-menu')" class="w-full mt-8 bg-amber-500 text-black py-4 rounded-xl font-bold uppercase italic">J'ai compris</button>
         </div>
 
-        <div id="screen-game" class="hidden relative">
-            <div class="glass rounded-[3.5rem] p-10 min-h-[300px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner">
+        <div id="screen-game" class="hidden relative text-center">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[300px] flex flex-col justify-center items-center relative border border-white/5 shadow-inner">
                 <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
-                <p class="text-[9px] uppercase font-black text-sky-400 absolute top-8 tracking-widest">Élément à classer</p>
+                <p class="text-[9px] uppercase font-black text-sky-400 absolute top-8 tracking-widest italic">Élément à classer</p>
                 <h2 id="item-name" class="text-2xl font-black uppercase mb-4 tracking-tighter italic">---</h2>
             </div>
             <div id="options-grid" class="grid grid-cols-1 gap-3 mt-6">
-                <button onclick="check('INC')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-sky-500/20 italic text-xs">Incorporelles</button>
-                <button onclick="check('CORP')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-emerald-500/20 italic text-xs">Corporelles</button>
-                <button onclick="check('FIN')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-amber-500/20 italic text-xs">Financières</button>
+                <button onclick="check('INC')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-sky-500/20 italic text-xs font-bold">Incorporelles (20)</button>
+                <button onclick="check('CORP')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-emerald-500/20 italic text-xs font-bold">Corporelles (21)</button>
+                <button onclick="check('FIN')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-amber-500/20 italic text-xs font-bold">Financières (27)</button>
             </div>
         </div>
 
         <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-sky-500/30">
             <div id="end-visual" class="text-7xl font-black text-sky-400 mb-4 tracking-tighter">0</div>
-            <p class="text-sm font-bold mb-8 text-slate-400 uppercase tracking-widest">Points récoltés</p>
             <button onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase text-white mb-4 flex items-center justify-center gap-3 shadow-xl"><i class="fas fa-share-nodes"></i> Partager</button>
             <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic text-white tracking-widest">Menu</button>
         </div>
@@ -98,16 +93,15 @@
     <script>
         let mode, score=0, timer, timeLeft=60, isProc=false;
         const db = [
-            {q:"Fonds commercial", r:"INC", w:"Incorporel : Pas de substance physique."},
-            {q:"Logiciels", r:"INC", w:"Incorporel : Droit d'usage immatériel."},
-            {q:"Brevets", r:"INC", w:"Incorporel : Titre de propriété industrielle."},
-            {q:"Terrains", r:"CORP", w:"Corporel : Bien physique tangible."},
-            {q:"Matériel industriel", r:"CORP", w:"Corporel : Outil de production physique."},
-            {q:"Mobilier", r:"CORP", w:"Corporel : Meubles et équipements."},
-            {q:"Ordinateurs", r:"CORP", w:"Corporel : Matériel informatique physique."},
-            {q:"Titres de participation", r:"FIN", w:"Financier : Titres conservés durablement."},
-            {q:"Prêts au personnel", r:"FIN", w:"Financier : Créance à long terme."},
-            {q:"Dépôts et cautionnements", r:"FIN", w:"Financier : Somme immobilisée contractuellement."}
+            {q:"Fonds commercial", r:"INC", w:"Incorporel (20)", detail:"Le fonds commercial est un actif immatériel. Il ne peut être touché physiquement, contrairement à un bâtiment (PCG 20)."},
+            {q:"Logiciels", r:"INC", w:"Incorporel (20)", detail:"Compte 205. Il s'agit d'un droit d'usage immatériel destiné à servir l'activité durablement."},
+            {q:"Brevets", r:"INC", w:"Incorporel (20)", detail:"Titre de propriété industrielle immatériel garantissant un monopole d'exploitation."},
+            {q:"Terrains", r:"CORP", w:"Corporel (21)", detail:"Compte 211. Actif physique tangible qui, en général, ne s'amortit pas (sauf gisements)."},
+            {q:"Matériel industriel", r:"CORP", w:"Corporel (21)", detail:"Compte 2154. Biens physiques utilisés pour la production ou la transformation."},
+            {q:"Ordinateurs", r:"CORP", w:"Corporel (21)", detail:"Compte 2183. Matériel informatique tangible utilisé pour le fonctionnement interne."},
+            {q:"Titres de participation", r:"FIN", w:"Financier (26)", detail:"Titres dont la possession durable est utile à l'activité de l'entreprise (influence)."},
+            {q:"Prêts au personnel", r:"FIN", w:"Financier (27)", detail:"Créances financières accordées par l'entreprise avec une échéance à long terme."},
+            {q:"Dépôts et cautionnements", r:"FIN", w:"Financier (275)", detail:"Sommes versées à titre de garantie, indisponibles jusqu'à une échéance contractuelle."}
         ];
 
         function showSection(id) {
@@ -125,12 +119,11 @@
             if(mode === 'learning') { document.getElementById('game-info').classList.add('hidden'); }
             else {
                 document.getElementById('game-info').classList.remove('hidden');
-                if(mode === 'survival') { document.getElementById('timer-container').classList.add('hidden'); }
-                else {
+                if(mode === 'competition') {
                     document.getElementById('timer-container').classList.remove('hidden');
                     document.getElementById('timer-ui').innerText = "60s";
                     timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
-                }
+                } else { document.getElementById('timer-container').classList.add('hidden'); }
             }
             next();
         }
@@ -146,18 +139,20 @@
             if(isProc) return; isProc = true;
             const isOk = (v === window.curr.r);
             const f = document.getElementById('feedback'); f.classList.remove('hidden');
-            if ("vibrate" in navigator) { isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]); }
+            if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
+            
             if(isOk) {
                 if(mode !== 'learning') { score += 100; document.getElementById('score-ui').innerText = score; }
                 f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 300);
             } else {
-                let advice = mode === 'competition' ? "" : `<p class="text-xs mt-4 uppercase tracking-widest px-4 font-bold">${window.curr.w}</p>`;
-                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6"; f.innerHTML=`<i class='fas fa-skull text-6xl'></i>${advice}`; setTimeout(stopGame, 2000); return; }
+                f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6";
+                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i><p class='text-xs uppercase font-bold italic'>${window.curr.w}</p>
+                <button onclick="alert('${window.curr.detail.replace(/'/g, "\\'")}')" class="mt-4 px-4 py-2 bg-white/20 rounded-xl text-[10px] uppercase tracking-widest italic font-bold">Pourquoi ? <i class="fas fa-question-circle ml-2"></i></button>`;
+                
+                if(mode === 'survival') { setTimeout(stopGame, 3500); return; }
                 if(mode === 'competition') { score = Math.max(0, score-50); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
-                f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6 text-center italic font-bold";
-                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i>${advice}`;
-                setTimeout(next, mode === 'competition' ? 800 : 2000);
+                setTimeout(next, 4500);
             }
         }
 
@@ -168,14 +163,12 @@
             if(mode !== 'learning') {
                 const best = parseInt(localStorage.getItem('record_immo') || 0);
                 if(score > best) localStorage.setItem('record_immo', score);
-                
-                // Google Analytics: Track Score
                 gtag('event', 'game_finish', { 'game_name': 'Tri d Immo', 'score': score, 'mode': mode });
             }
         }
 
         function shareScore() {
-            const message = `🏆 Nouveau Record sur ObjectifDCG/DSCG !\n\nJe viens de marquer ${score} points. Prêt à relever le défi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+            const message = `🏆 Nouveau Record sur ObjectifDCG/DSCG !\\n\\nJe viens de marquer ${score} points sur Tri d'Immo. 🔥\\n\\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
             if (navigator.share) { navigator.share({ title: 'Mon Record DCG/DSCG', text: message, url: 'https://bibiquette.github.io/objectif-dscg/' }).catch(() => {}); }
             else { navigator.clipboard.writeText(message).then(() => { alert("Record copié !"); }); }
         }
