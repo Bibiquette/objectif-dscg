@@ -1,183 +1,140 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Provisions Master | Cyber-Edition</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Provisions | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=JetBrains+Mono:wght@700&display=swap');
-        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; touch-action: manipulation; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-neon-emerald { border: 2px solid #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.3); transition: all 0.2s; }
-        .btn-neon-emerald:active { background: #10b981; box-shadow: 0 0 30px #10b981; transform: scale(0.95); }
-        .timer-low { color: #f43f5e !important; text-shadow: 0 0 10px #f43f5e; animation: blink 0.5s infinite; }
-        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .btn-neon-emerald { border: 2px solid #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.4); transition: 0.2s; }
+        .btn-neon-emerald:active { background: #10b981; transform: scale(0.95); }
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center justify-center">
-
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-8 px-2 w-full h-16">
-            <button onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-emerald-500/30"><i class="fas fa-chevron-left"></i></button>
-            <div id="game-info" class="hidden flex items-center gap-8 glass px-6 py-2 rounded-2xl border-2 border-emerald-500/50">
-                <div class="text-center">
-                    <p class="text-[8px] uppercase font-black text-emerald-500 tracking-widest">Points</p>
-                    <p id="score-ui" class="text-xl font-extrabold text-white">0</p>
-                </div>
-                <div class="text-center font-mono">
-                    <p class="text-[8px] uppercase font-black text-slate-500 tracking-widest">Chrono</p>
-                    <p id="timer-ui" class="text-xl font-extrabold text-white transition-all">60s</p>
-                </div>
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full">
+            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-emerald-500/30"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-mode-back" onclick="exitToModeSelection()" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-emerald-400 border-2 border-emerald-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
+            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-emerald-500/50">
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-emerald-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-emerald-500/20">
-            <h1 class="text-3xl font-extrabold italic uppercase mb-8 text-emerald-500 tracking-tighter">Provisions Master</h1>
-            <div class="grid grid-cols-1 gap-3">
-                <button onclick="showSection('screen-cours')" class="glass border-2 border-amber-500/30 p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-amber-500 text-xl"><i class="fas fa-scroll"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Cours</p><p class="text-[9px] text-slate-500 italic">Logique d'inventaire</p></div>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-emerald-500/20 shadow-2xl italic font-bold">
+            <p class="text-[10px] text-emerald-400 font-bold uppercase mb-2">UE 10 | UE 4</p>
+            <h1 class="text-4xl font-black italic uppercase mb-8 text-emerald-500 tracking-tighter">Provisions</h1>
+            <div class="grid grid-cols-1 gap-4 font-bold">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
+                    <div><p class="text-xs uppercase text-amber-400">Cours</p><p class="text-[9px] text-slate-500">Règles</p></div>
                 </button>
-                <button onclick="startGame('learning')" class="glass border-2 border-emerald-500/20 p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-emerald-500 text-xl"><i class="fas fa-brain"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Apprendre</p><p class="text-[9px] text-slate-500 italic">Sans chrono</p></div>
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
+                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN</p></div>
                 </button>
-                <button onclick="startGame('competition')" class="btn-neon-emerald glass p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-emerald-400 text-xl"><i class="fas fa-bolt"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Défier</p><p class="text-[9px] text-slate-500 italic">Combo & Vitesse</p></div>
+                <button onclick="startGame('competition')" class="btn-neon-emerald p-5 rounded-2xl flex items-center gap-4 text-left">
+                    <div class="w-10 h-10 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Score & Chrono</p></div>
                 </button>
-                <button onclick="startGame('survival')" class="glass border-2 border-rose-500/30 p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-rose-500 text-xl"><i class="fas fa-skull"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Survie</p><p class="text-[9px] text-slate-500 italic">Mort subite</p></div>
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
+                    <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute</p></div>
                 </button>
             </div>
         </div>
 
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50">
-            <h2 class="text-2xl font-black text-amber-500 mb-6 uppercase italic">📚 Provisions & Prudence</h2>
-            <div class="space-y-4 text-xs italic">
-                <div class="p-4 bg-emerald-500/10 border-l-4 border-emerald-500"><b>DOTER :</b> Risque nouveau ou qui augmente. On crée une charge.</div>
-                <div class="p-4 bg-blue-500/10 border-l-4 border-blue-500"><b>REPRENDRE :</b> Risque qui diminue ou disparaît. On crée un produit.</div>
-                <div class="p-4 bg-rose-500/10 border-l-4 border-rose-500 italic"><b>RIEN :</b> Valeur marché > Valeur comptable. On ne fait rien par prudence.</div>
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic font-bold">
+            <h2 class="text-2xl font-black text-amber-500 mb-6 uppercase text-center italic">📚 Prudence PCG</h2>
+            <div class="space-y-4 text-[10px] italic">
+                <p><b>Doter :</b> Risque probable ou dépréciation constatée.</p>
+                <p><b>Reprendre :</b> Risque disparu ou devenu sans objet.</p>
+                <p><b>Rien :</b> Si la valeur remonte au-dessus de la valeur d'achat (Gain latent interdit).</p>
             </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-2xl font-black mt-8 uppercase shadow-lg">Retour</button>
+            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-8 uppercase italic shadow-lg">Retour au choix</button>
         </div>
 
-        <div id="screen-game" class="hidden">
-            <div class="glass rounded-[3.5rem] p-10 min-h-[350px] flex flex-col justify-center items-center text-center relative border border-white/5">
-                <div id="feedback" class="hidden feedback-overlay"></div>
-                <p id="combo-ui" class="text-emerald-400 font-black italic absolute top-8 text-sm tracking-widest"></p>
-                <h2 id="op-name" class="text-xl font-extrabold leading-tight uppercase px-4 italic">---</h2>
+        <div id="screen-game" class="hidden relative italic font-bold">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner">
+                <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
+                <h2 id="op-name" class="text-2xl font-bold uppercase px-4 tracking-tighter">---</h2>
             </div>
-            <div class="grid grid-cols-3 gap-3 mt-8">
-                <button onclick="check('Dotation')" class="btn-neon-emerald py-6 rounded-2xl text-[10px] font-black uppercase italic">Doter</button>
-                <button onclick="check('Reprise')" class="btn-neon-emerald py-6 rounded-2xl text-[10px] font-black uppercase italic">Reprendre</button>
-                <button onclick="check('Rien')" class="btn-neon-emerald py-6 rounded-2xl text-[10px] font-black uppercase italic text-rose-400">Rien</button>
+            <div class="grid grid-cols-3 gap-3 mt-8 font-black italic">
+                <button onclick="check('Dotation')" class="btn-neon-emerald py-6 rounded-2xl text-[10px] uppercase">Doter</button>
+                <button onclick="check('Reprise')" class="btn-neon-emerald py-6 rounded-2xl text-[10px] uppercase">Reprendre</button>
+                <button onclick="check('Rien')" class="btn-neon-emerald border-rose-500 py-6 rounded-2xl text-[10px] uppercase text-rose-400">Rien</button>
             </div>
         </div>
 
         <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-emerald-500/30">
-            <div id="end-grade" class="text-8xl font-black text-emerald-400 mb-6 italic tracking-tighter">0/20</div>
-            <p id="end-score-label" class="text-xl font-bold mb-12 text-slate-500 italic">---</p>
-            <button onclick="location.reload()" class="w-full bg-emerald-600 py-5 rounded-2xl font-black uppercase italic shadow-xl">Menu</button>
+            <div id="end-visual" class="text-7xl font-black text-emerald-400 mb-6 italic tracking-tighter italic">---</div>
+            <button onclick="showSection('screen-menu')" class="w-full bg-emerald-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white italic">Menu du jeu</button>
         </div>
     </div>
 
     <script>
-        const SFX = {
-            ctx: new (window.AudioContext || window.webkitAudioContext)(),
-            play(t) {
-                if(this.ctx.state === 'suspended') this.ctx.resume();
-                const o = this.ctx.createOscillator(); const g = this.ctx.createGain();
-                o.connect(g); g.connect(this.ctx.destination);
-                if(t==='ok'){ o.frequency.setValueAtTime(600,0); o.frequency.exponentialRampToValueAtTime(1000,0.1); g.gain.setValueAtTime(0.1,0); o.start(); o.stop(0.1); }
-                else if(t==='err'){ o.type='sawtooth'; o.frequency.setValueAtTime(120,0); g.gain.setValueAtTime(0.1,0); o.start(); o.stop(0.3); }
-                else { o.frequency.setValueAtTime(1500,0); g.gain.setValueAtTime(0.05,0); o.start(); o.stop(0.05); }
-            }
-        };
-
+        let mode, score=0, timer, timeLeft=60, isProc=false, lastIdx=-1;
         const provDB = [
-            { q: "Client en faillite, perte estimée à 80% (0% provisionné).", r: "Dotation", w: "Nouveau risque." },
-            { q: "Litige provisionné 2k€. Finalement gagné (0€ à payer).", r: "Reprise", w: "Risque disparu." },
-            { q: "Titre acheté 50€. Valeur marché 70€.", r: "Rien", w: "Prudence : pas de gain latent." },
-            { q: "Stock : Coût 1000€. Valeur actuelle 800€.", r: "Dotation", w: "Perte probable." },
-            { q: "Provision litige 500€. Risque réestimé à 800€.", r: "Dotation", w: "Augmentation du risque." },
-            { q: "Immeuble : Valeur a triplé grâce au quartier.", r: "Rien", w: "On ne réévalue pas." }
+            {q:"Client Faillite",r:"Dotation",w:"Nouveau risque"},
+            {q:"Litige Gagné",r:"Reprise",w:"Sans objet"},
+            {q:"Titre +20% valeur",r:"Rien",w:"Gain latent"},
+            {q:"Baisse Bourse -10%",r:"Dotation",w:"Dépréciation"}
         ];
 
-        let mode, score=0, timer, timeLeft=60, total=0, correct=0, isProc=false, lastIndices=[];
-        let combo=1, consecutive=0;
-
         function showSection(id) {
-            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => {
-                const el = document.getElementById(s);
-                if(el) el.classList.add('hidden');
-            });
-            const target = document.getElementById(id);
-            if(target) target.classList.remove('hidden');
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            const isMenu = id === 'screen-menu';
+            document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
+            document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
+            if(isMenu) document.getElementById('game-info').classList.add('hidden');
         }
 
+        function exitToModeSelection() { if(timer) clearInterval(timer); showSection('screen-menu'); }
+
         function startGame(m) {
-            mode = m; score = 0; total = 0; correct = 0; timeLeft = 60; combo=1; consecutive=0;
+            mode = m; score = 0; timeLeft = 60;
             showSection('screen-game');
-            const info = document.getElementById('game-info');
-            if(mode === 'learning') {
-                info.classList.add('hidden');
-            } else {
-                info.classList.remove('hidden');
-                document.getElementById('score-ui').innerText = "0";
-                const tUI = document.getElementById('timer-ui');
-                tUI.innerText = "60s"; tUI.classList.remove('timer-low');
-                timer = setInterval(() => {
-                    timeLeft--; tUI.innerText = timeLeft+"s";
-                    if(timeLeft <= 10 && timeLeft > 0) { tUI.classList.add('timer-low'); SFX.play('tick'); }
-                    if(timeLeft <= 0) stopGame();
-                }, 1000);
+            if(mode === 'learning') return next();
+            document.getElementById('game-info').classList.remove('hidden');
+            document.getElementById('score-ui').innerText = "0";
+            if(mode === 'survival') { document.getElementById('timer-container').classList.add('hidden'); }
+            else {
+                document.getElementById('timer-container').classList.remove('hidden');
+                document.getElementById('timer-ui').innerText = "60s";
+                timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
             }
             next();
         }
 
         function next() {
             isProc = false; document.getElementById('feedback').classList.add('hidden');
-            let idx; do { idx = Math.floor(Math.random() * provDB.length); } while (lastIndices.includes(idx));
-            lastIndices.push(idx); if(lastIndices.length > 10) lastIndices.shift();
+            let idx; do { idx = Math.floor(Math.random()*provDB.length); } while (idx === lastIdx);
+            lastIdx = idx;
             document.getElementById('op-name').innerText = provDB[idx].q; window.curr = provDB[idx];
         }
 
         function check(v) {
-            if(isProc) return; isProc = true; total++;
-            const isOk = (v === window.curr.r); SFX.play(isOk ? 'ok' : 'err');
+            if(isProc) return; isProc = true;
+            const isOk = (v === window.curr.r);
             const f = document.getElementById('feedback'); f.classList.remove('hidden');
-
             if(isOk) {
-                if(mode !== 'learning') {
-                    consecutive++; combo = consecutive >= 10 ? 5 : (consecutive >= 5 ? 3 : (consecutive >= 3 ? 2 : 1));
-                    score += (20 * combo); document.getElementById('score-ui').innerText = score;
-                    document.getElementById('combo-ui').innerText = combo > 1 ? "COMBO X"+combo : "";
-                }
-                f.className="feedback-overlay bg-emerald-500/90";
-                f.innerHTML=`<div class="text-center"><i class="fas fa-check-circle text-7xl"></i>${combo > 1 && mode !== 'learning' ? '<p class="text-2xl font-black">X'+combo+'</p>' : ''}</div>`;
+                if(mode !== 'learning') { score += 50; document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 250);
             } else {
-                combo=1; consecutive=0; document.getElementById('combo-ui').innerText = "";
-                if(mode === 'survival') { stopGame(); return; }
-                if(mode === 'competition') { score = Math.max(0, score - 10); timeLeft = Math.max(0, timeLeft - 3); document.getElementById('score-ui').innerText = score;}
-                f.className="feedback-overlay bg-red-600/95";
-                f.innerHTML=`<div class="text-center p-6"><i class="fas fa-times-circle text-5xl mb-4"></i><p class="text-xs uppercase font-black">${window.curr.w}</p></div>`;
-                setTimeout(next, 900);
+                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95"; f.innerHTML="<i class='fas fa-skull text-6xl'></i>"; setTimeout(stopGame, 1000); return; }
+                if(mode === 'competition') { score = Math.max(0, score-10); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-red-600/95 p-6 text-center text-white"; f.innerHTML=`<p class='text-xs font-bold uppercase'>${window.curr.w}</p>`;
+                setTimeout(next, 1000);
             }
         }
 
-        function stopGame() {
-            clearInterval(timer); showSection('screen-end');
-            const g = total > 0 ? Math.round((correct/total)*20) : 0;
-            document.getElementById('end-grade').innerText = g+"/20";
-            document.getElementById('end-score-label').innerText = mode === 'learning' ? "Appris !" : "Score : " + score;
-            if(mode !== 'learning') localStorage.setItem('record_prov', score);
-        }
+        function stopGame() { if(timer) clearInterval(timer); showSection('screen-end'); document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score; localStorage.setItem('record_prov', Math.max(score, parseInt(localStorage.getItem('record_prov')||0))); }
     </script>
 </body>
 </html>

@@ -1,239 +1,141 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Flux Master | Cyber-Edition</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Flux Master | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=JetBrains+Mono:wght@700&display=swap');
-        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; overflow: hidden; touch-action: manipulation; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .btn-neon-blue { border: 2px solid #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
-        .btn-neon-blue:active { background: #38bdf8; box-shadow: 0 0 30px #38bdf8; transform: scale(0.95); }
-        .btn-neon-rose { border: 2px solid #f43f5e; box-shadow: 0 0 15px rgba(244, 63, 94, 0.4); }
-        .btn-neon-rose:active { background: #f43f5e; box-shadow: 0 0 30px #f43f5e; transform: scale(0.95); }
-        .timer-low { color: #f43f5e; text-shadow: 0 0 10px #f43f5e; animation: pulse 0.5s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); }
+        .btn-neon-blue { border: 2px solid #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); transition: 0.2s; }
+        .btn-neon-blue:active { background: #38bdf8; transform: scale(0.95); }
+        .timer-low { color: #f43f5e !important; animation: blink 0.5s infinite; }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center justify-center min-h-screen">
-
+<body class="p-4 flex flex-col items-center justify-center">
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-8 px-2 h-16">
-            <button onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-sky-500/30 border-2"><i class="fas fa-chevron-left"></i></button>
-            <div id="game-info" class="hidden flex items-center gap-6 glass px-6 py-2 rounded-2xl border-2 border-sky-500/50 shadow-[0_0_15px_rgba(56,189,248,0.2)]">
-                <div id="score-container" class="text-center">
-                    <p class="text-[8px] uppercase font-black text-sky-500 tracking-widest">Points</p>
-                    <p id="score-ui" class="text-xl font-extrabold text-white">0</p>
-                </div>
-                <div id="timer-container" class="text-center font-mono">
-                    <p class="text-[8px] uppercase font-black text-slate-500 tracking-widest">Temps</p>
-                    <p id="timer-ui" class="text-xl font-extrabold text-white transition-all">60s</p>
-                </div>
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full">
+            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-sky-500/30"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-mode-back" onclick="exitToModeSelection()" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-sky-400 border-2 border-sky-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
+            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-sky-500/50">
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-sky-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center shadow-2xl border-2 border-sky-500/20">
-            <h1 class="text-3xl font-extrabold italic uppercase mb-8 text-sky-500 tracking-tighter italic">Flux Master <span class="text-white text-xs block opacity-50 font-normal">300+ Notions</span></h1>
-            <div class="grid grid-cols-1 gap-3">
-                <button onclick="showSection('screen-cours')" class="glass border-2 border-amber-500/30 p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-amber-500 text-xl"><i class="fas fa-scroll"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Fiche Théorique</p><p class="text-[9px] text-slate-400 italic">Définition & Logique</p></div>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-sky-500/20 shadow-2xl italic font-bold">
+            <p class="text-[10px] text-sky-400 font-bold uppercase mb-2 italic">UE 9 | UE 4</p>
+            <h1 class="text-4xl font-black italic uppercase mb-8 text-sky-500 tracking-tighter">Flux Master</h1>
+            <div class="grid grid-cols-1 gap-4 italic font-bold">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
+                    <div><p class="text-xs uppercase text-amber-400">Cours</p><p class="text-[9px] text-slate-500">Rappel Logic</p></div>
                 </button>
-                <button onclick="startGame('learning')" class="glass border-2 border-emerald-500/20 p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-emerald-500 text-xl"><i class="fas fa-brain"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Apprendre</p><p class="text-[9px] text-slate-400 italic">Pas de chrono</p></div>
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
+                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN</p></div>
                 </button>
-                <button onclick="startGame('competition')" class="btn-neon-blue glass p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-sky-400 text-xl"><i class="fas fa-bolt"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Défier</p><p class="text-[9px] text-slate-400 italic">Speedrun 60s</p></div>
+                <button onclick="startGame('competition')" class="btn-neon-blue p-5 rounded-2xl flex items-center gap-4 text-left">
+                    <div class="w-10 h-10 bg-sky-500/10 text-sky-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Score & Chrono</p></div>
                 </button>
-                <button onclick="startGame('survival')" class="btn-neon-rose glass p-4 rounded-3xl flex items-center gap-4 text-left">
-                    <span class="text-rose-500 text-xl"><i class="fas fa-skull"></i></span>
-                    <div><p class="font-extrabold uppercase text-[10px]">Survie</p><p class="text-[9px] text-slate-400 italic">Mort subite</p></div>
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
+                    <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute</p></div>
                 </button>
             </div>
         </div>
 
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50">
-            <h2 class="text-2xl font-black text-amber-500 mb-6 uppercase italic">📚 La Partie Double</h2>
-            <div class="space-y-4 text-xs">
-                <div class="p-4 bg-sky-500/10 rounded-2xl border-l-4 border-sky-500">
-                    <h3 class="font-bold text-sky-400 mb-1 uppercase">Débit (Emploi)</h3>
-                    <p>On débite pour :<br>• Augmenter l'Actif (2, 3, 5)<br>• Augmenter une Charge (6)<br>• Diminuer un Passif (401)</p>
-                </div>
-                <div class="p-4 bg-rose-500/10 rounded-2xl border-l-4 border-rose-500">
-                    <h3 class="font-bold text-rose-400 mb-1 uppercase">Crédit (Ressource)</h3>
-                    <p>On crédite pour :<br>• Augmenter le Passif (1, 164, 401)<br>• Augmenter un Produit (7)<br>• Diminuer l'Actif (512)</p>
-                </div>
-                <div class="bg-black/40 p-4 rounded-xl font-mono text-emerald-400">
-                    <p class="text-[10px]">Exemple : Paiement Fournisseur<br>D 401 (Dette -) | C 512 (Cash -)</p>
-                </div>
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic">
+            <h2 class="text-2xl font-black text-amber-500 mb-6 uppercase text-center">📚 Flux & Emplois</h2>
+            <div class="space-y-4 text-xs italic">
+                <div class="p-4 bg-sky-500/10 border-l-4 border-sky-500 rounded-xl"><b>DÉBIT :</b> Emplois (Actif +, Charge +)</div>
+                <div class="p-4 bg-rose-500/10 border-l-4 border-rose-500 rounded-xl"><b>CRÉDIT :</b> Ressources (Passif +, Produit +)</div>
             </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-2xl font-black mt-8 uppercase shadow-lg shadow-amber-500/20">J'ai compris</button>
+            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-8 uppercase">Retour au choix</button>
         </div>
 
-        <div id="screen-game" class="hidden">
-            <div class="glass rounded-[3.5rem] p-10 min-h-[350px] flex flex-col justify-center items-center text-center relative border-2 border-white/5 shadow-inner">
-                <div id="feedback" class="hidden feedback-overlay"></div>
-                <p class="text-[9px] uppercase font-black text-slate-600 tracking-[0.4em] mb-8 italic">Analyse d'Écriture</p>
-                <h2 id="op-name" class="text-2xl font-extrabold uppercase px-4 tracking-tighter">---</h2>
+        <div id="screen-game" class="hidden relative italic font-bold">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner italic font-bold">
+                <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
+                <h2 id="op-name" class="text-2xl font-bold uppercase px-4 tracking-tighter">---</h2>
             </div>
-            <div class="grid grid-cols-2 gap-6 mt-12">
-                <button onclick="check('D')" class="btn-neon-blue py-8 rounded-[2.5rem] text-3xl font-black italic uppercase italic">Débit</button>
-                <button onclick="check('C')" class="btn-neon-rose py-8 rounded-[2.5rem] text-3xl font-black italic uppercase italic">Crédit</button>
+            <div class="grid grid-cols-2 gap-6 mt-10">
+                <button onclick="check('D')" class="btn-neon-blue py-8 rounded-3xl text-2xl font-black uppercase">Débit</button>
+                <button onclick="check('C')" class="btn-neon-blue border-rose-500 py-8 rounded-3xl text-2xl font-black uppercase">Crédit</button>
             </div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-emerald-500/30">
-            <div id="end-grade" class="text-8xl font-black text-emerald-400 mb-6 italic tracking-tighter italic">0/20</div>
-            <p id="end-score-label" class="text-xl font-bold mb-12 text-slate-500 italic">Score : 0</p>
-            <button onclick="location.reload()" class="btn-neon-blue w-full bg-white/5 py-5 rounded-2xl font-black uppercase italic italic">Recommencer</button>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-sky-500/30">
+            <div id="end-visual" class="text-7xl font-black text-sky-400 mb-6 italic tracking-tighter italic">---</div>
+            <button onclick="showSection('screen-menu')" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white italic">Menu du jeu</button>
         </div>
     </div>
 
     <script>
-        // BASE DE DONNÉES MASSIVE (+300 EN POTENTIEL)
+        let mode, score=0, timer, timeLeft=60, isProc=false, lastIdx=-1;
         const fluxDB = [
-            // ACHATS/VENTES
-            { q: "Achat de marchandises (607)", r: "D", w: "Charge (6) = Débit", j: "607|401" },
-            { q: "Vente de marchandises (707)", r: "C", w: "Produit (7) = Crédit", j: "411|707" },
-            { q: "Rabais obtenu sur achat (609)", r: "C", w: "Réduction charge = Crédit", j: "401|609" },
-            { q: "Ristourne accordée (709)", r: "D", w: "Réduction produit = Débit", j: "709|411" },
-            { q: "Escompte de règlement accordé (665)", r: "D", w: "Charge financière = Débit", j: "665|411" },
-            { q: "Escompte obtenu (765)", r: "C", w: "Produit financier = Crédit", j: "401|765" },
-            { q: "Frais de transport (624)", r: "D", w: "Charge (6) = Débit", j: "624|512" },
-            
-            // SOCIAL & FISCAL
-            { q: "Paiement Salaires nets (421)", r: "C", w: "Sortie banque = Crédit", j: "421|512" },
-            { q: "Charges patronales URSSAF (645)", r: "D", w: "Charge (6) = Débit", j: "645|431" },
-            { q: "TVA Collectée (44571)", r: "C", w: "Dette État = Crédit", j: "411|44571" },
-            { q: "TVA Déductible / ABS (44566)", r: "D", w: "Créance État = Débit", j: "44566|401" },
-            { q: "TVA à décaisser (4455)", r: "C", w: "Dette TVA = Crédit", j: "44567|4455" },
-            { q: "Impôt sur les sociétés (695)", r: "D", w: "Charge IS = Débit", j: "695|444" },
-            { q: "Crédit de TVA (44567)", r: "D", w: "Créance État = Débit", j: "44567|4456" },
-            
-            // IMMOBILISATIONS
-            { q: "Achat d'un brevet (205)", r: "D", w: "Actif immatériel = Débit", j: "205|404" },
-            { q: "Cession d'immobilisation (775)", r: "C", w: "Produit exceptionnel = Crédit", j: "462|775" },
-            { q: "VNC des immo cédées (675)", r: "D", w: "Charge exceptionnelle = Débit", j: "675|21" },
-            { q: "Production stockée d'immo (72)", r: "C", w: "Production propre = Crédit", j: "21|72" },
-            
-            // FINANCIER
-            { q: "Encaissement d'un emprunt (164)", r: "C", w: "Dette financière = Crédit", j: "512|164" },
-            { q: "Intérêts bancaires (661)", r: "D", w: "Charge financière = Débit", j: "661|512" },
-            { q: "Prélèvement agios (627)", r: "D", w: "Frais bancaires = Débit", j: "627|512" },
-            { q: "Dividendes reçus (761)", r: "C", w: "Produit financier = Crédit", j: "512|761" },
-            { q: "Gain de change (766)", r: "C", w: "Produit financier = Crédit", j: "512|766" },
-            { q: "Perte de change (666)", r: "D", w: "Charge financière = Débit", j: "666|512" },
-            
-            // INVENTAIRE
-            { q: "Dotation Amortissement (681)", r: "D", w: "Charge d'exploitation = Débit", j: "681|28" },
-            { q: "Reprise sur provision (78)", r: "C", w: "Produit d'exploitation = Crédit", j: "49|78" },
-            { q: "Stock Final Marchandises (37)", r: "D", w: "Actif stock = Débit", j: "37|6037" },
-            { q: "Variation de stock / MP (6031)", r: "C", w: "Si stock final > initial = Crédit", j: "31|6031" },
-            { q: "Charge à payer / Fournisseur (408)", r: "C", w: "Dette non facturée = Crédit", j: "6|408" },
-            { q: "Produit constaté d'avance (487)", r: "C", w: "Régularisation Passif = Crédit", j: "7|487" }
-            // Note : Cette liste peut être étendue à 300+ facilement
+            {q:"Achat marchandises",r:"D",w:"Charge = Débit"},
+            {q:"Vente produits",r:"C",w:"Produit = Crédit"},
+            {q:"TVA Déductible",r:"D",w:"Actif = Débit"},
+            {q:"Emprunt",r:"C",w:"Passif = Crédit"},
+            {q:"Paiement Fournisseur",r:"C",w:"Diminution Banque"}
         ];
-
-        let mode, score=0, timer, timeLeft=60, total=0, correct=0, isProc=false;
-        let lastIndices = [];
 
         function showSection(id) {
             ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
+            const isMenu = id === 'screen-menu';
+            document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
+            document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
+            if(isMenu) document.getElementById('game-info').classList.add('hidden');
         }
 
-        function startGame(m) {
-            mode = m; score = 0; total = 0; correct = 0; timeLeft = 60;
-            document.getElementById('score-ui').innerText = "0";
-            showSection('screen-game');
-            document.getElementById('game-info').classList.remove('hidden');
-            const timerText = document.getElementById('timer-ui');
-            const timerContainer = document.getElementById('timer-container');
-            const scoreContainer = document.getElementById('score-container');
+        function exitToModeSelection() { if(timer) clearInterval(timer); showSection('screen-menu'); }
 
-            if(mode === 'learning') {
-                timerContainer.classList.add('hidden');
-                scoreContainer.classList.add('hidden');
-            } else {
-                timerContainer.classList.remove('hidden');
-                scoreContainer.classList.remove('hidden');
-                timerText.classList.remove('timer-low');
-                timerText.innerText = "60s";
-                timer = setInterval(() => {
-                    timeLeft--; 
-                    timerText.innerText = timeLeft+"s";
-                    if(timeLeft <= 10) timerText.classList.add('timer-low');
-                    if(timeLeft <= 0) stopGame();
-                }, 1000);
+        function startGame(m) {
+            mode = m; score = 0; timeLeft = 60;
+            showSection('screen-game');
+            if(mode === 'learning') return next();
+            document.getElementById('game-info').classList.remove('hidden');
+            document.getElementById('score-ui').innerText = "0";
+            if(mode === 'survival') { document.getElementById('timer-container').classList.add('hidden'); }
+            else {
+                document.getElementById('timer-container').classList.remove('hidden');
+                document.getElementById('timer-ui').innerText = "60s";
+                timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
             }
             next();
         }
 
         function next() {
-            isProc = false;
-            document.getElementById('feedback').classList.add('hidden');
-            let idx;
-            do {
-                idx = Math.floor(Math.random() * fluxDB.length);
-            } while (lastIndices.includes(idx));
-            lastIndices.push(idx);
-            if(lastIndices.length > 20) lastIndices.shift(); // Anti-répétition sur 20 questions
-
-            const item = fluxDB[idx];
-            document.getElementById('op-name').innerText = item.q;
-            window.curr = item;
+            isProc = false; document.getElementById('feedback').classList.add('hidden');
+            let idx; do { idx = Math.floor(Math.random()*fluxDB.length); } while (idx === lastIdx);
+            lastIdx = idx;
+            document.getElementById('op-name').innerText = fluxDB[idx].q; window.curr = fluxDB[idx];
         }
 
         function check(v) {
             if(isProc) return; isProc = true;
-            total++;
             const isOk = (v === window.curr.r);
-            const f = document.getElementById('feedback');
-            f.classList.remove('hidden');
-
+            const f = document.getElementById('feedback'); f.classList.remove('hidden');
             if(isOk) {
-                correct++; 
-                if(mode !== 'learning') score += 20;
-                f.className="feedback-overlay bg-emerald-500/90";
-                f.innerHTML="<i class='fas fa-check text-6xl'></i>";
-                setTimeout(next, 200);
+                if(mode !== 'learning') { score += 20; document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
+                setTimeout(next, 250);
             } else {
-                if(mode === 'survival') { stopGame(); return; }
-                if(mode === 'competition') {
-                    score = Math.max(0, score - 10);
-                    timeLeft = Math.max(0, timeLeft - 3);
-                }
-                
-                if(mode === 'learning') {
-                    f.className="feedback-overlay bg-slate-900/98 p-8 text-left";
-                    f.innerHTML=`<div><p class='text-red-500 font-black mb-2 uppercase italic text-xs tracking-widest'>Erreur</p><p class='text-sm mb-4'>${window.curr.w}</p><div class='bg-white/5 p-3 rounded font-mono text-[10px] text-sky-400'>Logique : ${window.curr.j}</div><p class='text-[10px] opacity-50 mt-6 text-center uppercase tracking-[0.3em]'>Continuer</p></div>`;
-                    f.onclick = next;
-                } else {
-                    f.className="feedback-overlay bg-red-600/95";
-                    f.innerHTML="<div class='text-center'><i class='fas fa-times text-5xl mb-2'></i><p class='font-black uppercase italic text-xs'>-3s | -10 pts</p></div>";
-                    setTimeout(next, 600);
-                }
+                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95"; f.innerHTML="<i class='fas fa-skull text-6xl'></i>"; setTimeout(stopGame, 1000); return; }
+                if(mode === 'competition') { score = Math.max(0, score-10); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-red-600/95 p-6 text-center text-white"; f.innerHTML=`<p class='text-xs font-bold uppercase'>${window.curr.w}</p>`;
+                setTimeout(next, 1000);
             }
-            document.getElementById('score-ui').innerText = score;
         }
 
-        function stopGame() {
-            clearInterval(timer);
-            showSection('screen-end');
-            const g = total > 0 ? Math.round((correct/total)*20) : 0;
-            document.getElementById('end-grade').innerText = g+"/20";
-            document.getElementById('end-score-label').innerText = (mode === 'learning') ? "Révisions Terminées" : "Score Final : " + score;
-            if(mode !== 'learning') {
-                const best = parseInt(localStorage.getItem('record_flux')) || 0;
-                if(score > best) localStorage.setItem('record_flux', score);
-            }
-        }
+        function stopGame() { if(timer) clearInterval(timer); showSection('screen-end'); document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score; localStorage.setItem('record_flux', Math.max(score, parseInt(localStorage.getItem('record_flux')||0))); }
     </script>
 </body>
 </html>

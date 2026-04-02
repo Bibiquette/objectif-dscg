@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>English DSCG | ObjectifDCG/DSCG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .btn-neon-indigo { border: 2px solid #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); transition: 0.2s; }
+        .btn-neon-indigo:active { background: #6366f1; transform: scale(0.95); }
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
+        .theme-card { background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; padding: 0.75rem; border-radius: 0.75rem; margin-bottom: 0.75rem; }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center justify-center">
+    <div class="w-full max-w-lg">
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full italic">
+            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-indigo-500/30"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-mode-back" onclick="exitToModeSelection()" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-indigo-400 border-2 border-indigo-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
+            
+            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-indigo-500/50">
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-indigo-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
+            </div>
+        </header>
+
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-indigo-500/20 shadow-2xl italic font-bold">
+            <p class="text-[10px] text-indigo-400 font-bold uppercase mb-2">UE 12 | UE 6</p>
+            <h1 class="text-4xl font-black italic uppercase mb-8 text-indigo-400 tracking-tighter">English</h1>
+            <div class="grid grid-cols-1 gap-3">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book-open"></i></div>
+                    <div><p class="text-xs uppercase text-amber-400">Lexique (7 Thèmes)</p><p class="text-[9px] text-slate-500">Révisions Pro</p></div>
+                </button>
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
+                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN</p></div>
+                </button>
+                <button onclick="startGame('competition')" class="btn-neon-indigo p-5 rounded-2xl flex items-center gap-4 text-left">
+                    <div class="w-10 h-10 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Points & Chrono</p></div>
+                </button>
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
+                    <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute</p></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-6 max-h-[75vh] overflow-y-auto border-2 border-amber-500/50 italic">
+            <h2 class="text-xl font-bold mb-4 text-amber-500 uppercase text-center">📚 Les 7 Thèmes DSCG</h2>
+            <div id="cours-content" class="space-y-3 mb-6 text-[9px]">
+                <div class="theme-card"><b>1. Finance :</b> Money supply, Venture capital, IPO, Bonds, Yield, Bull/Bear market.</div>
+                <div class="theme-card"><b>2. Accounting :</b> Balance sheet, Assets, Liabilities, Equity, Depreciation.</div>
+                <div class="theme-card"><b>3. Governance/CSR :</b> Stakeholders, Sustainability, Greenwashing, Whistleblowing.</div>
+                <div class="theme-card"><b>4. IT & Tech :</b> Big data, Blockchain, Cloud computing, AI, Cybersecurity.</div>
+                <div class="theme-card"><b>5. Management/HR :</b> Leadership, Trade union, Burnout, Remote work, Onboarding.</div>
+                <div class="theme-card"><b>6. Marketing :</b> Supply chain, Market share, Outsourcing, Product life cycle.</div>
+                <div class="theme-card"><b>7. International :</b> Globalization, Free trade, Protectionism, Tariffs, MNC.</div>
+            </div>
+            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-4 uppercase">Retour au choix</button>
+        </div>
+
+        <div id="screen-game" class="hidden relative italic font-bold">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[350px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner">
+                <div id="feedback" class="hidden feedback-overlay italic"></div>
+                <p id="theme-tag" class="text-[9px] uppercase font-black text-indigo-400 absolute top-8 tracking-widest"></p>
+                <h2 id="word-to-guess" class="text-2xl font-black uppercase mb-4 tracking-tighter">---</h2>
+                <p id="combo-ui" class="text-indigo-400 font-bold text-sm mt-2"></p>
+            </div>
+            <div id="options-grid" class="grid grid-cols-1 gap-3 mt-6"></div>
+        </div>
+
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-indigo-500/30">
+            <div id="end-visual" class="text-7xl font-black text-indigo-400 mb-6 italic tracking-tighter">---</div>
+            <p id="end-score-label" class="text-xl font-bold mb-12 text-slate-400 italic">Score Final</p>
+            <button onclick="showSection('screen-menu')" class="w-full bg-indigo-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white tracking-widest italic">Menu du jeu</button>
+        </div>
+    </div>
+
+    <script>
+        let mode, score=0, timer, timeLeft=60, combo=1, consecutive=0, isProc=false, lastIndices=[];
+        
+        const officialDB = [
+            // Thème 1 - Finance
+            {t:"Finance", q:"Money supply", r:"Masse monétaire"}, {t:"Finance", q:"Venture capital", r:"Capital-risque"}, {t:"Finance", q:"Yield", r:"Rendement"}, {t:"Finance", q:"Bonds", r:"Obligations"}, {t:"Finance", q:"Initial Public Offering (IPO)", r:"Introduction en bourse"},
+            // Thème 2 - Accounting
+            {t:"Accounting", q:"Balance sheet", r:"Bilan"}, {t:"Accounting", q:"Assets", r:"Actif"}, {t:"Accounting", q:"Liabilities", r:"Passif"}, {t:"Accounting", q:"Equity", r:"Capitaux propres"}, {t:"Accounting", q:"Depreciation", r:"Amortissement"},
+            // Thème 3 - CSR
+            {t:"CSR", q:"Stakeholders", r:"Parties prenantes"}, {t:"CSR", q:"Sustainability", r:"Durabilité"}, {t:"CSR", q:"Greenwashing", r:"Éco-blanchiment"}, {t:"CSR", q:"Whistleblowing", r:"Alerte éthique"},
+            // Thème 4 - IT
+            {t:"IT & Tech", q:"AI", r:"Intelligence artificielle"}, {t:"IT & Tech", q:"Big data", r:"Données massives"}, {t:"IT & Tech", q:"Blockchain", r:"Chaîne de blocs"}, {t:"IT & Tech", q:"Cloud computing", r:"Informatique en nuage"},
+            // Thème 5 - HR
+            {t:"Management", q:"Leadership", r:"Direction"}, {t:"Management", q:"Trade union", r:"Syndicat"}, {t:"Management", q:"Burnout", r:"Épuisement"}, {t:"Management", q:"Remote work", r:"Télétravail"},
+            // Thème 6 - Marketing
+            {t:"Marketing", q:"Supply chain", r:"Chaîne logistique"}, {t:"Marketing", q:"Market share", r:"Part de marché"}, {t:"Marketing", q:"Outsourcing", r:"Externalisation"}, {t:"Marketing", q:"Product life cycle", r:"Cycle de vie produit"},
+            // Thème 7 - International
+            {t:"International", q:"Globalization", r:"Mondialisation"}, {t:"International", q:"Free trade", r:"Libre-échange"}, {t:"International", q:"Tariff", r:"Droit de douane"}, {t:"International", q:"Trade deficit", r:"Déficit commercial"}
+        ];
+
+        function showSection(id) {
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            const isMenu = id === 'screen-menu';
+            document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
+            document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
+            if(isMenu) document.getElementById('game-info').classList.add('hidden');
+        }
+
+        function exitToModeSelection() { if(timer) clearInterval(timer); showSection('screen-menu'); }
+
+        function startGame(m) {
+            mode = m; score = 0; timeLeft = 60; combo = 1; consecutive = 0; lastIndices = [];
+            showSection('screen-game');
+            if(mode === 'learning') return next();
+            document.getElementById('game-info').classList.remove('hidden');
+            document.getElementById('score-ui').innerText = "0";
+            if(mode === 'survival') { document.getElementById('timer-container').classList.add('hidden'); }
+            else {
+                document.getElementById('timer-container').classList.remove('hidden');
+                document.getElementById('timer-ui').innerText = "60s";
+                timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+            }
+            next();
+        }
+
+        function next() {
+            isProc = false; document.getElementById('feedback').classList.add('hidden');
+            let idx;
+            let attempts = 0;
+            do {
+                idx = Math.floor(Math.random() * officialDB.length);
+                attempts++;
+            } while (lastIndices.includes(idx) && attempts < 15);
+            
+            lastIndices.push(idx);
+            if(lastIndices.length > 5) lastIndices.shift();
+            
+            const item = officialDB[idx];
+            window.curr = item;
+            document.getElementById('word-to-guess').innerText = item.q;
+            document.getElementById('theme-tag').innerText = item.t;
+            
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = "";
+            let choices = [item.r];
+            while(choices.length < 3) {
+                let r = officialDB[Math.floor(Math.random()*officialDB.length)].r;
+                if(!choices.includes(r)) choices.push(r);
+            }
+            choices.sort(() => Math.random() - 0.5).forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = "glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-indigo-500/10 transition-colors italic text-xs";
+                btn.innerText = c; btn.onclick = () => check(c);
+                grid.appendChild(btn);
+            });
+        }
+
+        function check(v) {
+            if(isProc) return; isProc = true;
+            const isOk = (v === window.curr.r);
+            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            if(isOk) {
+                if(mode !== 'learning') { consecutive++; combo = consecutive >= 3 ? 2 : 1; score += (50 * combo); document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
+                setTimeout(next, 300);
+            } else {
+                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95"; f.innerHTML="<i class='fas fa-skull text-6xl'></i>"; setTimeout(stopGame, 1000); return; }
+                combo = 1; consecutive = 0;
+                if(mode === 'competition') { score = Math.max(0, score-25); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-red-600/95 p-6 text-center text-white italic"; f.innerHTML=`<p class='text-lg'>${window.curr.r}</p>`;
+                setTimeout(next, 1200);
+            }
+        }
+
+        function stopGame() { if(timer) clearInterval(timer); showSection('screen-end'); document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score; localStorage.setItem('record_anglais', Math.max(score, parseInt(localStorage.getItem('record_anglais')||0))); }
+    </script>
+</body>
+</html>
