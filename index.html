@@ -3,7 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ObjectifDCG | Business Tycoon</title>
+    <title>ObjectifDCG/DSCG | Business Tycoon</title>
+
+    <meta name="description" content="ObjectifDCG/DSCG : La plateforme de révision ultime. Flux, BFR, Anglais et Compta sous forme de jeux interactifs.">
+    <meta name="keywords" content="DCG, DSCG, révisions, comptabilité, finance, gestion, jeux éducatifs">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bibiquette.github.io/objectif-dscg/">
+    <meta property="og:title" content="ObjectifDCG/DSCG | Deviens un expert en jouant">
+    <meta property="og:description" content="Prêt pour les examens ? Entraîne-toi avec nos simulateurs de gestion et de compta.">
+    <meta property="og:image" content="https://bibiquette.github.io/objectif-dscg/assets/banner.png">
     
     <script>
         if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -57,10 +65,10 @@
             box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
         }
 
-        .text-gradient-9 { background: var(--ue9-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        .text-gradient-6 { background: var(--ue6-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        .text-gradient-10 { background: var(--ue10-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
-        .text-gradient-12 { background: var(--ue12-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1)); }
+        .text-gradient-9 { background: var(--ue9-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-6 { background: var(--ue6-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-10 { background: var(--ue10-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-12 { background: var(--ue12-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .ue-card { transition: all 0.4s ease; border-top: 6px solid transparent; position: relative; overflow: hidden; }
         .ue-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1); }
@@ -81,7 +89,7 @@
 
     <div id="auth-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl hidden">
         <div class="glass p-10 rounded-[3rem] text-center max-w-md w-full italic">
-            <h2 class="text-3xl font-black mb-2 text-slate-800 dark:text-white uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span></h2>
+            <h2 class="text-3xl font-black mb-2 text-slate-800 dark:text-white uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h2>
             <input type="text" id="username-input" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl p-5 text-center font-bold mb-6 text-slate-800 dark:text-white outline-none" placeholder="Ton Pseudo">
             <button onclick="saveUser()" class="w-full py-5 bg-sky-600 text-white rounded-2xl font-black uppercase tracking-widest italic hover:bg-sky-500 transition-all">Lancer l'App</button>
         </div>
@@ -89,8 +97,8 @@
 
     <header class="max-w-6xl mx-auto flex justify-between items-start mb-12 italic font-bold">
         <div>
-            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">Objectif<span class="text-sky-500">DCG</span></h1>
-            <p id="user-greeting" class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1">Chargement...</p>
+            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h1>
+            <p id="user-greeting" class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1 italic">La référence des révisions interactives</p>
             <div class="flex items-center gap-2 mt-3">
                 <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
                 <p class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest"><span id="online-count">14</span> Étudiants en ligne</p>
@@ -114,6 +122,16 @@
             <button onclick="clearUser()" class="glass p-3 rounded-xl hover:text-red-500"><i class="fa-solid fa-user-gear"></i></button>
         </div>
     </header>
+
+    <section class="max-w-6xl mx-auto mb-10 px-4">
+        <div class="flex justify-between items-end mb-2 uppercase font-black italic text-[10px]">
+            <p class="text-slate-500 dark:text-slate-400">Progression vers le Diplôme</p>
+            <p id="progression-text" class="text-sky-500">0%</p>
+        </div>
+        <div class="h-4 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden border border-white/10 shadow-inner">
+            <div id="progression-bar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-500 transition-all duration-1000" style="width: 0%"></div>
+        </div>
+    </section>
 
     <main class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 italic font-bold mb-20">
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-9">
@@ -167,22 +185,16 @@
     </section>
 
     <div id="feedback-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4">
-        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-emerald-500 italic font-bold">
-            <h3 class="text-xl font-black uppercase text-slate-800 dark:text-white mb-2 italic">Ton avis compte 📝</h3>
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-emerald-500 italic font-bold text-slate-900 dark:text-white text-center">
+            <h3 class="text-xl font-black uppercase mb-2 italic">Ton avis compte 📝</h3>
             <p class="text-[10px] text-slate-500 mb-6 uppercase tracking-widest italic">Aide-moi à améliorer l'app !</p>
-            
             <div class="space-y-4">
-                <button onclick="sendFeedback('Trop dur')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-emerald-500/10 text-xs text-left text-slate-700 dark:text-slate-200">🤯 C'est trop difficile</button>
-                <button onclick="sendFeedback('Bug')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-rose-500/10 text-xs text-left text-slate-700 dark:text-slate-200">🐛 J'ai trouvé un bug</button>
-                <button onclick="sendFeedback('Nouvelle UE')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-sky-500/10 text-xs text-left text-slate-700 dark:text-slate-200">🚀 Je veux une autre UE</button>
+                <button onclick="sendFeedback('Trop dur')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-emerald-500/10 text-xs text-left">🤯 C'est trop difficile</button>
+                <button onclick="sendFeedback('Bug')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-rose-500/10 text-xs text-left">🐛 J'ai trouvé un bug</button>
+                <button onclick="sendFeedback('Nouvelle UE')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-sky-500/10 text-xs text-left">🚀 Je veux une autre UE</button>
             </div>
-            
             <button onclick="closeFeedback()" class="w-full mt-6 py-3 text-slate-400 text-[10px] uppercase font-black italic">Plus tard</button>
         </div>
-    </div>
-
-    <div class="mt-20 opacity-20 flex justify-center pb-10">
-        <a href="https://www.hitwebcounter.com" target="_blank"><img src="https://hitwebcounter.com/counter/counter.php?page=ObjectifDCG_PWA&style=0007&nbdigits=5&type=ip&initCount=0" border="0" /></a>
     </div>
 
     <script>
@@ -191,30 +203,47 @@
             if(!user) document.getElementById('auth-modal').classList.remove('hidden');
             else {
                 document.getElementById('user-greeting').innerText = `Ravi de vous revoir, ${user}`;
-                updateStreak(); loadRecords(); checkBadges(); updateThemeIcon();
+                updateStreak(); 
+                loadRecords(); 
+                updateProgression(); 
+                checkBadges(); 
+                updateThemeIcon();
             }
             setInterval(updateOnlineCount, 5000);
         };
 
-        // --- LOGIQUE FEEDBACK ---
-        function openFeedback() {
-            document.getElementById('feedback-modal').classList.remove('hidden');
+        function updateProgression() {
+            const records = ['flux', 'bfr', 'immo', 'prov', 'anglais'];
+            let playedGames = 0;
+            records.forEach(key => {
+                if(parseInt(localStorage.getItem('record_' + key)) > 0) playedGames++;
+            });
+            let percent = Math.round((playedGames / records.length) * 100);
+            const bar = document.getElementById('progression-bar');
+            const text = document.getElementById('progression-text');
+            if(bar && text) {
+                bar.style.width = percent + '%';
+                text.innerText = percent + '%';
+            }
         }
 
-        function closeFeedback() {
-            document.getElementById('feedback-modal').classList.add('hidden');
+        function loadRecords() {
+            ['flux', 'bfr', 'immo', 'prov', 'anglais'].forEach(key => {
+                const rec = document.getElementById(`rec-${key}`);
+                if(rec) rec.innerText = (localStorage.getItem('record_' + key) || 0) + " PTS";
+            });
         }
 
+        function openFeedback() { document.getElementById('feedback-modal').classList.remove('hidden'); }
+        function closeFeedback() { document.getElementById('feedback-modal').classList.add('hidden'); }
         function sendFeedback(type) {
             const pseudo = localStorage.getItem('dscg_username') || "Un étudiant";
-            const subject = encodeURIComponent(`Feedback ObjectifDCG - ${type}`);
-            const body = encodeURIComponent(`Salut ! C'est ${pseudo}.\n\nMon retour sur le site : ${type}\n\n(Détaillez ici ce que vous aimeriez changer...)`);
-            
+            const subject = encodeURIComponent(`Feedback ObjectifDCGDSCG - ${type}`);
+            const body = encodeURIComponent(`Salut ! C'est ${pseudo}.\n\nMon retour sur le site : ${type}`);
             window.location.href = `mailto:bibiquettejeux@gmail.com?subject=${subject}&body=${body}`;
             closeFeedback();
         }
 
-        // --- LOGIQUE THÈME ---
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
@@ -223,11 +252,9 @@
 
         function updateThemeIcon() {
             const icon = document.getElementById('theme-icon');
-            const isDark = document.documentElement.classList.contains('dark');
-            icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
 
-        // --- LOGIQUE GÉNÉRALE ---
         function updateOnlineCount() {
             const el = document.getElementById('online-count');
             let current = parseInt(el.innerText);
@@ -252,12 +279,6 @@
             document.getElementById('streak-count').innerText = streak;
         }
 
-        function loadRecords() {
-            ['flux', 'bfr', 'immo', 'prov', 'anglais'].forEach(key => {
-                document.getElementById(`rec-${key}`).innerText = (localStorage.getItem('record_' + key) || 0) + " PTS";
-            });
-        }
-
         function checkBadges() {
             if(parseInt(localStorage.getItem('record_bfr')) >= 2000) unlockBadge('badge-bfr');
             if(parseInt(localStorage.getItem('stat_max_turns')) >= 50) unlockBadge('badge-survivor');
@@ -276,13 +297,14 @@
         }
 
         function clearUser() { if(confirm("Réinitialiser profil ?")) { localStorage.clear(); location.reload(); } }
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-            .then(reg => console.log('SW enregistré !'))
-            .catch(err => console.log('Erreur SW:', err));
-    });
-}
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('SW enregistré !'))
+                    .catch(err => console.log('Erreur SW:', err));
+            });
+        }
     </script>
 </body>
 </html>

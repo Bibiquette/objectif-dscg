@@ -1,141 +1,146 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BFR Tycoon | ObjectifDCG</title>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BFR Tycoon | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
-        body { background: #0f172a; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; touch-action: manipulation; }
+        body { background: #0f172a; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
         #cash-fill { height: 100%; width: 60%; background: linear-gradient(90deg, #f43f5e, #fbbf24, #10b981); transition: width 0.5s ease-in-out; }
         .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
-        @keyframes pulse-red { 0%, 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); } 50% { box-shadow: 0 0 20px 5px rgba(244, 63, 94, 0.3); } }
-        .danger-zone { animation: pulse-red 1.5s infinite; border: 1px solid #f43f5e !important; }
-        .rule-card { background: rgba(255, 255, 255, 0.03); border-left: 4px solid #38bdf8; padding: 0.75rem; border-radius: 0.75rem; margin-bottom: 0.75rem; font-size: 11px; }
+        .danger-zone { border: 2px solid #f43f5e !important; animation: pulse-red 2s infinite; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(244, 63, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(244, 63, 94, 0); } }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center">
+<body class="p-4 flex flex-col items-center italic font-bold">
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-6 h-20 w-full italic font-bold">
-            <button id="btn-to-index" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 shadow-lg"><i class="fas fa-arrow-left"></i></button>
-            <button id="btn-to-menu" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-emerald-400 border-2 border-emerald-500/20 shadow-lg"><i class="fas fa-chevron-left text-xl"></i></button>
-            
+        <header class="flex justify-between items-center mb-6 h-20 w-full">
+            <button onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-emerald-500/20"><i class="fas fa-arrow-left"></i></button>
             <div id="game-stats" class="hidden flex-1 ml-4 glass px-6 py-4 rounded-3xl border-t-2 border-emerald-500/30">
                 <div class="flex justify-between items-center mb-2 text-[10px]">
-                    <div><p class="uppercase font-black text-emerald-400">Cash</p><p id="cash-text" class="text-sm font-black italic">60k €</p></div>
-                    <div class="text-right"><p class="uppercase font-black text-slate-500">Niveau</p><p id="level-ui" class="text-sm font-black italic text-amber-500">1</p></div>
+                    <div><p class="uppercase font-black text-emerald-400">Trésorerie</p><p id="cash-text" class="text-sm font-black">60k €</p></div>
+                    <div class="text-right"><p class="uppercase font-black text-slate-500">Tour</p><p id="turn-ui" class="text-sm font-black text-amber-500">1</p></div>
                 </div>
                 <div class="h-2 bg-white/5 rounded-full overflow-hidden"><div id="cash-fill"></div></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center italic font-bold">
-            <h1 class="text-4xl font-black uppercase mb-4 tracking-tighter italic">BFR <span class="text-emerald-500">Tycoon</span></h1>
-            <div class="space-y-3">
-                <button onclick="startGame()" class="w-full bg-emerald-600 p-6 rounded-2xl shadow-lg italic uppercase font-black">Lancer la simulation</button>
-                <div class="grid grid-cols-2 gap-3">
-                    <button onclick="showSection('screen-rules')" class="glass p-4 rounded-2xl text-[10px] uppercase tracking-widest text-sky-400 border border-sky-500/30">📜 Règles</button>
-                    <button onclick="showSection('screen-cours')" class="glass p-4 rounded-2xl text-[10px] uppercase tracking-widest text-amber-400 border border-amber-500/30">📚 Cours</button>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center shadow-2xl border-2 border-emerald-500/20">
+            <p class="text-[10px] text-emerald-400 uppercase mb-2">UE 6 | Finance d'entreprise</p>
+            <h1 class="text-4xl font-black uppercase mb-8 tracking-tighter italic">BFR <span class="text-emerald-500">Tycoon</span></h1>
+            <div class="space-y-4">
+                <button onclick="showSection('screen-cours')" class="w-full glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
+                    <div><p class="text-xs uppercase text-amber-400">Cours Flash</p><p class="text-[9px] text-slate-500">Maîtriser le cycle d'exploitation</p></div>
+                </button>
+                <button onclick="startGame()" class="w-full bg-emerald-600 p-6 rounded-2xl uppercase font-black shadow-lg shadow-emerald-900/20 hover:scale-[1.02] transition-transform">Lancer Simulation</button>
+            </div>
+        </div>
+
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic font-bold text-sm">
+            <h2 class="text-xl font-bold mb-6 text-amber-500 uppercase text-center">📊 Le secret du Cash</h2>
+            <div class="space-y-4">
+                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-emerald-400">
+                    <h3 class="text-emerald-400 mb-1 uppercase text-xs">Le BFR, c'est quoi ?</h3>
+                    <p class="text-[10px] text-slate-300">C'est l'argent bloqué dans l'entreprise à cause du décalage entre les paiements (Stocks + Créances - Dettes).</p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-sky-400">
+                    <h3 class="text-sky-400 mb-1 uppercase text-xs">Optimiser le cycle</h3>
+                    <p class="text-[10px] text-slate-300">1. Réduire les stocks.<br>2. Encaisser les clients vite.<br>3. Payer les fournisseurs tard.</p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-rose-400">
+                    <h3 class="text-rose-400 mb-1 uppercase text-xs">Le Danger</h3>
+                    <p class="text-[10px] text-slate-300">Une forte croissance sans cash peut mener à la faillite (crise de trésorerie).</p>
                 </div>
             </div>
+            <button onclick="showSection('screen-menu')" class="w-full mt-8 bg-amber-500 text-black py-4 rounded-xl font-bold uppercase italic">J'ai compris</button>
         </div>
 
-        <div id="screen-rules" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto italic font-bold">
-            <h2 class="text-xl font-black text-sky-400 mb-6 uppercase text-center tracking-tighter italic">📜 Règles du Jeu</h2>
-            <div class="space-y-3">
-                <div class="rule-card"><b class="text-sky-300">Objectif :</b> Survivez le plus longtemps possible. Si votre cash atteint 0, c'est la faillite.</div>
-                <div class="rule-card" style="border-left-color: #f43f5e;"><b class="text-rose-400">Charges Fixes :</b> Vous perdez automatiquement <b class="text-white">1k€ par tour</b> pour payer vos frais courants.</div>
-                <div class="rule-card" style="border-left-color: #fbbf24;"><b class="text-amber-400">Paris Risqués :</b> Gain énorme mais risque de perte totale de la mise.</div>
-                <div class="rule-card" style="border-left-color: #10b981;"><b class="text-emerald-400">Impact BFR :</b> Accepter un contrat consomme du cash immédiatement.</div>
-            </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black mt-6 uppercase italic">Retour</button>
-        </div>
-
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto italic font-bold">
-            <h2 class="text-xl font-black text-amber-500 mb-6 uppercase text-center tracking-tighter italic">📚 Fiche de Révision</h2>
-            <div class="space-y-4 text-[11px] leading-relaxed">
-                <p>• <b class="text-amber-400">BFR</b> = Stocks + Créances - Dettes Fournisseurs.</p>
-                <p>• <b class="text-emerald-400">Trésorerie Nette</b> = FRNG - BFR.</p>
-                <p>• Pour optimiser le cash : <b class="text-rose-400">Encaissez tôt</b> et <b class="text-rose-400">payez tard</b>.</p>
-            </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black mt-8 uppercase italic">Retour</button>
-        </div>
-
-        <div id="screen-game" class="hidden relative italic font-bold">
-            <div id="event-box" class="glass rounded-[3rem] p-8 min-h-[380px] flex flex-col justify-center items-center text-center relative border border-white/5">
-                <div id="feedback" class="hidden feedback-overlay italic"></div>
+        <div id="screen-game" class="hidden relative">
+            <div id="event-box" class="glass rounded-[3rem] p-8 min-h-[380px] flex flex-col justify-center items-center text-center border border-white/5">
+                <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
                 <div id="current-event">
                     <div id="event-icon" class="w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6"></div>
-                    <p id="event-type" class="text-[9px] uppercase font-black text-slate-500 mb-2 tracking-[0.3em]"></p>
-                    <h2 id="event-title" class="text-2xl font-black uppercase mb-4 tracking-tighter italic"></h2>
-                    <p id="event-desc" class="text-xs text-slate-400 font-medium italic px-4"></p>
+                    <p id="event-type" class="text-[9px] uppercase font-black text-slate-500 mb-2 italic"></p>
+                    <h2 id="event-title" class="text-2xl font-black uppercase mb-4 tracking-tighter italic leading-tight"></h2>
+                    <p id="event-desc" class="text-xs text-slate-400 px-4 leading-relaxed"></p>
                 </div>
             </div>
-            <div class="grid grid-cols-2 gap-6 mt-8 italic">
-                <button onclick="decide(false)" class="bg-slate-800 py-6 rounded-2xl font-black uppercase text-rose-400 shadow-xl italic">Refuser</button>
-                <button onclick="decide(true)" class="bg-emerald-600 py-6 rounded-2xl font-black uppercase text-white shadow-xl italic">Accepter</button>
+            <div class="grid grid-cols-2 gap-6 mt-8">
+                <button onclick="decide(false)" class="bg-slate-800 py-6 rounded-3xl font-black uppercase text-rose-400 italic border-b-4 border-rose-900 active:border-b-0 active:translate-y-1 transition-all">Refuser</button>
+                <button onclick="decide(true)" class="bg-emerald-600 py-6 rounded-3xl font-black uppercase text-white italic border-b-4 border-emerald-900 active:border-b-0 active:translate-y-1 transition-all">Accepter</button>
             </div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center italic font-bold">
-            <h2 class="text-4xl font-black uppercase mb-4 text-rose-500 tracking-tighter">Faillite</h2>
-            <p id="death-reason" class="text-slate-400 text-sm mb-8 italic font-medium"></p>
-            
-            <div class="glass p-6 rounded-3xl mb-8">
-                <p class="text-[10px] text-slate-500 uppercase font-black italic">Score Final</p>
-                <p id="final-score" class="text-5xl font-black text-emerald-400">0</p>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-rose-500/20">
+            <h2 class="text-4xl font-black uppercase mb-4 text-rose-500 tracking-tighter italic">Faillite</h2>
+            <p id="death-reason" class="text-slate-400 text-sm mb-8 font-bold leading-relaxed px-2"></p>
+            <div class="glass p-6 rounded-3xl mb-8 border border-white/5">
+                <p class="text-[10px] uppercase text-slate-500 mb-1">Score Final</p>
+                <p id="final-score" class="text-5xl font-black text-emerald-400 italic">0</p>
             </div>
-
-            <button id="btn-share" onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase italic shadow-xl mb-4 text-white flex items-center justify-center gap-3 hover:bg-sky-500 transition-all">
-                <i class="fas fa-share-nodes text-xl"></i>
-                Partager mon record
-            </button>
-
-            <button onclick="location.reload()" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic">Réessayer</button>
+            <button onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase text-white mb-4 flex items-center justify-center gap-3"><i class="fas fa-share-nodes"></i> Partager</button>
+            <button onclick="location.reload()" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic">Menu Principal</button>
         </div>
     </div>
 
     <script>
-        let cash = 60, score = 0, turn = 0, level = 1, isProc = false;
+        let cash = 60, score = 0, turn = 0, isProc = false;
+
         const events = [
-            { t: "CLIENT", title: "Contrat Export", desc: "Paiement à 120j. Impact Cash immédiat -25k€.", impact: -25, pts: 500, icon: "fa-earth-americas", color: "text-sky-400" },
-            { t: "FOURNISSEUR", title: "Paiement Cash", desc: "Remise immédiate de 5%. Sortie de Cash -15k€.", impact: -15, pts: 200, icon: "fa-truck-fast", color: "text-purple-400" },
-            { t: "PARI", title: "R&D Risquée", desc: "Miser 15k€ pour tenter de gagner 45k€ de subvention.", impact: 45, penalty: -15, pts: 1000, icon: "fa-flask-vial", color: "text-yellow-500" }
+            { t: "CLIENT", title: "Gros Contrat", desc: "Paiement à 120 jours. Bloque du cash immédiatement.", impact: -25, pts: 500, icon: "fa-earth-americas", color: "text-sky-400" },
+            { t: "FOURNISSEUR", title: "Remise Cash", desc: "Payer comptant pour -10% sur l'achat. Consomme du cash.", impact: -15, pts: 200, icon: "fa-truck-fast", color: "text-purple-400" },
+            { t: "BANQUE", title: "Découvert", desc: "Négocier une ligne de crédit. Coûte des intérêts mais donne du cash.", impact: 20, pts: -100, icon: "fa-building-columns", color: "text-emerald-400" },
+            { t: "STOCKS", title: "Surstockage", desc: "Acheter en masse pour prévenir une pénurie. Immobilise du cash.", impact: -20, pts: 400, icon: "fa-boxes-stacked", color: "text-amber-400" },
+            { t: "ÉTAT", title: "Crédit TVA", desc: "Demander le remboursement anticipé. Apport de cash.", impact: 15, pts: 100, icon: "fa-file-invoice-dollar", color: "text-rose-400" },
+            { t: "RH", title: "Primes", desc: "Verser les bonus annuels maintenant. Impact cash immédiat.", impact: -10, pts: 300, icon: "fa-users", color: "text-indigo-400" }
         ];
 
         function showSection(id) {
-            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours', 'screen-rules'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-            const isHome = id === 'screen-menu';
-            document.getElementById('btn-to-index').classList.toggle('hidden', !isHome);
-            document.getElementById('btn-to-menu').classList.toggle('hidden', isHome);
-            if (id === 'screen-game') document.getElementById('game-stats').classList.remove('hidden');
-            else if (isHome) document.getElementById('game-stats').classList.add('hidden');
+            
+            const stats = document.getElementById('game-stats');
+            if (id === 'screen-game') stats.classList.remove('hidden');
+            else if (id === 'screen-menu') stats.classList.add('hidden');
         }
 
-        function startGame() { cash = 60; score = 0; turn = 0; level = 1; showSection('screen-game'); updateUI(); nextEvent(); }
+        function startGame() { 
+            cash = 60; score = 0; turn = 0; 
+            showSection('screen-game'); 
+            updateUI(); 
+            nextEvent(); 
+        }
 
         function updateUI() {
             document.getElementById('cash-text').innerText = cash + "k €";
-            document.getElementById('level-ui').innerText = level;
-            document.getElementById('cash-fill').style.width = Math.max(0, Math.min(100, cash)) + "%";
+            const fill = document.getElementById('cash-fill');
+            fill.style.width = Math.max(0, Math.min(100, cash)) + "%";
+            document.getElementById('turn-ui').innerText = turn;
+            
             if(cash <= 25) document.getElementById('event-box').classList.add('danger-zone');
             else document.getElementById('event-box').classList.remove('danger-zone');
         }
 
         function nextEvent() {
-            isProc = false; turn++; document.getElementById('feedback').classList.add('hidden');
-            if(turn % 5 === 0) level++;
-            cash -= 1; updateUI();
-            if(cash <= 0) { stopGame("Vos charges fixes ont vidé vos caisses."); return; }
-            const ev = (Math.random() > 0.75) ? events[2] : events[Math.floor(Math.random()*2)];
-            window.currentEv = ev; renderEvent(ev);
-        }
+            isProc = false; 
+            turn++; 
+            document.getElementById('feedback').classList.add('hidden');
+            
+            cash -= 2; // Charges fixes
+            updateUI();
+            
+            if(cash <= 0) { 
+                stopGame("Tes charges fixes ont épuisé ta trésorerie. 💡 Conseil : Pour durer, accepte des petits gains de cash et évite les délais clients trop longs !"); 
+                return; 
+            }
 
-        function renderEvent(ev) {
+            const ev = events[Math.floor(Math.random()*events.length)];
+            window.currentEv = ev;
+            
             document.getElementById('event-type').innerText = ev.t;
             document.getElementById('event-title').innerText = ev.title;
             document.getElementById('event-desc').innerText = ev.desc;
@@ -144,57 +149,54 @@
         }
 
         function decide(accept) {
-            if(isProc) return; isProc = true;
+            if(isProc) return;
+            isProc = true;
             const ev = window.currentEv;
-            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+
             if(accept) {
-                if(ev.t === "PARI") {
-                    if(Math.random() > 0.5) { cash += ev.impact; score += ev.pts; f.innerHTML = "<div class='text-emerald-400'><i class='fas fa-gem text-6xl'></i><p class='font-black mt-2 italic'>JACKPOT !</p></div>"; }
-                    else { cash += ev.penalty; f.innerHTML = "<div class='text-rose-500'><i class='fas fa-fire text-6xl'></i><p class='font-black mt-2 italic'>ÉCHEC</p></div>"; }
-                } else { cash += ev.impact; score += ev.pts; f.innerHTML = `<i class="fas ${ev.impact < 0 ? 'fa-arrow-trend-down' : 'fa-arrow-trend-up'} text-7xl ${ev.impact < 0 ? 'text-orange-400' : 'text-emerald-400'}"></i>`; }
-            } else { f.innerHTML = "<i class='fas fa-ban text-7xl text-slate-500'></i>"; }
+                cash += ev.impact;
+                score += ev.pts;
+                if ("vibrate" in navigator) navigator.vibrate(30);
+            }
+
             updateUI();
-            if(cash <= 0) setTimeout(() => stopGame("Trésorerie épuisée."), 800);
-            else setTimeout(nextEvent, 1200);
+
+            if(cash <= 0) {
+                setTimeout(() => stopGame("Faillite. 💡 Conseil : Encaisser à 120 jours détruit ton cash ! Privilégie les rentrées de trésorerie rapides quand tu es sous les 30k€."), 500);
+            } else {
+                setTimeout(nextEvent, 800);
+            }
         }
 
         function stopGame(reason) { 
-            // Sauvegarde du record pour l'index
-            const bestScore = localStorage.getItem('record_bfr') || 0;
-            if (score > bestScore) localStorage.setItem('record_bfr', score);
+            const best = parseInt(localStorage.getItem('record_bfr') || 0);
+            if (score > best) localStorage.setItem('record_bfr', score);
             
-            // Sauvegarde du nombre de tours (pour badge survivant)
-            const maxTurns = localStorage.getItem('stat_max_turns') || 0;
+            // On sauvegarde aussi les tours pour les badges de l'index
+            const maxTurns = parseInt(localStorage.getItem('stat_max_turns') || 0);
             if (turn > maxTurns) localStorage.setItem('stat_max_turns', turn);
 
-            document.getElementById('screen-game').classList.add('hidden'); 
-            document.getElementById('screen-end').classList.remove('hidden'); 
+            showSection('screen-end'); 
             document.getElementById('death-reason').innerText = reason; 
-            document.getElementById('final-score').innerText = score; 
+            document.getElementById('final-score').innerText = score;
+            if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
         }
 
-        function shareScore() {
-            const message = `🏆 RECORD BATTU !\n\nJe viens de marquer ${score} points en tenant ${turn} tours sur BFR Tycoon (ObjectifDCG).\n\nQui peut faire mieux ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+function shareScore() {
+    const message = `🏆 TYCOON DU BFR !\n\nJ'ai marqué ${score} pts en tenant ${turn} tours sur BFR Tycoon (ObjectifDCG/DSCG). Qui peut sauver sa boîte mieux que moi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
 
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Mon record ObjectifDCG',
-                    text: message,
-                    url: 'https://bibiquette.github.io/objectif-dscg/'
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(message).then(() => {
-                    const btn = document.getElementById('btn-share');
-                    const oldHtml = btn.innerHTML;
-                    btn.innerHTML = "<i class='fas fa-check'></i> Copié !";
-                    btn.classList.replace('bg-sky-600', 'bg-emerald-600');
-                    setTimeout(() => {
-                        btn.innerHTML = oldHtml;
-                        btn.classList.replace('bg-emerald-600', 'bg-sky-600');
-                    }, 2000);
-                });
-            }
-        }
+    if (navigator.share) {
+        navigator.share({
+            title: 'Record BFR Tycoon',
+            text: message,
+            url: 'https://bibiquette.github.io/objectif-dscg/'
+        }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(message).then(() => {
+            alert("Record copié !");
+        });
+    }
+}
     </script>
 </body>
 </html>

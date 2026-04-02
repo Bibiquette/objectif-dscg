@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Provisions Master | ObjectifDCG</title>
+    <title>Provisions Master | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -14,77 +14,84 @@
         .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center justify-center">
+<body class="p-4 flex flex-col items-center justify-center font-bold italic">
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full italic">
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full">
             <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-purple-500/30"><i class="fas fa-arrow-left"></i></button>
             <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-purple-400 border-2 border-purple-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
-            
             <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-purple-500/50">
                 <div class="text-left"><p class="text-[8px] uppercase font-black text-purple-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
                 <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-purple-500/20 shadow-2xl italic font-bold">
-            <p class="text-[10px] text-purple-400 font-bold uppercase mb-2">UE 10 | Compta. Approfondie</p>
-            <h1 class="text-4xl font-black italic uppercase mb-8 text-purple-400 tracking-tighter">Provisions</h1>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-purple-500/20 shadow-2xl">
+            <p class="text-[10px] text-purple-400 font-bold uppercase mb-2">UE 10 | Compta. Appro</p>
+            <h1 class="text-4xl font-black uppercase mb-8 text-purple-400 tracking-tighter italic">Provisions</h1>
             <div class="grid grid-cols-1 gap-3">
                 <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
                     <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
-                    <div><p class="text-xs uppercase text-amber-400">Cours</p><p class="text-[9px] text-slate-500">Actif vs Passif</p></div>
+                    <div><p class="text-xs uppercase text-amber-400">Voir le Cours</p><p class="text-[9px] text-slate-500">Actif vs Passif</p></div>
                 </button>
                 <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
                     <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
-                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN</p></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN + Conseils</p></div>
                 </button>
                 <button onclick="startGame('competition')" class="btn-neon-purple p-5 rounded-2xl flex items-center gap-4 text-left">
                     <div class="w-10 h-10 bg-purple-500/10 text-purple-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
-                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Score & Chrono</p></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Points & Chrono</p></div>
                 </button>
                 <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
                     <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
-                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute</p></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute + Conseils</p></div>
                 </button>
             </div>
         </div>
 
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto border-2 border-amber-500/50 italic">
-            <h2 class="text-xl font-bold mb-4 text-amber-500 uppercase text-center">⚖️ Provisions vs Dépréciations</h2>
-            <div class="space-y-3 mb-6 text-[10px]">
-                <div class="p-3 bg-white/5 border-l-4 border-sky-400 rounded-lg"><b>Dépréciation :</b> Constatée à l'ACTIF (Stock, Client, Terrain). Perte de valeur réversible.</div>
-                <div class="p-3 bg-white/5 border-l-4 border-purple-400 rounded-lg"><b>Provision (PRC) :</b> Constatée au PASSIF (Litige, Garantie, Amende). Charge future probable.</div>
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic font-bold text-sm">
+            <h2 class="text-xl font-bold mb-6 text-amber-500 uppercase text-center">⚖️ Actif vs Passif</h2>
+            <div class="space-y-4">
+                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-sky-400">
+                    <h3 class="text-sky-400 mb-1 uppercase text-xs">Dépréciation (Actif)</h3>
+                    <p class="text-[10px] text-slate-300 italic">Constatation de la perte de valeur réversible d'un élément de l'actif (Terrain, Client, Stock).</p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-purple-400">
+                    <h3 class="text-purple-400 mb-1 uppercase text-xs">Provision R&C (Passif)</h3>
+                    <p class="text-[10px] text-slate-300 italic">Dette probable ou charge future estimée au passif du bilan (Litige, Garantie client, Amendes).</p>
+                </div>
             </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold uppercase">Retour</button>
+            <button onclick="showSection('screen-menu')" class="w-full mt-8 bg-amber-500 text-black py-4 rounded-xl font-bold uppercase italic">J'ai compris</button>
         </div>
 
-        <div id="screen-game" class="hidden relative italic font-bold">
+        <div id="screen-game" class="hidden relative">
             <div class="glass rounded-[3.5rem] p-10 min-h-[300px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner">
-                <div id="feedback" class="hidden feedback-overlay italic"></div>
+                <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
                 <p class="text-[9px] uppercase font-black text-purple-400 absolute top-8 tracking-widest">Élément comptable</p>
                 <h2 id="item-name" class="text-2xl font-black uppercase mb-4 tracking-tighter">---</h2>
             </div>
             <div id="options-grid" class="grid grid-cols-1 gap-3 mt-6">
-                <button onclick="check('DEP')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-sky-500/20 italic text-xs">Dépréciation (Actif)</button>
-                <button onclick="check('PRC')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-purple-500/20 italic text-xs">Provision R&C (Passif)</button>
+                <button onclick="check('DEP')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-sky-500/20 text-xs italic">Dépréciation (Actif)</button>
+                <button onclick="check('PRC')" class="glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-purple-500/20 text-xs italic">Provision R&C (Passif)</button>
             </div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-purple-500/30 font-bold italic">
-            <div id="end-visual" class="text-7xl font-black text-purple-400 mb-2 italic tracking-tighter">0</div>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-purple-500/30">
+            <div id="end-visual" class="text-7xl font-black text-purple-400 mb-2 tracking-tighter italic">0</div>
             <p class="text-sm font-bold mb-10 text-slate-400 uppercase tracking-widest">Points récoltés</p>
-            <button id="btn-share" onclick="shareScore()" class="w-full bg-purple-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white mb-4 flex items-center justify-center gap-3">
-                <i class="fas fa-share-nodes"></i> Partager mon record
-            </button>
-            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase text-white tracking-widest">Menu Principal</button>
+            <button id="btn-share" onclick="shareScore()" class="w-full bg-purple-600 py-5 rounded-2xl font-black uppercase text-white mb-4 flex items-center justify-center gap-3 shadow-xl"><i class="fas fa-share-nodes"></i> Partager</button>
+            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase text-white tracking-widest italic">Menu Principal</button>
         </div>
     </div>
 
     <script>
         let mode, score=0, timer, timeLeft=60, isProc=false;
         const db = [
-            {q:"Baisse valeur Terrain", r:"DEP"}, {q:"Client douteux", r:"DEP"}, {q:"Stock obsolète", r:"DEP"},
-            {q:"Litige Prud'hommes", r:"PRC"}, {q:"Garantie client", r:"PRC"}, {q:"Amendes & Pénalités", r:"PRC"}
+            {q:"Baisse valeur Terrain", r:"DEP", w:"Dépréciation : L'actif perd de la valeur."},
+            {q:"Client douteux", r:"DEP", w:"Dépréciation : Risque de non-recouvrement (Actif)."},
+            {q:"Litige Prud'hommes", r:"PRC", w:"Provision R&C : Dette probable au passif."},
+            {q:"Garantie client", r:"PRC", w:"Provision R&C : Charge future probable."},
+            {q:"Stock obsolète", r:"DEP", w:"Dépréciation : Perte de valeur des stocks."},
+            {q:"Amendes à payer", r:"PRC", w:"Provision R&C : Risque de sortie de cash."}
         ];
 
         function showSection(id) {
@@ -98,15 +105,22 @@
 
         function startGame(m) {
             mode = m; score = 0; timeLeft = 60; showSection('screen-game');
-            if(mode === 'learning') { document.getElementById('game-info').classList.add('hidden'); }
-            else {
+            document.getElementById('score-ui').innerText = "0";
+            
+            if(mode === 'learning') { 
+                document.getElementById('game-info').classList.add('hidden'); 
+            } else {
                 document.getElementById('game-info').classList.remove('hidden');
-                document.getElementById('score-ui').innerText = "0";
-                if(mode === 'survival') document.getElementById('timer-container').classList.add('hidden');
-                else {
+                if(mode === 'survival') {
+                    document.getElementById('timer-container').classList.add('hidden');
+                } else {
                     document.getElementById('timer-container').classList.remove('hidden');
                     document.getElementById('timer-ui').innerText = "60s";
-                    timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+                    timer = setInterval(() => { 
+                        timeLeft--; 
+                        document.getElementById('timer-ui').innerText = timeLeft+"s"; 
+                        if(timeLeft <= 0) stopGame(); 
+                    }, 1000);
                 }
             }
             next();
@@ -123,29 +137,62 @@
             if(isProc) return; isProc = true;
             const isOk = (v === window.curr.r);
             const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            
+            if ("vibrate" in navigator) { isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]); }
+
             if(isOk) {
-                if(mode !== 'learning') { score += 150; document.getElementById('score-ui').innerText = score; }
+                if(mode !== 'learning') { 
+                    score += 150; 
+                    document.getElementById('score-ui').innerText = score; 
+                }
                 f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 300);
             } else {
-                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95"; f.innerHTML="<i class='fas fa-skull text-6xl'></i>"; setTimeout(stopGame, 1000); return; }
-                if(mode === 'competition') { score = Math.max(0, score-75); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
-                f.className="feedback-overlay bg-red-600/95 text-white text-6xl"; f.innerHTML="<i class='fas fa-times'></i>";
-                setTimeout(next, 800);
+                let advice = mode === 'competition' ? "" : `<p class="text-xs mt-4 uppercase tracking-widest px-4 font-bold">${window.curr.w}</p>`;
+                if(mode === 'survival') { 
+                    f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6"; 
+                    f.innerHTML=`<i class='fas fa-skull text-6xl'></i>${advice}`; 
+                    setTimeout(stopGame, 2000); 
+                    return; 
+                }
+                if(mode === 'competition') { 
+                    score = Math.max(0, score-75); 
+                    timeLeft -= 3; 
+                    document.getElementById('score-ui').innerText = score; 
+                }
+                f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6 text-center italic font-bold";
+                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i>${advice}`;
+                setTimeout(next, mode === 'competition' ? 800 : 2000);
             }
         }
 
         function stopGame() { 
-            if(timer) clearInterval(timer); showSection('screen-end'); 
+            if(timer) clearInterval(timer); 
+            showSection('screen-end'); 
             document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
-            const best = parseInt(localStorage.getItem('record_prov') || 0);
-            if(score > best) localStorage.setItem('record_prov', score);
+            
+            if(mode !== 'learning') {
+                const best = parseInt(localStorage.getItem('record_prov') || 0);
+                if(score > best) localStorage.setItem('record_prov', score);
+            }
         }
 
-        function shareScore() {
-            const message = `⚖️ EXPERT EN PROVISIONS !\n\nJe viens de scorer ${score} sur ObjectifDCG.\n\nPrêt pour la compta appro ? 📚🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
-            if (navigator.share) navigator.share({title: 'Mon record Provisions DCG', text: message, url: 'https://bibiquette.github.io/objectif-dscg/'});
-        }
+function shareScore() {
+    // On utilise la variable 'score' directement pour éviter le texte "ZEN"
+    const message = `🏆 Nouveau Record sur ObjectifDCG/DSCG !\n\nJe viens de marquer ${score} points. Prêt à relever le défi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+
+    if (navigator.share) {
+        navigator.share({
+            title: 'Mon Record DCG/DSCG',
+            text: message,
+            url: 'https://bibiquette.github.io/objectif-dscg/'
+        }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(message).then(() => {
+            alert("Record copié dans le presse-papier !");
+        });
+    }
+}
     </script>
 </body>
 </html>

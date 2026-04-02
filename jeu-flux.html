@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Flux Master | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -11,86 +12,85 @@
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .btn-neon-blue { border: 2px solid #38bdf8; box-shadow: 0 0 15px rgba(56, 189, 248, 0.4); transition: 0.2s; }
         .btn-neon-blue:active { background: #38bdf8; transform: scale(0.95); }
-        .timer-low { color: #f43f5e !important; animation: blink 0.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
         .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center justify-center">
+<body class="p-4 flex flex-col items-center justify-center italic font-bold">
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full italic font-bold">
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full">
             <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-sky-500/30"><i class="fas fa-arrow-left"></i></button>
-            <button id="btn-mode-back" onclick="exitToModeSelection()" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-sky-400 border-2 border-sky-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
+            <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-sky-400 border-2 border-sky-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
             <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-sky-500/50">
-                <div class="text-left"><p class="text-[8px] uppercase font-black text-sky-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
-                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-sky-400 italic">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500 italic">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-sky-500/20 shadow-2xl italic font-bold">
-            <p class="text-[10px] text-sky-400 font-bold uppercase mb-2 italic">UE 9 | UE 4</p>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-sky-500/20 shadow-2xl">
+            <p class="text-[10px] text-sky-400 uppercase mb-2">UE 9 | Comptabilité</p>
             <h1 class="text-4xl font-black italic uppercase mb-8 text-sky-500 tracking-tighter">Flux Master</h1>
-            <div class="grid grid-cols-1 gap-4 italic font-bold">
+            <div class="grid grid-cols-1 gap-4">
                 <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
                     <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
-                    <div><p class="text-xs uppercase text-amber-400">Cours</p><p class="text-[9px] text-slate-500">Rappel Logic</p></div>
+                    <div><p class="text-xs uppercase text-amber-400">Voir le Cours</p><p class="text-[9px] text-slate-500">Emplois & Ressources</p></div>
                 </button>
                 <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
                     <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
-                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN</p></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN + Conseils</p></div>
                 </button>
                 <button onclick="startGame('competition')" class="btn-neon-blue p-5 rounded-2xl flex items-center gap-4 text-left">
                     <div class="w-10 h-10 bg-sky-500/10 text-sky-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
-                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Score & Chrono</p></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Points & Chrono</p></div>
                 </button>
                 <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
                     <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
-                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute</p></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute + Conseils</p></div>
                 </button>
             </div>
         </div>
 
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic font-bold">
-            <h2 class="text-2xl font-black text-amber-500 mb-6 uppercase text-center">📚 Flux & Emplois</h2>
-            <div class="space-y-4 text-xs italic">
-                <div class="p-4 bg-sky-500/10 border-l-4 border-sky-500 rounded-xl"><b>DÉBIT :</b> Emplois (Actif +, Charge +)</div>
-                <div class="p-4 bg-rose-500/10 border-l-4 border-rose-500 rounded-xl"><b>CRÉDIT :</b> Ressources (Passif +, Produit +)</div>
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic font-bold text-sm">
+            <h2 class="text-xl font-bold mb-6 text-amber-500 uppercase text-center">📊 Emplois & Ressources</h2>
+            <div class="space-y-4">
+                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-sky-400">
+                    <h3 class="text-sky-400 mb-1 uppercase">Débit (Emploi)</h3>
+                    <p class="text-[10px] text-slate-300 italic">L'utilisation des fonds. Ce que l'entreprise possède ou consomme (Charges, Augmentation d'Actif).</p>
+                </div>
+                <div class="p-4 bg-white/5 rounded-xl border-l-4 border-rose-400">
+                    <h3 class="text-rose-400 mb-1 uppercase">Crédit (Ressource)</h3>
+                    <p class="text-[10px] text-slate-300 italic">L'origine des fonds. Ce que l'entreprise doit ou gagne (Produits, Augmentation de Passif).</p>
+                </div>
             </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-8 uppercase">Retour au choix</button>
+            <button onclick="showSection('screen-menu')" class="w-full mt-8 bg-amber-500 text-black py-4 rounded-xl font-bold uppercase italic">J'ai compris</button>
         </div>
 
-        <div id="screen-game" class="hidden relative italic font-bold">
-            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner italic font-bold">
+        <div id="screen-game" class="hidden relative">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center text-center border border-white/5">
                 <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
-                <h2 id="op-name" class="text-2xl font-bold uppercase px-4 tracking-tighter">---</h2>
+                <h2 id="op-name" class="text-2xl font-bold uppercase tracking-tighter italic">---</h2>
             </div>
-            <div class="grid grid-cols-2 gap-6 mt-10 italic font-bold">
-                <button onclick="check('D')" class="btn-neon-blue py-8 rounded-3xl text-2xl font-black uppercase">Débit</button>
-                <button onclick="check('C')" class="btn-neon-blue border-rose-500 py-8 rounded-3xl text-2xl font-black uppercase">Crédit</button>
+            <div class="grid grid-cols-2 gap-6 mt-10">
+                <button onclick="check('D')" class="btn-neon-blue py-8 rounded-3xl text-2xl font-black uppercase italic">Débit</button>
+                <button onclick="check('C')" class="btn-neon-blue border-rose-500 py-8 rounded-3xl text-2xl font-black uppercase italic">Crédit</button>
             </div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-sky-500/30 italic font-bold">
-            <div id="end-visual" class="text-7xl font-black text-sky-400 mb-2 italic tracking-tighter">0</div>
-            <p class="text-sm font-bold mb-10 text-slate-400 uppercase tracking-widest">Points récoltés</p>
-            
-            <button id="btn-share" onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white mb-4 flex items-center justify-center gap-3 hover:bg-sky-500 transition-all">
-                <i class="fas fa-share-nodes text-xl"></i>
-                Partager mon record
-            </button>
-
-            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase shadow-xl text-white italic">Menu Principal</button>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-sky-500/30">
+            <div id="end-visual" class="text-7xl font-black text-sky-400 mb-4 tracking-tighter italic">0</div>
+            <button id="btn-share" onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase text-white mb-4 flex items-center justify-center gap-3"><i class="fas fa-share-nodes"></i> Partager</button>
+            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic">Menu</button>
         </div>
     </div>
 
     <script>
-        let mode, score=0, timer, timeLeft=60, isProc=false, lastIdx=-1;
+        let mode, score=0, timer, timeLeft=60, isProc=false;
         const fluxDB = [
-            {q:"Achat marchandises",r:"D",w:"Charge = Débit"},
-            {q:"Vente produits",r:"C",w:"Produit = Crédit"},
-            {q:"TVA Déductible",r:"D",w:"Actif = Débit"},
-            {q:"Emprunt",r:"C",w:"Passif = Crédit"},
-            {q:"Paiement Fournisseur",r:"C",w:"Diminution Banque"}
+            {q:"Achat marchandises",r:"D",w:"Achat = Charge = Débit (Emploi)."},
+            {q:"Vente produits",r:"C",w:"Vente = Produit = Crédit (Ressource)."},
+            {q:"TVA Déductible",r:"D",w:"TVA Déductible = Actif = Débit."},
+            {q:"Emprunt bancaire",r:"C",w:"Emprunt = Passif = Crédit."},
+            {q:"Règlement fournisseur",r:"D",w:"Payer une dette diminue le Passif = Débit."},
+            {q:"Paiement client",r:"C",w:"Recevoir du cash diminue une créance Actif = Crédit."}
         ];
 
         function showSection(id) {
@@ -99,86 +99,102 @@
             const isMenu = id === 'screen-menu';
             document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
             document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
-            if(isMenu) {
-                document.getElementById('game-info').classList.add('hidden');
-                if(timer) clearInterval(timer);
-            }
+            if(isMenu && timer) clearInterval(timer);
         }
 
-        function exitToModeSelection() { if(timer) clearInterval(timer); showSection('screen-menu'); }
-
         function startGame(m) {
-            mode = m; score = 0; timeLeft = 60;
-            showSection('screen-game');
-            if(mode === 'learning') return next();
-            document.getElementById('game-info').classList.remove('hidden');
+            mode = m; score = 0; timeLeft = 60; showSection('screen-game');
             document.getElementById('score-ui').innerText = "0";
-            if(mode === 'survival') { document.getElementById('timer-container').classList.add('hidden'); }
-            else {
-                document.getElementById('timer-container').classList.remove('hidden');
-                document.getElementById('timer-ui').innerText = "60s";
-                timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+            
+            if(mode === 'learning') {
+                document.getElementById('game-info').classList.add('hidden');
+            } else {
+                document.getElementById('game-info').classList.remove('hidden');
+                if(mode === 'competition') {
+                    document.getElementById('timer-container').classList.remove('hidden');
+                    document.getElementById('timer-ui').innerText = "60s";
+                    timer = setInterval(() => { 
+                        timeLeft--; 
+                        document.getElementById('timer-ui').innerText = timeLeft+"s"; 
+                        if(timeLeft <= 0) stopGame(); 
+                    }, 1000);
+                } else {
+                    document.getElementById('timer-container').classList.add('hidden');
+                }
             }
             next();
         }
 
         function next() {
             isProc = false; document.getElementById('feedback').classList.add('hidden');
-            let idx; do { idx = Math.floor(Math.random()*fluxDB.length); } while (idx === lastIdx);
-            lastIdx = idx;
-            document.getElementById('op-name').innerText = fluxDB[idx].q; window.curr = fluxDB[idx];
+            const item = fluxDB[Math.floor(Math.random()*fluxDB.length)];
+            window.curr = item;
+            document.getElementById('op-name').innerText = item.q;
         }
 
         function check(v) {
             if(isProc) return; isProc = true;
             const isOk = (v === window.curr.r);
             const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            
+            if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
+
             if(isOk) {
-                if(mode !== 'learning') { score += 20; document.getElementById('score-ui').innerText = score; }
+                if(mode !== 'learning') { 
+                    score += 20; 
+                    document.getElementById('score-ui').innerText = score; 
+                }
                 f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 250);
             } else {
-                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95"; f.innerHTML="<i class='fas fa-skull text-6xl'></i>"; setTimeout(stopGame, 1000); return; }
-                if(mode === 'competition') { score = Math.max(0, score-10); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
-                f.className="feedback-overlay bg-red-600/95 p-6 text-center text-white font-bold italic"; f.innerHTML=`<p class='text-xs uppercase'>${window.curr.w}</p>`;
-                setTimeout(next, 1000);
+                let advice = mode === 'competition' ? "" : `<p class='text-xs mt-4 uppercase tracking-widest px-4 font-bold'>${window.curr.w}</p>`;
+                
+                if(mode === 'survival') { 
+                    f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6"; 
+                    f.innerHTML=`<i class='fas fa-skull text-6xl'></i>${advice}`; 
+                    setTimeout(stopGame, 2000); 
+                    return; 
+                }
+                
+                if(mode === 'competition') { 
+                    score = Math.max(0, score-10); 
+                    timeLeft -= 3; 
+                    document.getElementById('score-ui').innerText = score; 
+                }
+                
+                f.className="feedback-overlay bg-red-600/95 p-6 flex-col text-center text-white font-bold italic"; 
+                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i>${advice}`;
+                setTimeout(next, mode === 'competition' ? 1000 : 2000);
             }
         }
 
         function stopGame() { 
             if(timer) clearInterval(timer); 
             showSection('screen-end'); 
-            document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score; 
+            document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
             
-            // Sauvegarde du record
             if(mode !== 'learning') {
                 const best = parseInt(localStorage.getItem('record_flux') || 0);
                 if(score > best) localStorage.setItem('record_flux', score);
             }
         }
 
-        function shareScore() {
-            const message = `🏆 FLUX MASTER !\n\nJe viens de marquer ${score} points sur "Flux Master" (ObjectifDCG).\n\nQui maîtrise mieux les écritures ? 📊⚡\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+function shareScore() {
+    // On utilise la variable 'score' directement pour éviter le texte "ZEN"
+    const message = `🏆 Nouveau Record sur ObjectifDCG/DSCG !\n\nJe viens de marquer ${score} points. Prêt à relever le défi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
 
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Mon record Flux Master',
-                    text: message,
-                    url: 'https://bibiquette.github.io/objectif-dscg/'
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(message).then(() => {
-                    const btn = document.getElementById('btn-share');
-                    const oldHtml = btn.innerHTML;
-                    btn.innerHTML = "<i class='fas fa-check'></i> Copié !";
-                    btn.classList.replace('bg-sky-600', 'bg-emerald-600');
-                    setTimeout(() => {
-                        btn.innerHTML = oldHtml;
-                        btn.classList.replace('bg-emerald-600', 'bg-sky-600');
-                    }, 2000);
-                });
-            }
-        }
+    if (navigator.share) {
+        navigator.share({
+            title: 'Mon Record DCG/DSCG',
+            text: message,
+            url: 'https://bibiquette.github.io/objectif-dscg/'
+        }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(message).then(() => {
+            alert("Record copié dans le presse-papier !");
+        });
+    }
+}
     </script>
 </body>
 </html>

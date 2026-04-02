@@ -2,144 +2,165 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>English DSCG | ObjectifDCG/DSCG</title>
+    <title>English Pro | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
-        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow: hidden; }
+        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .btn-neon-indigo { border: 2px solid #6366f1; box-shadow: 0 0 15px rgba(99, 102, 241, 0.3); transition: 0.2s; }
         .btn-neon-indigo:active { background: #6366f1; transform: scale(0.95); }
         .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; }
-        .theme-card { background: rgba(99, 102, 241, 0.05); border-left: 4px solid #6366f1; padding: 0.75rem; border-radius: 0.75rem; margin-bottom: 0.75rem; }
     </style>
 </head>
-<body class="p-4 flex flex-col items-center justify-center">
+<body class="p-4 flex flex-col items-center justify-center italic font-bold">
     <div class="w-full max-w-lg">
-        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full italic">
+        <header class="flex justify-between items-center mb-8 px-2 h-16 w-full">
             <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-indigo-500/30"><i class="fas fa-arrow-left"></i></button>
-            <button id="btn-mode-back" onclick="exitToModeSelection()" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-indigo-400 border-2 border-indigo-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
-            
+            <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-indigo-400 border-2 border-indigo-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
             <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-indigo-500/50">
                 <div class="text-left"><p class="text-[8px] uppercase font-black text-indigo-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
-                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
+                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold text-white">60s</p></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-indigo-500/20 shadow-2xl italic font-bold">
-            <p class="text-[10px] text-indigo-400 font-bold uppercase mb-2">UE 12 | Business English</p>
-            <h1 class="text-4xl font-black italic uppercase mb-8 text-indigo-400 tracking-tighter">Lexique Pro</h1>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-8 text-center border-2 border-indigo-500/20 shadow-2xl">
+            <h1 class="text-3xl font-black uppercase mb-6 text-indigo-400 tracking-tighter">Lexique Pro</h1>
             <div class="grid grid-cols-1 gap-3">
-                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
-                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book-open"></i></div>
-                    <div><p class="text-xs uppercase text-amber-400">Lexique (7 Thèmes)</p><p class="text-[9px] text-slate-500">Révisions Pro</p></div>
+                <button onclick="showSection('screen-cours')" class="glass p-4 rounded-2xl flex items-center gap-4 text-left border-2 border-amber-500/30">
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book"></i></div>
+                    <div><p class="text-xs uppercase text-amber-400">7 Thèmes Officiels</p><p class="text-[9px] text-slate-500 italic">Révisions UE 12</p></div>
                 </button>
-                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
+                <button onclick="startGame('learning')" class="glass p-4 rounded-2xl flex items-center gap-4 text-left border-2 border-emerald-500/30 text-emerald-400">
                     <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
-                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">Mode ZEN</p></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500 italic">ZEN + Traduction</p></div>
                 </button>
-                <button onclick="startGame('competition')" class="btn-neon-indigo p-5 rounded-2xl flex items-center gap-4 text-left">
+                <button onclick="startGame('competition')" class="btn-neon-indigo p-4 rounded-2xl flex items-center gap-4 text-left">
                     <div class="w-10 h-10 bg-indigo-500/10 text-indigo-400 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
-                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Points & Chrono</p></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500 italic">Score & Chrono</p></div>
                 </button>
-                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
+                <button onclick="startGame('survival')" class="glass p-4 rounded-2xl flex items-center gap-4 text-left border-2 border-rose-500/30 text-rose-400">
                     <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
-                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">0 Faute</p></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500 italic">Zéro Faute + Conseils</p></div>
+                </button>
+                <button onclick="showSection('screen-custom')" class="glass p-4 rounded-2xl flex items-center gap-4 text-left border-2 border-pink-500/30 text-pink-400">
+                    <div class="w-10 h-10 bg-pink-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-plus"></i></div>
+                    <div><p class="text-xs uppercase">Mes mots</p><p class="text-[9px] text-slate-500 italic">Personnaliser le jeu</p></div>
                 </button>
             </div>
         </div>
 
-        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-6 max-h-[75vh] overflow-y-auto border-2 border-amber-500/50 italic">
-            <h2 class="text-xl font-bold mb-4 text-amber-500 uppercase text-center">📚 Vocabulaire DSCG</h2>
-            <div id="cours-content" class="space-y-3 mb-6 text-[9px]">
-                <div class="theme-card"><b>1. Finance :</b> Venture capital, IPO, Bonds, Yield, Bull/Bear market.</div>
-                <div class="theme-card"><b>2. Accounting :</b> Balance sheet, Assets, Liabilities, Equity, Depreciation.</div>
-                <div class="theme-card"><b>3. Governance/CSR :</b> Stakeholders, Sustainability, Greenwashing.</div>
-                <div class="theme-card"><b>4. IT & Tech :</b> Big data, Blockchain, AI, Cybersecurity.</div>
-                <div class="theme-card"><b>5. Management/HR :</b> Leadership, Trade union, Burnout, Remote work.</div>
-            </div>
-            <button onclick="showSection('screen-menu')" class="w-full bg-amber-500 text-black py-4 rounded-xl font-bold mt-4 uppercase">Retour</button>
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[70vh] overflow-y-auto border-2 border-amber-500/50 italic font-bold text-sm">
+            <h2 class="text-xl font-bold mb-4 text-amber-500 uppercase text-center">📚 Le programme UE 12</h2>
+            <div id="cours-list" class="space-y-4"></div>
+            <button onclick="showSection('screen-menu')" class="w-full mt-6 bg-amber-500 text-black py-4 rounded-xl font-bold uppercase">Retour</button>
         </div>
 
-        <div id="screen-game" class="hidden relative italic font-bold">
-            <div class="glass rounded-[3.5rem] p-10 min-h-[350px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-inner">
-                <div id="feedback" class="hidden feedback-overlay italic"></div>
-                <p id="theme-tag" class="text-[9px] uppercase font-black text-indigo-400 absolute top-8 tracking-widest"></p>
-                <h2 id="word-to-guess" class="text-2xl font-black uppercase mb-4 tracking-tighter">---</h2>
-                <p id="combo-ui" class="text-indigo-400 font-bold text-sm mt-2"></p>
+        <div id="screen-custom" class="hidden glass rounded-[3.5rem] p-8 border-2 border-pink-500/50 italic">
+            <h2 class="text-xl font-bold mb-6 text-pink-500 uppercase text-center">✍️ Ajouter des mots</h2>
+            <input type="text" id="custom-en" placeholder="Mot en Anglais" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 mb-4 outline-none">
+            <input type="text" id="custom-fr" placeholder="Traduction en Français" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 mb-6 outline-none">
+            <button onclick="saveCustomWord()" class="w-full bg-pink-600 text-white py-4 rounded-xl font-bold uppercase mb-4">Enregistrer</button>
+            <button onclick="showSection('screen-menu')" class="w-full py-2 text-slate-500 text-xs uppercase text-center">Retour</button>
+        </div>
+
+        <div id="screen-game" class="hidden relative">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center text-center relative border border-white/5 shadow-xl">
+                <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
+                <p id="theme-tag" class="text-[9px] uppercase font-black text-indigo-400 absolute top-8 tracking-widest italic"></p>
+                <h2 id="word-to-guess" class="text-2xl font-black uppercase mb-4 tracking-tighter italic">---</h2>
             </div>
             <div id="options-grid" class="grid grid-cols-1 gap-3 mt-6"></div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-indigo-500/30 font-bold italic">
-            <div id="end-visual" class="text-7xl font-black text-indigo-400 mb-2 italic tracking-tighter">0</div>
-            <p id="end-score-label" class="text-sm font-bold mb-10 text-slate-400 uppercase tracking-widest">Points récoltés</p>
-            
-            <button id="btn-share" onclick="shareScore()" class="w-full bg-indigo-600 py-5 rounded-2xl font-black uppercase shadow-xl text-white mb-4 flex items-center justify-center gap-3 hover:bg-indigo-500 transition-all">
-                <i class="fas fa-share-nodes"></i>
-                Partager mon record
-            </button>
-
-            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase text-white tracking-widest">Menu Principal</button>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-indigo-500/30">
+            <div id="end-visual" class="text-7xl font-black text-indigo-400 mb-4 tracking-tighter italic">0</div>
+            <button onclick="shareScore()" class="w-full bg-indigo-600 py-5 rounded-2xl font-black uppercase text-white mb-4 flex items-center justify-center gap-3"><i class="fas fa-share-nodes"></i> Partager</button>
+            <button onclick="showSection('screen-menu')" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic">Menu</button>
         </div>
     </div>
 
     <script>
-        let mode, score=0, timer, timeLeft=60, combo=1, consecutive=0, isProc=false, lastIndices=[];
+        let mode, score=0, timer, timeLeft=60, isProc=false;
         
         const officialDB = [
-            {t:"Finance", q:"Money supply", r:"Masse monétaire"}, {t:"Finance", q:"Venture capital", r:"Capital-risque"}, {t:"Finance", q:"Yield", r:"Rendement"}, {t:"Finance", q:"Bonds", r:"Obligations"}, {t:"Finance", q:"Initial Public Offering (IPO)", r:"Introduction en bourse"},
-            {t:"Accounting", q:"Balance sheet", r:"Bilan"}, {t:"Accounting", q:"Assets", r:"Actif"}, {t:"Accounting", q:"Liabilities", r:"Passif"}, {t:"Accounting", q:"Equity", r:"Capitaux propres"}, {t:"Accounting", q:"Depreciation", r:"Amortissement"},
-            {t:"CSR", q:"Stakeholders", r:"Parties prenantes"}, {t:"CSR", q:"Sustainability", r:"Durabilité"}, {t:"CSR", q:"Greenwashing", r:"Éco-blanchiment"}, {t:"CSR", q:"Whistleblowing", r:"Alerte éthique"},
-            {t:"IT & Tech", q:"AI", r:"Intelligence artificielle"}, {t:"IT & Tech", q:"Big data", r:"Données massives"}, {t:"IT & Tech", q:"Blockchain", r:"Chaîne de blocs"}, {t:"IT & Tech", q:"Cloud computing", r:"Informatique en nuage"},
-            {t:"Management", q:"Leadership", r:"Direction"}, {t:"Management", q:"Trade union", r:"Syndicat"}, {t:"Management", q:"Burnout", r:"Épuisement"}, {t:"Management", q:"Remote work", r:"Télétravail"},
-            {t:"Marketing", q:"Supply chain", r:"Chaîne logistique"}, {t:"Marketing", q:"Market share", r:"Part de marché"}, {t:"Marketing", q:"Outsourcing", r:"Externalisation"}, {t:"Marketing", q:"Product life cycle", r:"Cycle de vie produit"},
-            {t:"International", q:"Globalization", r:"Mondialisation"}, {t:"International", q:"Free trade", r:"Libre-échange"}, {t:"International", q:"Tariff", r:"Droit de douane"}, {t:"International", q:"Trade deficit", r:"Déficit commercial"}
+            {t:"1. Monde du travail", q:"Freelance", r:"Travailleur indépendant"},
+            {t:"1. Monde du travail", q:"Headhunter", r:"Chasseur de têtes"},
+            {t:"2. Stratégie", q:"Core business", r:"Cœur de métier"},
+            {t:"2. Stratégie", q:"Market share", r:"Part de marché"},
+            {t:"3. Ressources Humaines", q:"Payroll", r:"Paie / Salaires"},
+            {t:"3. Ressources Humaines", q:"Fringe benefits", r:"Avantages en nature"},
+            {t:"4. Marketing", q:"Brand awareness", r:"Notoriété de la marque"},
+            {t:"4. Marketing", q:"Wholesale", r:"Vente en gros"},
+            {t:"5. Finance", q:"Working capital", r:"Fonds de roulement"},
+            {t:"5. Finance", q:"To break even", r:"Atteindre l'équilibre"},
+            {t:"6. Logistique", q:"Supply chain", r:"Chaîne logistique"},
+            {t:"6. Logistique", q:"Inventory", r:"Stock"},
+            {t:"7. Éthique", q:"Whistleblower", r:"Lanceur d'alerte"},
+            {t:"7. Éthique", q:"Fair trade", r:"Commerce équitable"}
         ];
 
         function showSection(id) {
-            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours', 'screen-custom'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
             const isMenu = id === 'screen-menu';
             document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
             document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
-            if(isMenu) {
-                document.getElementById('game-info').classList.add('hidden');
-                if(timer) clearInterval(timer);
+            if(id === 'screen-cours') loadCours();
+            if(timer && isMenu) clearInterval(timer);
+        }
+
+        function loadCours() {
+            const list = document.getElementById('cours-list');
+            list.innerHTML = "";
+            const themes = [...new Set(officialDB.map(i => i.t))];
+            themes.forEach(t => {
+                const div = document.createElement('div');
+                div.className = "p-4 bg-white/5 rounded-xl border-l-4 border-indigo-400 mb-2";
+                const words = officialDB.filter(i => i.t === t).map(i => `${i.q} (${i.r})`).join(', ');
+                div.innerHTML = `<h3 class="text-indigo-400 uppercase text-xs mb-1">${t}</h3><p class="text-[10px] text-slate-300 italic">${words}</p>`;
+                list.appendChild(div);
+            });
+        }
+
+        function saveCustomWord() {
+            const en = document.getElementById('custom-en').value.trim();
+            const fr = document.getElementById('custom-fr').value.trim();
+            if(en && fr) {
+                let custom = JSON.parse(localStorage.getItem('custom_vocab') || "[]");
+                custom.push({t:"MES MOTS", q: en, r: fr});
+                localStorage.setItem('custom_vocab', JSON.stringify(custom));
+                alert("Mot ajouté !");
+                document.getElementById('custom-en').value = "";
+                document.getElementById('custom-fr').value = "";
+                showSection('screen-menu');
             }
         }
 
-        function exitToModeSelection() { if(timer) clearInterval(timer); showSection('screen-menu'); }
-
         function startGame(m) {
-            mode = m; score = 0; timeLeft = 60; combo = 1; consecutive = 0; lastIndices = [];
-            showSection('screen-game');
-            if(mode === 'learning') return next();
-            document.getElementById('game-info').classList.remove('hidden');
+            mode = m; score = 0; timeLeft = 60; showSection('screen-game');
             document.getElementById('score-ui').innerText = "0";
-            if(mode === 'survival') { document.getElementById('timer-container').classList.add('hidden'); }
-            else {
-                document.getElementById('timer-container').classList.remove('hidden');
-                document.getElementById('timer-ui').innerText = "60s";
-                timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+            
+            if(mode === 'learning') {
+                document.getElementById('game-info').classList.add('hidden');
+            } else {
+                document.getElementById('game-info').classList.remove('hidden');
+                if(mode === 'competition') {
+                    document.getElementById('timer-container').classList.remove('hidden');
+                    document.getElementById('timer-ui').innerText = "60s";
+                    timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+                } else {
+                    document.getElementById('timer-container').classList.add('hidden');
+                }
             }
             next();
         }
 
         function next() {
             isProc = false; document.getElementById('feedback').classList.add('hidden');
-            let idx;
-            let attempts = 0;
-            do {
-                idx = Math.floor(Math.random() * officialDB.length);
-                attempts++;
-            } while (lastIndices.includes(idx) && attempts < 15);
-            
-            lastIndices.push(idx);
-            if(lastIndices.length > 5) lastIndices.shift();
-            
-            const item = officialDB[idx];
+            let fullDB = [...officialDB, ...JSON.parse(localStorage.getItem('custom_vocab') || "[]")];
+            const item = fullDB[Math.floor(Math.random() * fullDB.length)];
             window.curr = item;
             document.getElementById('word-to-guess').innerText = item.q;
             document.getElementById('theme-tag').innerText = item.t;
@@ -148,12 +169,12 @@
             grid.innerHTML = "";
             let choices = [item.r];
             while(choices.length < 3) {
-                let r = officialDB[Math.floor(Math.random()*officialDB.length)].r;
+                let r = fullDB[Math.floor(Math.random()*fullDB.length)].r;
                 if(!choices.includes(r)) choices.push(r);
             }
             choices.sort(() => Math.random() - 0.5).forEach(c => {
                 const btn = document.createElement('button');
-                btn.className = "glass p-5 rounded-2xl uppercase border border-white/10 hover:bg-indigo-500/10 transition-colors italic text-xs";
+                btn.className = "glass p-4 rounded-2xl uppercase border border-white/10 italic text-xs";
                 btn.innerText = c; btn.onclick = () => check(c);
                 grid.appendChild(btn);
             });
@@ -163,16 +184,18 @@
             if(isProc) return; isProc = true;
             const isOk = (v === window.curr.r);
             const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
+            
             if(isOk) {
-                if(mode !== 'learning') { consecutive++; combo = consecutive >= 3 ? 2 : 1; score += (50 * combo); document.getElementById('score-ui').innerText = score; }
+                if(mode !== 'learning') { score += 50; document.getElementById('score-ui').innerText = score; }
                 f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 300);
             } else {
-                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95"; f.innerHTML="<i class='fas fa-skull text-6xl'></i>"; setTimeout(stopGame, 1000); return; }
-                combo = 1; consecutive = 0;
-                if(mode === 'competition') { score = Math.max(0, score-25); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
-                f.className="feedback-overlay bg-red-600/95 p-6 text-center text-white italic"; f.innerHTML=`<p class='text-lg'>${window.curr.r}</p>`;
-                setTimeout(next, 1200);
+                let advice = mode === 'competition' ? "" : `<p class='text-xl mt-4'>${window.curr.r}</p><p class='text-[10px] uppercase opacity-70 mt-2 tracking-widest'>Correction</p>`;
+                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6"; f.innerHTML=`<i class='fas fa-skull text-6xl'></i>${advice}`; setTimeout(stopGame, 2000); return; }
+                f.className="feedback-overlay bg-red-600/95 flex-col p-6 font-bold";
+                f.innerHTML=`<i class='fas fa-times text-4xl mb-2'></i>${advice}`;
+                setTimeout(next, mode === 'competition' ? 1200 : 2500);
             }
         }
 
@@ -180,36 +203,27 @@
             if(timer) clearInterval(timer); 
             showSection('screen-end'); 
             document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
-            
-            // Sauvegarde du record pour le dashboard
             if(mode !== 'learning') {
                 const best = parseInt(localStorage.getItem('record_anglais') || 0);
                 if(score > best) localStorage.setItem('record_anglais', score);
             }
         }
 
-        function shareScore() {
-            const message = `🏆 BILINGUE DCG !\n\nJe viens de scorer ${score} points sur le lexique "English Pro" (ObjectifDCG).\n\nReady to challenge me? 🇬🇧🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+function shareScore() {
+    const message = `🏆 BILINGUE DCG !\n\nJe viens de scorer ${score} pts sur English Pro (ObjectifDCG/DSCG). Ready to challenge me? 🇬🇧🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
 
-            if (navigator.share) {
-                navigator.share({
-                    title: 'Mon record English DCG',
-                    text: message,
-                    url: 'https://bibiquette.github.io/objectif-dscg/'
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(message).then(() => {
-                    const btn = document.getElementById('btn-share');
-                    const oldHtml = btn.innerHTML;
-                    btn.innerHTML = "<i class='fas fa-check'></i> Copié !";
-                    btn.classList.replace('bg-indigo-600', 'bg-emerald-600');
-                    setTimeout(() => {
-                        btn.innerHTML = oldHtml;
-                        btn.classList.replace('bg-emerald-600', 'bg-indigo-600');
-                    }, 2000);
-                });
-            }
-        }
+    if (navigator.share) {
+        navigator.share({
+            title: 'Mon Record English Pro',
+            text: message,
+            url: 'https://bibiquette.github.io/objectif-dscg/'
+        }).catch(() => {});
+    } else {
+        navigator.clipboard.writeText(message).then(() => {
+            alert("Copié !");
+        });
+    }
+}
     </script>
 </body>
 </html>
