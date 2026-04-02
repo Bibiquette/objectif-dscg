@@ -101,6 +101,15 @@
             <div id="streak-container" class="streak-badge flex items-center gap-2 px-4 py-2 rounded-2xl text-white">
                 <i class="fas fa-fire"></i><span id="streak-count">0</span>
             </div>
+
+            <button onclick="openFeedback()" class="glass p-3 rounded-xl hover:text-emerald-500 transition-colors shadow-lg group relative">
+                <i class="fa-solid fa-comment-dots"></i>
+                <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                </span>
+            </button>
+
             <button onclick="toggleTheme()" class="glass p-3 rounded-xl hover:scale-110 transition-transform"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
             <button onclick="clearUser()" class="glass p-3 rounded-xl hover:text-red-500"><i class="fa-solid fa-user-gear"></i></button>
         </div>
@@ -157,6 +166,21 @@
         </div>
     </section>
 
+    <div id="feedback-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4">
+        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-emerald-500 italic font-bold">
+            <h3 class="text-xl font-black uppercase text-slate-800 dark:text-white mb-2 italic">Ton avis compte 📝</h3>
+            <p class="text-[10px] text-slate-500 mb-6 uppercase tracking-widest italic">Aide-moi à améliorer l'app !</p>
+            
+            <div class="space-y-4">
+                <button onclick="sendFeedback('Trop dur')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-emerald-500/10 text-xs text-left text-slate-700 dark:text-slate-200">🤯 C'est trop difficile</button>
+                <button onclick="sendFeedback('Bug')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-rose-500/10 text-xs text-left text-slate-700 dark:text-slate-200">🐛 J'ai trouvé un bug</button>
+                <button onclick="sendFeedback('Nouvelle UE')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-sky-500/10 text-xs text-left text-slate-700 dark:text-slate-200">🚀 Je veux une autre UE</button>
+            </div>
+            
+            <button onclick="closeFeedback()" class="w-full mt-6 py-3 text-slate-400 text-[10px] uppercase font-black italic">Plus tard</button>
+        </div>
+    </div>
+
     <div class="mt-20 opacity-20 flex justify-center pb-10">
         <a href="https://www.hitwebcounter.com" target="_blank"><img src="https://hitwebcounter.com/counter/counter.php?page=ObjectifDCG_PWA&style=0007&nbdigits=5&type=ip&initCount=0" border="0" /></a>
     </div>
@@ -172,6 +196,25 @@
             setInterval(updateOnlineCount, 5000);
         };
 
+        // --- LOGIQUE FEEDBACK ---
+        function openFeedback() {
+            document.getElementById('feedback-modal').classList.remove('hidden');
+        }
+
+        function closeFeedback() {
+            document.getElementById('feedback-modal').classList.add('hidden');
+        }
+
+        function sendFeedback(type) {
+            const pseudo = localStorage.getItem('dscg_username') || "Un étudiant";
+            const subject = encodeURIComponent(`Feedback ObjectifDCG - ${type}`);
+            const body = encodeURIComponent(`Salut ! C'est ${pseudo}.\n\nMon retour sur le site : ${type}\n\n(Détaillez ici ce que vous aimeriez changer...)`);
+            
+            window.location.href = `mailto:bibiquettejeux@gmail.com?subject=${subject}&body=${body}`;
+            closeFeedback();
+        }
+
+        // --- LOGIQUE THÈME ---
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
@@ -184,6 +227,7 @@
             icon.className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
 
+        // --- LOGIQUE GÉNÉRALE ---
         function updateOnlineCount() {
             const el = document.getElementById('online-count');
             let current = parseInt(el.innerText);
@@ -232,6 +276,13 @@
         }
 
         function clearUser() { if(confirm("Réinitialiser profil ?")) { localStorage.clear(); location.reload(); } }
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('SW enregistré !'))
+            .catch(err => console.log('Erreur SW:', err));
+    });
+}
     </script>
 </body>
 </html>
