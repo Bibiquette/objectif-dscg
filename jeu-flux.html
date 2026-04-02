@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2428KVLEB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V2428KVLEB');
+    </script>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Flux Master | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -105,22 +111,14 @@
         function startGame(m) {
             mode = m; score = 0; timeLeft = 60; showSection('screen-game');
             document.getElementById('score-ui').innerText = "0";
-            
-            if(mode === 'learning') {
-                document.getElementById('game-info').classList.add('hidden');
-            } else {
+            if(mode === 'learning') { document.getElementById('game-info').classList.add('hidden'); }
+            else {
                 document.getElementById('game-info').classList.remove('hidden');
                 if(mode === 'competition') {
                     document.getElementById('timer-container').classList.remove('hidden');
                     document.getElementById('timer-ui').innerText = "60s";
-                    timer = setInterval(() => { 
-                        timeLeft--; 
-                        document.getElementById('timer-ui').innerText = timeLeft+"s"; 
-                        if(timeLeft <= 0) stopGame(); 
-                    }, 1000);
-                } else {
-                    document.getElementById('timer-container').classList.add('hidden');
-                }
+                    timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+                } else { document.getElementById('timer-container').classList.add('hidden'); }
             }
             next();
         }
@@ -136,32 +134,15 @@
             if(isProc) return; isProc = true;
             const isOk = (v === window.curr.r);
             const f = document.getElementById('feedback'); f.classList.remove('hidden');
-            
             if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
-
             if(isOk) {
-                if(mode !== 'learning') { 
-                    score += 20; 
-                    document.getElementById('score-ui').innerText = score; 
-                }
+                if(mode !== 'learning') { score += 20; document.getElementById('score-ui').innerText = score; }
                 f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 250);
             } else {
                 let advice = mode === 'competition' ? "" : `<p class='text-xs mt-4 uppercase tracking-widest px-4 font-bold'>${window.curr.w}</p>`;
-                
-                if(mode === 'survival') { 
-                    f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6"; 
-                    f.innerHTML=`<i class='fas fa-skull text-6xl'></i>${advice}`; 
-                    setTimeout(stopGame, 2000); 
-                    return; 
-                }
-                
-                if(mode === 'competition') { 
-                    score = Math.max(0, score-10); 
-                    timeLeft -= 3; 
-                    document.getElementById('score-ui').innerText = score; 
-                }
-                
+                if(mode === 'survival') { f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6"; f.innerHTML=`<i class='fas fa-skull text-6xl'></i>${advice}`; setTimeout(stopGame, 2000); return; }
+                if(mode === 'competition') { score = Math.max(0, score-10); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
                 f.className="feedback-overlay bg-red-600/95 p-6 flex-col text-center text-white font-bold italic"; 
                 f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i>${advice}`;
                 setTimeout(next, mode === 'competition' ? 1000 : 2000);
@@ -172,29 +153,20 @@
             if(timer) clearInterval(timer); 
             showSection('screen-end'); 
             document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
-            
             if(mode !== 'learning') {
                 const best = parseInt(localStorage.getItem('record_flux') || 0);
                 if(score > best) localStorage.setItem('record_flux', score);
+                
+                // Google Analytics: Track Score
+                gtag('event', 'game_finish', { 'game_name': 'Flux Master', 'score': score, 'mode': mode });
             }
         }
 
-function shareScore() {
-    // On utilise la variable 'score' directement pour éviter le texte "ZEN"
-    const message = `🏆 Nouveau Record sur ObjectifDCG/DSCG !\n\nJe viens de marquer ${score} points. Prêt à relever le défi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
-
-    if (navigator.share) {
-        navigator.share({
-            title: 'Mon Record DCG/DSCG',
-            text: message,
-            url: 'https://bibiquette.github.io/objectif-dscg/'
-        }).catch(() => {});
-    } else {
-        navigator.clipboard.writeText(message).then(() => {
-            alert("Record copié dans le presse-papier !");
-        });
-    }
-}
+        function shareScore() {
+            const message = `🏆 Nouveau Record sur ObjectifDCG/DSCG !\n\nJe viens de marquer ${score} points. Prêt à relever le défi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+            if (navigator.share) { navigator.share({ title: 'Mon Record DCG/DSCG', text: message, url: 'https://bibiquette.github.io/objectif-dscg/' }).catch(() => {}); }
+            else { navigator.clipboard.writeText(message).then(() => { alert("Record copié !"); }); }
+        }
     </script>
 </body>
 </html>

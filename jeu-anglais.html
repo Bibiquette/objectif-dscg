@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2428KVLEB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V2428KVLEB');
+    </script>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>English Pro | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -206,24 +213,20 @@
             if(mode !== 'learning') {
                 const best = parseInt(localStorage.getItem('record_anglais') || 0);
                 if(score > best) localStorage.setItem('record_anglais', score);
+                
+                // Google Analytics: Track Score
+                gtag('event', 'game_finish', { 'game_name': 'English Pro', 'score': score, 'mode': mode });
             }
         }
 
-function shareScore() {
-    const message = `🏆 BILINGUE DCG !\n\nJe viens de scorer ${score} pts sur English Pro (ObjectifDCG/DSCG). Ready to challenge me? 🇬🇧🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
-
-    if (navigator.share) {
-        navigator.share({
-            title: 'Mon Record English Pro',
-            text: message,
-            url: 'https://bibiquette.github.io/objectif-dscg/'
-        }).catch(() => {});
-    } else {
-        navigator.clipboard.writeText(message).then(() => {
-            alert("Copié !");
-        });
-    }
-}
+        function shareScore() {
+            const message = `🏆 BILINGUE DCG !\n\nJe viens de scorer ${score} pts sur English Pro (ObjectifDCG/DSCG). Ready to challenge me? 🇬🇧🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+            if (navigator.share) {
+                navigator.share({ title: 'Mon Record English Pro', text: message, url: 'https://bibiquette.github.io/objectif-dscg/' }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(message).then(() => { alert("Copié !"); });
+            }
+        }
     </script>
 </body>
 </html>

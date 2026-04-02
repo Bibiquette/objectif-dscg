@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2428KVLEB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V2428KVLEB');
+    </script>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>BFR Tycoon | ObjectifDCG/DSCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -89,7 +96,6 @@
 
     <script>
         let cash = 60, score = 0, turn = 0, isProc = false;
-
         const events = [
             { t: "CLIENT", title: "Gros Contrat", desc: "Paiement à 120 jours. Bloque du cash immédiatement.", impact: -25, pts: 500, icon: "fa-earth-americas", color: "text-sky-400" },
             { t: "FOURNISSEUR", title: "Remise Cash", desc: "Payer comptant pour -10% sur l'achat. Consomme du cash.", impact: -15, pts: 200, icon: "fa-truck-fast", color: "text-purple-400" },
@@ -102,45 +108,28 @@
         function showSection(id) {
             ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
-            
             const stats = document.getElementById('game-stats');
             if (id === 'screen-game') stats.classList.remove('hidden');
             else if (id === 'screen-menu') stats.classList.add('hidden');
         }
 
-        function startGame() { 
-            cash = 60; score = 0; turn = 0; 
-            showSection('screen-game'); 
-            updateUI(); 
-            nextEvent(); 
-        }
+        function startGame() { cash = 60; score = 0; turn = 0; showSection('screen-game'); updateUI(); nextEvent(); }
 
         function updateUI() {
             document.getElementById('cash-text').innerText = cash + "k €";
             const fill = document.getElementById('cash-fill');
             fill.style.width = Math.max(0, Math.min(100, cash)) + "%";
             document.getElementById('turn-ui').innerText = turn;
-            
             if(cash <= 25) document.getElementById('event-box').classList.add('danger-zone');
             else document.getElementById('event-box').classList.remove('danger-zone');
         }
 
         function nextEvent() {
-            isProc = false; 
-            turn++; 
-            document.getElementById('feedback').classList.add('hidden');
-            
-            cash -= 2; // Charges fixes
-            updateUI();
-            
-            if(cash <= 0) { 
-                stopGame("Tes charges fixes ont épuisé ta trésorerie. 💡 Conseil : Pour durer, accepte des petits gains de cash et évite les délais clients trop longs !"); 
-                return; 
-            }
-
+            isProc = false; turn++; document.getElementById('feedback').classList.add('hidden');
+            cash -= 2; updateUI();
+            if(cash <= 0) { stopGame("Tes charges fixes ont épuisé ta trésorerie. 💡 Conseil : Pour durer, accepte des petits gains de cash et évite les délais clients trop longs !"); return; }
             const ev = events[Math.floor(Math.random()*events.length)];
             window.currentEv = ev;
-            
             document.getElementById('event-type').innerText = ev.t;
             document.getElementById('event-title').innerText = ev.title;
             document.getElementById('event-desc').innerText = ev.desc;
@@ -149,54 +138,33 @@
         }
 
         function decide(accept) {
-            if(isProc) return;
-            isProc = true;
+            if(isProc) return; isProc = true;
             const ev = window.currentEv;
-
-            if(accept) {
-                cash += ev.impact;
-                score += ev.pts;
-                if ("vibrate" in navigator) navigator.vibrate(30);
-            }
-
+            if(accept) { cash += ev.impact; score += ev.pts; if ("vibrate" in navigator) navigator.vibrate(30); }
             updateUI();
-
-            if(cash <= 0) {
-                setTimeout(() => stopGame("Faillite. 💡 Conseil : Encaisser à 120 jours détruit ton cash ! Privilégie les rentrées de trésorerie rapides quand tu es sous les 30k€."), 500);
-            } else {
-                setTimeout(nextEvent, 800);
-            }
+            if(cash <= 0) setTimeout(() => stopGame("Faillite. 💡 Conseil : Encaisser à 120 jours détruit ton cash ! Privilégie les rentrées de trésorerie rapides quand tu es sous les 30k€."), 500);
+            else setTimeout(nextEvent, 800);
         }
 
         function stopGame(reason) { 
             const best = parseInt(localStorage.getItem('record_bfr') || 0);
             if (score > best) localStorage.setItem('record_bfr', score);
-            
-            // On sauvegarde aussi les tours pour les badges de l'index
             const maxTurns = parseInt(localStorage.getItem('stat_max_turns') || 0);
             if (turn > maxTurns) localStorage.setItem('stat_max_turns', turn);
-
             showSection('screen-end'); 
             document.getElementById('death-reason').innerText = reason; 
             document.getElementById('final-score').innerText = score;
             if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
+
+            // Google Analytics: Track Score
+            gtag('event', 'game_finish', { 'game_name': 'BFR Tycoon', 'score': score, 'turns': turn });
         }
 
-function shareScore() {
-    const message = `🏆 TYCOON DU BFR !\n\nJ'ai marqué ${score} pts en tenant ${turn} tours sur BFR Tycoon (ObjectifDCG/DSCG). Qui peut sauver sa boîte mieux que moi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
-
-    if (navigator.share) {
-        navigator.share({
-            title: 'Record BFR Tycoon',
-            text: message,
-            url: 'https://bibiquette.github.io/objectif-dscg/'
-        }).catch(() => {});
-    } else {
-        navigator.clipboard.writeText(message).then(() => {
-            alert("Record copié !");
-        });
-    }
-}
+        function shareScore() {
+            const message = `🏆 TYCOON DU BFR !\n\nJ'ai marqué ${score} pts en tenant ${turn} tours sur BFR Tycoon (ObjectifDCG/DSCG). Qui peut sauver sa boîte mieux que moi ? 🔥\n\nJoue ici : https://bibiquette.github.io/objectif-dscg/`;
+            if (navigator.share) { navigator.share({ title: 'Record BFR Tycoon', text: message, url: 'https://bibiquette.github.io/objectif-dscg/' }).catch(() => {}); }
+            else { navigator.clipboard.writeText(message).then(() => { alert("Record copié !"); }); }
+        }
     </script>
 </body>
 </html>

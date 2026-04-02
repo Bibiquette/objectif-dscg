@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2428KVLEB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V2428KVLEB');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ObjectifDCG/DSCG | Business Tycoon</title>
@@ -58,6 +66,9 @@
             transition: all 0.5s ease;
         }
 
+        /* Force la visibilité du logo en mode sombre */
+        .logo-text { color: var(--text-main) !important; }
+
         .glass { 
             background: var(--glass-bg); 
             backdrop-filter: blur(16px); 
@@ -89,7 +100,7 @@
 
     <div id="auth-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl hidden">
         <div class="glass p-10 rounded-[3rem] text-center max-w-md w-full italic">
-            <h2 class="text-3xl font-black mb-2 text-slate-800 dark:text-white uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h2>
+            <h2 class="text-3xl font-black mb-2 logo-text uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h2>
             <input type="text" id="username-input" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl p-5 text-center font-bold mb-6 text-slate-800 dark:text-white outline-none" placeholder="Ton Pseudo">
             <button onclick="saveUser()" class="w-full py-5 bg-sky-600 text-white rounded-2xl font-black uppercase tracking-widest italic hover:bg-sky-500 transition-all">Lancer l'App</button>
         </div>
@@ -97,7 +108,7 @@
 
     <header class="max-w-6xl mx-auto flex justify-between items-start mb-12 italic font-bold">
         <div>
-            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter text-slate-900 dark:text-white">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h1>
+            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter logo-text">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h1>
             <p id="user-greeting" class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1 italic">La référence des révisions interactives</p>
             <div class="flex items-center gap-2 mt-3">
                 <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
@@ -215,16 +226,11 @@
         function updateProgression() {
             const records = ['flux', 'bfr', 'immo', 'prov', 'anglais'];
             let playedGames = 0;
-            records.forEach(key => {
-                if(parseInt(localStorage.getItem('record_' + key)) > 0) playedGames++;
-            });
+            records.forEach(key => { if(parseInt(localStorage.getItem('record_' + key)) > 0) playedGames++; });
             let percent = Math.round((playedGames / records.length) * 100);
             const bar = document.getElementById('progression-bar');
             const text = document.getElementById('progression-text');
-            if(bar && text) {
-                bar.style.width = percent + '%';
-                text.innerText = percent + '%';
-            }
+            if(bar && text) { bar.style.width = percent + '%'; text.innerText = percent + '%'; }
         }
 
         function loadRecords() {
@@ -252,13 +258,15 @@
 
         function updateThemeIcon() {
             const icon = document.getElementById('theme-icon');
-            icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            if(icon) icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
         }
 
         function updateOnlineCount() {
             const el = document.getElementById('online-count');
-            let current = parseInt(el.innerText);
-            el.innerText = Math.max(8, Math.min(45, current + (Math.floor(Math.random() * 3) - 1)));
+            if(el) {
+                let current = parseInt(el.innerText);
+                el.innerText = Math.max(8, Math.min(45, current + (Math.floor(Math.random() * 3) - 1)));
+            }
         }
 
         function updateStreak() {
@@ -276,7 +284,8 @@
 
             localStorage.setItem('last_visit', today);
             localStorage.setItem('user_streak', streak);
-            document.getElementById('streak-count').innerText = streak;
+            const el = document.getElementById('streak-count');
+            if(el) el.innerText = streak;
         }
 
         function checkBadges() {
@@ -293,7 +302,11 @@
 
         function saveUser() {
             const name = document.getElementById('username-input').value.trim();
-            if(name.length > 1) { localStorage.setItem('dscg_username', name); location.reload(); }
+            if(name.length > 1) { 
+                localStorage.setItem('dscg_username', name); 
+                gtag('event', 'sign_up', { 'method': 'local_storage' });
+                location.reload(); 
+            }
         }
 
         function clearUser() { if(confirm("Réinitialiser profil ?")) { localStorage.clear(); location.reload(); } }
