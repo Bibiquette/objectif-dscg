@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2428KVLEB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V2428KVLEB');
+    </script>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Theories Master | ObjectifDCG/DSCG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; flex-direction: column; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .school-card { background: rgba(255,255,255,0.03); border-radius: 1.5rem; padding: 1.25rem; border-left: 4px solid; margin-bottom: 1rem; }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center italic font-bold">
+    <div class="w-full max-w-lg">
+        <header class="flex justify-between items-center mb-6 h-16 w-full text-left">
+            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-emerald-500/30"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-emerald-400 border-2 border-emerald-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
+            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-emerald-500/50">
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-emerald-400 italic">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500 italic">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
+            </div>
+        </header>
+
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-emerald-500/20 shadow-2xl">
+            <h1 class="text-4xl font-black uppercase mb-8 text-emerald-400 tracking-tighter italic">Theories Master</h1>
+            <div class="grid grid-cols-1 gap-3 text-left">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-amber-500/30 text-amber-400">
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-book-open"></i></div>
+                    <div><p class="text-xs uppercase">Cours Complet</p><p class="text-[9px] text-slate-500 italic">Révisions par écoles</p></div>
+                </button>
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-emerald-500/30 text-emerald-400">
+                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500 italic">ZEN + Pourquoi ?</p></div>
+                </button>
+                <button onclick="startGame('competition')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-sky-500/30 text-sky-400">
+                    <div class="w-10 h-10 bg-sky-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500 italic">Chrono & Records</p></div>
+                </button>
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-rose-500/30 text-rose-400">
+                    <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500 italic text-rose-400">0 Faute</p></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto custom-scrollbar italic text-left border-2 border-amber-500/50">
+            <h2 class="text-xl font-black mb-6 text-amber-500 uppercase text-center">🧠 Récapitulatif par Écoles</h2>
+            <div class="space-y-4">
+                <div class="school-card border-sky-400">
+                    <h3 class="text-sky-400 text-xs uppercase mb-1">Classique & OST</h3>
+                    <p class="text-[10px] text-slate-300"><b>Taylor</b> : Division verticale/horizontale. <b>Fayol</b> : POCCC & 14 principes. <b>Ford</b> : Travail à la chaîne & Target Costing. <b>Weber</b> : Bureaucratie.</p>
+                </div>
+                <div class="school-card border-emerald-400">
+                    <h3 class="text-emerald-400 text-xs uppercase mb-1">Relations Humaines</h3>
+                    <p class="text-[10px] text-slate-300"><b>Mayo</b> : Effet Hawthorne. <b>Maslow</b> : Pyramide des besoins. <b>Herzberg</b> : Hygiène vs Motivation. <b>McGregor</b> : X et Y. <b>Follett</b> : Conflit constructif.</p>
+                </div>
+                <div class="school-card border-purple-400">
+                    <h3 class="text-purple-400 text-xs uppercase mb-1">Contractuelles & Agence</h3>
+                    <p class="text-[10px] text-slate-300"><b>Coase/Williamson</b> : Coûts de transaction (Marché vs Firme). <b>Jensen/Meckling</b> : Agence (Principal vs Agent). <b>Freeman/Clarkson</b> : Parties prenantes.</p>
+                </div>
+                <div class="school-card border-orange-400">
+                    <h3 class="text-orange-400 text-xs uppercase mb-1">Décision & Stratégie</h3>
+                    <p class="text-[10px] text-slate-300"><b>Simon</b> : Rationalité limitée (IMC). <b>March</b> : Poubelle. <b>Crozier</b> : Zones d'incertitude. <b>Porter</b> : 5 forces & Chaîne de valeur. <b>Drucker</b> : DPO.</p>
+                </div>
+            </div>
+            <button onclick="showSection('screen-menu')" class="w-full mt-8 bg-amber-500 text-black py-4 rounded-xl font-black uppercase">Retour</button>
+        </div>
+
+        <div id="screen-game" class="hidden relative text-center">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center relative border border-white/5 shadow-inner">
+                <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
+                <p class="text-[9px] uppercase font-black text-emerald-400 absolute top-8 tracking-widest italic">Concept / Auteur</p>
+                <h2 id="question-text" class="text-xl font-black uppercase mb-4 tracking-tighter italic leading-snug">---</h2>
+            </div>
+            <div id="options-grid" class="grid grid-cols-1 gap-3 mt-6"></div>
+        </div>
+
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-emerald-500/30">
+            <div id="end-visual" class="text-7xl font-black text-emerald-400 mb-4 italic tracking-tighter">0</div>
+            <button onclick="shareScore()" class="w-full bg-emerald-600 py-5 rounded-2xl font-black uppercase text-white mb-4 flex items-center justify-center gap-3 shadow-xl"><i class="fas fa-share-nodes"></i> Partager</button>
+            <button onclick="location.reload()" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic text-white tracking-widest">Menu</button>
+        </div>
+    </div>
+
+    <script>
+        let mode, score=0, timer, timeLeft=60, isProc=false;
+        
+        const db = [
+            {q: "Théorie des coûts de transaction (Firme vs Marché).", r: "Coase & Williamson", detail: "La firme réduit les coûts de recherche et négociation du marché[cite: 44, 47]."},
+            {q: "Théorie de l'agence (conflit Principal/Agent).", r: "Jensen & Meckling", detail: "Analyse la séparation propriété/contrôle et l'asymétrie d'info[cite: 68, 73]."},
+            {q: "Théorie des parties prenantes (Stakeholders).", r: "Freeman & Clarkson", detail: "L'entreprise dépend de ses clients, employés et fournisseurs[cite: 96, 101]."},
+            {q: "Organisation Scientifique du Travail (OST).", r: "Taylor", detail: "Optimisation par décomposition des tâches et salaire au rendement[cite: 142, 150]."},
+            {q: "Modèle POCCC (Prévoir, Organiser, Commander...).", r: "Henri Fayol", detail: "Définit 5 fonctions clés et 14 principes de management[cite: 174, 180]."},
+            {q: "Modèle Socio-Technique (équilibre technique/social).", r: "Emery & Trist", detail: "L'efficacité dépend de l'interaction système technique/humain[cite: 193, 202]."},
+            {q: "Théorie évolutionniste et Routines.", r: "Nelson & Winter", detail: "L'entreprise évolue via l'apprentissage et des modèles répétitifs[cite: 219, 223]."},
+            {q: "La structure suit la stratégie (Main visible).", r: "Alfred Chandler", detail: "Les changements stratégiques imposent des refontes structurelles[cite: 263, 264]."},
+            {q: "Compétences clés (Core Competencies).", r: "Hamel & Prahalad", detail: "L'avantage concurrentiel repose sur des capacités distinctives[cite: 289]."},
+            {q: "5 forces concurrentielles & Chaîne de valeur.", r: "Michael Porter", detail: "Analyse des menaces et optimisation créatrice de valeur[cite: 300, 311]."},
+            {q: "Apprentissage organisationnel (Double boucle).", r: "Argyris & Schön", detail: "Passer de la correction d'erreur à la remise en cause des normes[cite: 334]."},
+            {q: "Structures mécanistes (stable) vs organiques (turbulent).", r: "Burns & Stalker", detail: "Adaptation de la structure selon l'environnement[cite: 355]."},
+            {q: "La technologie détermine la structure.", r: "Joan Woodward", detail: "Le mode de production impose le nombre de niveaux hiérarchiques[cite: 361, 364]."},
+            {q: "Les 6 composantes de l'organisation.", r: "Henry Mintzberg", detail: "Analyse via sommet stratégique, technostructure, centre op, etc[cite: 383, 389]."},
+            {q: "Différenciation et Intégration.", r: "Lawrence & Lorsch", detail: "S'adapter à des sous-environnements variés tout en restant cohérent[cite: 409, 411]."},
+            {q: "Rationalité limitée (Modèle IMC).", r: "Herbert Simon", detail: "Le décideur s'arrête à la première solution satisfaisante[cite: 425, 437]."},
+            {q: "Modèle de la poubelle (anarchie organisée).", r: "James March", detail: "Décisions aléatoires dans un flux de problèmes et solutions[cite: 468, 469]."},
+            {q: "3 types d'autorité (Charismatique, Traditionnelle, Rationnelle).", r: "Max Weber", detail: "Fondements de la légitimité au travail[cite: 492]."},
+            {q: "Zones d'incertitude et Pouvoir relationnel.", r: "Crozier & Friedberg", detail: "Le pouvoir appartient à celui qui maîtrise l'imprévu[cite: 526]."},
+            {q: "4 systèmes de management (Autoritaire à Participatif).", r: "Rensis Likert", detail: "Le management participatif est jugé le plus performant[cite: 558, 570]."},
+            {q: "Grille managériale (Production vs Humain).", r: "Blake & Mouton", detail: "Matrice identifiant 5 styles de comportement managérial[cite: 581, 587]."},
+            {q: "Effet Hawthorne : importance du facteur social.", r: "Elton Mayo", detail: "La motivation dépend des relations sociales au sein du groupe[cite: 638, 640]."},
+            {q: "Pyramide des besoins (hiérarchie des 5 niveaux).", r: "Abraham Maslow", detail: "Un besoin supérieur n'apparaît que si l'inférieur est comblé[cite: 652, 660]."},
+            {q: "Facteurs d'hygiène vs Facteurs de motivation.", r: "Frederick Herzberg", detail: "L'hygiène évite l'insatisfaction, le contenu du travail motive[cite: 675, 681]."},
+            {q: "Théorie X (contrainte) vs Théorie Y (autonomie).", r: "Douglas McGregor", detail: "La vision de l'homme par le manager détermine son style[cite: 687, 694]."},
+            {q: "Théorie des attentes (Motivation = Valence x I x E).", r: "Victor Vroom", detail: "La motivation dépend du processus Valence/Instrumentalité/Expectation[cite: 708, 714]."},
+            {q: "Conflit constructif et approche humaniste.", r: "Mary Parker Follett", detail: "Prône le pouvoir partagé et la position gagnant-gagnant[cite: 745, 747]."},
+            {q: "Direction Par Objectifs (DPO).", r: "Peter Drucker", detail: "Fixer des objectifs pour relier autonomie et responsabilité[cite: 121, 125]."},
+            {q: "Standardisation et '5 dollars a day'.", r: "Henry Ford", detail: "Production et consommation de masse (Fordisme)[cite: 862, 875]."},
+            {q: "Distinction activités stratégiques vs opérationnelles.", r: "Igor Ansoff", detail: "Père de la gestion stratégique et inventeur des DAS[cite: 243, 248]."}
+        ];
+
+        function showSection(id) {
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            const isMenu = id === 'screen-menu';
+            document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
+            document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
+            if(isMenu && timer) clearInterval(timer);
+        }
+
+        function startGame(m) {
+            mode = m; score = 0; timeLeft = 60; showSection('screen-game');
+            document.getElementById('game-info').classList.remove('hidden');
+            document.getElementById('score-ui').innerText = "0";
+            if(mode === 'competition') {
+                document.getElementById('timer-container').classList.remove('hidden');
+                startTimer();
+            } else { document.getElementById('timer-container').classList.add('hidden'); }
+            next();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => { 
+                timeLeft--; 
+                document.getElementById('timer-ui').innerText = timeLeft+"s"; 
+                if(timeLeft <= 0) stopGame(); 
+            }, 1000);
+        }
+
+        function next() {
+            isProc = false; document.getElementById('feedback').classList.add('hidden');
+            const item = db[Math.floor(Math.random()*db.length)];
+            window.curr = item; document.getElementById('question-text').innerText = item.q;
+            
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = "";
+            let choices = [item.r];
+            while(choices.length < 3) {
+                let r = db[Math.floor(Math.random()*db.length)].r;
+                if(!choices.includes(r)) choices.push(r);
+            }
+            choices.sort(() => Math.random() - 0.5).forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = "glass p-5 rounded-2xl uppercase border border-white/10 italic text-[10px] font-black hover:bg-emerald-500/10 transition-all";
+                btn.innerText = c; btn.onclick = () => check(c);
+                grid.appendChild(btn);
+            });
+        }
+
+        function check(v) {
+            if(isProc) return; isProc = true;
+            const isOk = (v === window.curr.r);
+            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            
+            if(isOk) {
+                if(mode !== 'learning') { score += 100; document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
+                setTimeout(next, 300);
+            } else {
+                if(timer) clearInterval(timer);
+                f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6";
+                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i><p class='text-xs uppercase'>Correct : ${window.curr.r}</p>
+                <button onclick="alert('${window.curr.detail.replace(/'/g, "\\'")}')" class="mt-4 px-4 py-2 bg-white/20 rounded-xl text-[10px] uppercase font-bold italic">Pourquoi ?</button>`;
+                
+                if(mode === 'survival') { setTimeout(stopGame, 3000); return; }
+                if(mode === 'competition') { score = Math.max(0, score-50); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
+                
+                setTimeout(() => {
+                    next();
+                    if(mode === 'competition') startTimer();
+                }, 1500);
+            }
+        }
+
+        function stopGame() { 
+            if(timer) clearInterval(timer); 
+            showSection('screen-end'); 
+            document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
+            const b = parseInt(localStorage.getItem('record_theories') || 0);
+            if (score > b && mode !== 'learning') localStorage.setItem('record_theories', score);
+            gtag('event', 'game_finish', { 'game_name': 'Theories Master', 'score': score });
+        }
+
+        function shareScore() {
+            const m = `🧠 Theories Master : ${score} pts sur ObjectifDCG ! 🔥\nhttps://bibiquette.github.io/objectif-dscg/`;
+            if (navigator.share) navigator.share({ title: 'Record Theories', text: m, url: 'https://bibiquette.github.io/objectif-dscg/' });
+            else { navigator.clipboard.writeText(m); alert("Copié !"); }
+        }
+    </script>
+</body>
+</html>

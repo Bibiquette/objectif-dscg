@@ -117,10 +117,14 @@
                 if(mode === 'competition') {
                     document.getElementById('timer-container').classList.remove('hidden');
                     document.getElementById('timer-ui').innerText = "60s";
-                    timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+                    startTimer();
                 } else { document.getElementById('timer-container').classList.add('hidden'); }
             }
             next();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
         }
 
         function next() {
@@ -141,13 +145,18 @@
                 f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 250);
             } else {
+                if(timer) clearInterval(timer); // PAUSE DU TIMER
                 f.className="feedback-overlay bg-red-600/95 p-6 text-white";
                 f.innerHTML=`<i class='fas fa-times text-5xl mb-2'></i><p class='text-sm uppercase font-bold'>${window.curr.w}</p>
                 <button onclick="alert('${window.curr.detail.replace(/'/g, "\\'")}')" class="mt-4 px-4 py-2 bg-white/20 rounded-xl text-[10px] uppercase tracking-widest italic">Pourquoi ? <i class="fas fa-question-circle ml-2"></i></button>`;
                 
                 if(mode === 'survival') { setTimeout(stopGame, 3000); return; }
                 if(mode === 'competition') { score = Math.max(0, score-10); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
-                setTimeout(next, 4000);
+                
+                setTimeout(() => {
+                    next();
+                    if(mode === 'competition') startTimer(); // RELANCE DU TIMER
+                }, 4000);
             }
         }
 

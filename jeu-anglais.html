@@ -109,7 +109,10 @@
         ];
 
         function showSection(id) {
-            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours', 'screen-custom'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours', 'screen-custom'].forEach(s => {
+                const el = document.getElementById(s);
+                if(el) el.classList.add('hidden');
+            });
             document.getElementById(id).classList.remove('hidden');
             const isMenu = id === 'screen-menu';
             document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
@@ -194,7 +197,8 @@
             if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
             
             if(isOk) {
-                if(mode !== 'learning') { score += 50; document.getElementById('score-ui').innerText = score; }
+                // HARMONISATION : 100 PTS par réponse
+                if(mode !== 'learning') { score += 100; document.getElementById('score-ui').innerText = score; }
                 f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
                 setTimeout(next, 300);
             } else {
@@ -213,8 +217,6 @@
             if(mode !== 'learning') {
                 const best = parseInt(localStorage.getItem('record_anglais') || 0);
                 if(score > best) localStorage.setItem('record_anglais', score);
-                
-                // Google Analytics: Track Score
                 gtag('event', 'game_finish', { 'game_name': 'English Pro', 'score': score, 'mode': mode });
             }
         }
