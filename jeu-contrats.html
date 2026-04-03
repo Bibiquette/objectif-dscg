@@ -9,7 +9,7 @@
       gtag('config', 'G-V2428KVLEB');
     </script>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Juriste Master | ObjectifDCG</title>
+    <title>Contrats Master | ObjectifDCG</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -20,100 +20,92 @@
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
         
-        .law-card { 
+        .contract-card { 
             background: rgba(255,255,255,0.03); 
             border-radius: 1.5rem; 
             padding: 1.5rem; 
-            border-left: 4px solid; 
+            border-left: 4px solid #f59e0b; 
             margin-bottom: 1.5rem; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        .law-list p { margin-bottom: 0.5rem; line-height: 1.5; }
+        .contract-desc { line-height: 1.7; margin-top: 0.75rem; }
     </style>
 </head>
 <body class="p-4 flex flex-col items-center italic font-bold">
     <div class="w-full max-w-lg">
         <header class="flex justify-between items-center mb-6 h-16 w-full text-left">
-            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-rose-500/30"><i class="fas fa-arrow-left"></i></button>
-            <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-rose-400 border-2 border-rose-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
-            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-rose-500/50">
-                <div class="text-left"><p class="text-[8px] uppercase font-black text-rose-400 italic">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-amber-500/30"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-amber-400 border-2 border-amber-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
+            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-amber-500/50">
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-amber-400 italic">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
                 <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500 italic">Timer</p><p id="timer-ui" class="text-lg font-extrabold italic text-white">60s</p></div>
             </div>
         </header>
 
-        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-rose-500/20 shadow-2xl">
-            <h1 class="text-4xl font-black uppercase mb-8 text-rose-500 tracking-tighter italic">Juriste Master</h1>
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-amber-500/20 shadow-2xl">
+            <h1 class="text-4xl font-black uppercase mb-8 text-amber-500 tracking-tighter italic">Contrats Master</h1>
             <div class="grid grid-cols-1 gap-3 text-left">
                 <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-amber-500/30 text-amber-400">
-                    <div class="w-10 h-10 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center"><i class="fas fa-balance-scale"></i></div>
-                    <div><p class="text-xs uppercase">Fiches de Droit</p><p class="text-[9px] text-slate-500 italic">UE 1 - Synthèse complète</p></div>
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-500 rounded-xl flex items-center justify-center"><i class="fas fa-file-contract"></i></div>
+                    <div><p class="text-xs uppercase">Typologie</p><p class="text-[9px] text-slate-500 italic">UE 2 - Les 40 contrats clés</p></div>
                 </button>
                 <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-emerald-500/30 text-emerald-400">
                     <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-brain"></i></div>
-                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500 italic">ZEN + Pourquoi ?</p></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500 italic">ZEN + Conseils</p></div>
                 </button>
                 <button onclick="startGame('competition')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-sky-500/30 text-sky-400">
                     <div class="w-10 h-10 bg-sky-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-bolt"></i></div>
-                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500 italic">Score & Chrono</p></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500 italic">100 PTS / Réponse</p></div>
                 </button>
                 <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-rose-500/30 text-rose-400">
                     <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-skull"></i></div>
-                    <div><p class="text-xs uppercase text-rose-400">Survie</p><p class="text-[9px] text-slate-500 italic">0 Faute</p></div>
+                    <div><p class="text-xs uppercase text-rose-400">Survie</p><p class="text-[9px] text-slate-500 italic">Zéro Faute</p></div>
                 </button>
             </div>
         </div>
 
         <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto custom-scrollbar italic text-left border-2 border-amber-500/50">
-            <h2 class="text-xl font-black mb-8 text-amber-500 uppercase text-center italic tracking-widest">⚖️ Synthèse Juridique</h2>
-            
+            <h2 class="text-xl font-black mb-8 text-amber-500 uppercase text-center italic tracking-widest">📜 Guide des Contrats</h2>
             <div class="space-y-6">
-                <div class="law-card border-blue-400">
-                    <h3 class="text-blue-400 text-xs uppercase font-black">Société Anonyme (SA)</h3>
-                    <div class="law-list text-[10px] text-slate-300 italic mt-3">
-                        <p>• Capital minimum : <b>37 000 €</b></p>
-                        <p>• Libération numéraire : <b>50% à la création</b></p>
-                        <p>• Associés : <b>2 min (non cotée) ou 7 min (cotée)</b></p>
-                    </div>
+                <div class="contract-card">
+                    <h3 class="text-amber-500 text-xs uppercase font-black tracking-wider">📦 Contrats de Base</h3>
+                    <p class="text-[10px] text-slate-300 contract-desc italic">
+                        • <b>Vente :</b> Transfert de propriété.<br>
+                        • <b>Bail :</b> Mise à disposition contre loyer.<br>
+                        • <b>Prêt :</b> Obligation de restitution.
+                    </p>
                 </div>
-
-                <div class="law-card border-emerald-400">
-                    <h3 class="text-emerald-400 text-xs uppercase font-black">SARL / EURL</h3>
-                    <div class="law-list text-[10px] text-slate-300 italic mt-3">
-                        <p>• Capital : <b>Libre (1€ min)</b></p>
-                        <p>• Libération numéraire : <b>20% à la création</b></p>
-                        <p>• Associés : <b>1 à 100 maximum</b></p>
-                    </div>
+                <div class="contract-card">
+                    <h3 class="text-amber-500 text-xs uppercase font-black tracking-wider">💼 Contrats Commerciaux</h3>
+                    <p class="text-[10px] text-slate-300 contract-desc italic">
+                        • <b>Franchise :</b> Concept + Marque.<br>
+                        • <b>Concession :</b> Exclusivité territoriale.<br>
+                        • <b>Agent :</b> Représentation indépendante.
+                    </p>
                 </div>
-
-                <div class="law-card border-rose-400">
-                    <h3 class="text-rose-400 text-xs uppercase font-black">SNC</h3>
-                    <div class="law-list text-[10px] text-slate-300 italic mt-3">
-                        <p>• Responsabilité : <b>Indéfinie et solidaire</b></p>
-                        <p>• Statut : <b>Associés tous commerçants</b></p>
-                        <p>• Capital : <b>Libre, pas de libération mini légale</b></p>
-                    </div>
+                <div class="contract-card">
+                    <h3 class="text-amber-500 text-xs uppercase font-black tracking-wider">💻 Numérique & Finances</h3>
+                    <p class="text-[10px] text-slate-300 contract-desc italic">
+                        • <b>SaaS :</b> Logiciel en ligne.<br>
+                        • <b>Leasing :</b> Location + Option d'achat.<br>
+                        • <b>NDA :</b> Confidentialité des infos.
+                    </p>
                 </div>
             </div>
-            
             <button onclick="showSection('screen-menu')" class="w-full mt-10 bg-amber-500 text-black py-4 rounded-xl font-black uppercase italic shadow-lg">J'ai révisé !</button>
         </div>
 
         <div id="screen-game" class="hidden relative text-center">
             <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center relative border border-white/5 shadow-inner">
                 <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
-                <p class="text-[9px] uppercase font-black text-rose-400 absolute top-8 tracking-widest italic">Règle de Droit</p>
+                <p id="category-tag" class="text-[9px] uppercase font-black text-amber-400 absolute top-8 tracking-widest italic"></p>
                 <h2 id="question-text" class="text-xl font-black uppercase mb-4 tracking-tighter italic leading-snug">---</h2>
             </div>
-            <div id="options-grid" class="grid grid-cols-2 gap-3 mt-6">
-                <button onclick="check('SARL')" class="glass p-5 rounded-2xl uppercase border border-white/10 italic text-[10px] font-black">SARL/EURL</button>
-                <button onclick="check('SAS')" class="glass p-5 rounded-2xl uppercase border border-white/10 italic text-[10px] font-black">SAS/SASU</button>
-                <button onclick="check('SA')" class="glass p-5 rounded-2xl uppercase border border-white/10 italic text-[10px] font-black">SA</button>
-                <button onclick="check('SNC')" class="glass p-5 rounded-2xl uppercase border border-white/10 italic text-[10px] font-black">SNC</button>
-            </div>
+            <div id="options-grid" class="grid grid-cols-1 gap-3 mt-6"></div>
         </div>
 
-        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-rose-500/30">
-            <div id="end-visual" class="text-7xl font-black text-rose-400 mb-4 italic tracking-tighter">0</div>
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-amber-500/30">
+            <div id="end-visual" class="text-7xl font-black text-amber-400 mb-4 italic tracking-tighter">0</div>
             <button onclick="shareScore()" class="w-full bg-emerald-600 py-5 rounded-2xl font-black uppercase text-white mb-4 shadow-xl"><i class="fas fa-share-nodes"></i> Partager</button>
             <button onclick="location.reload()" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic">Menu</button>
         </div>
@@ -122,16 +114,16 @@
     <script>
         let mode, score=0, timer, timeLeft=60, isProc=false;
         const db = [
-            {q: "Capital social minimum de 37 000 euros.", r: "SA", detail: "Exigence légale pour la SA (Art. L224-2)."},
-            {q: "Libération de 20% des apports en numéraire à la création.", r: "SARL", detail: "La SARL n'impose que 1/5ème à la constitution."},
-            {q: "Libération de 50% des apports en numéraire à la création.", r: "SAS", detail: "La SAS et la SA imposent la moitié dès le départ."},
-            {q: "Responsabilité indéfinie et solidaire sur les biens personnels.", r: "SNC", detail: "C'est la forme juridique la plus risquée financièrement."},
-            {q: "Nombre d'associés limité de 1 à 100 maximum.", r: "SARL", detail: "Au-delà de 100, la société doit se transformer."},
-            {q: "Qualité de commerçant obligatoire pour tous les associés.", r: "SNC", detail: "Même s'ils ne gèrent pas, ils sont commerçants."},
-            {q: "Apports en industrie impossibles dans cette société.", r: "SA", detail: "On ne peut pas apporter du savoir-faire pour le capital en SA."},
-            {q: "Liberté contractuelle totale pour rédiger les statuts.", r: "SAS", detail: "La loi laisse une grande souplesse aux associés."},
-            {q: "Dispense de Commissaire aux apports si apports nature < 30k€.", r: "SARL", detail: "Possible aussi en SAS, mais interdit en SA."},
-            {q: "Obligation d'avoir au moins 7 associés si cotée.", r: "SA", detail: "C'est la structure reine des marchés financiers."}
+            {c:"Classiques", q: "Transfert de propriété d’un bien contre paiement.", r: "Contrat de vente", detail: "L'acheteur devient propriétaire dès l'accord sur la chose et le prix."},
+            {c:"Classiques", q: "Mise à disposition d’un bien contre un loyer.", r: "Contrat de bail", detail: "Le bailleur s'oblige à faire jouir le locataire d'une chose pendant un certain temps."},
+            {c:"Travail", q: "Relation stable et durable employeur / salarié.", r: "CDI", detail: "Contrat de droit commun sans terme fixé à l'avance."},
+            {c:"Commercial", q: "Exploiter un concept et une marque contre redevance.", r: "Contrat de franchise", detail: "Le franchiseur doit transmettre son savoir-faire."},
+            {c:"Immobilier", q: "Location pour une activité commerciale (3-6-9).", r: "Bail commercial", detail: "Offre un droit au renouvellement au locataire."},
+            {c:"Financier", q: "Location avec une option d’achat à la fin.", r: "Leasing (Crédit-bail)", detail: "Permet de financer un bien sans apport initial."},
+            {c:"Numérique", q: "Accès à un logiciel à distance via internet.", r: "Contrat SaaS", detail: "Software as a Service."},
+            {c:"Technique", q: "Confier la réalisation d'une partie d'un contrat à un tiers.", r: "Sous-traitance", detail: "Le donneur d'ordre reste responsable vis-à-vis du client."},
+            {c:"Technique", q: "Mettre fin à un litige par des concessions réciproques.", r: "Contrat de transaction", detail: "Il a l'autorité de la chose jugée."},
+            {c:"Commercial", q: "Distribution exclusive sur un territoire précis.", r: "Contrat de concession", detail: "Le concessionnaire achète et revend les produits de la marque."}
         ];
 
         function showSection(id) {
@@ -161,7 +153,23 @@
         function next() {
             isProc = false; document.getElementById('feedback').classList.add('hidden');
             const item = db[Math.floor(Math.random()*db.length)];
-            window.curr = item; document.getElementById('question-text').innerText = item.q;
+            window.curr = item; 
+            document.getElementById('question-text').innerText = item.q;
+            document.getElementById('category-tag').innerText = item.c;
+            
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = "";
+            let choices = [item.r];
+            while(choices.length < 3) {
+                let r = db[Math.floor(Math.random()*db.length)].r;
+                if(!choices.includes(r)) choices.push(r);
+            }
+            choices.sort(() => Math.random() - 0.5).forEach(c => {
+                const btn = document.createElement('button');
+                btn.className = "glass p-4 rounded-2xl uppercase border border-white/10 italic text-[10px] font-black hover:bg-amber-500/10";
+                btn.innerText = c; btn.onclick = () => check(c);
+                grid.appendChild(btn);
+            });
         }
 
         function check(v) {
@@ -176,7 +184,7 @@
             } else {
                 if(timer) clearInterval(timer);
                 f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6";
-                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i><p class='text-xs uppercase font-bold italic'>Correct : ${window.curr.r}</p>
+                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i><p class='text-xs uppercase'>Correct : ${window.curr.r}</p>
                 <button onclick="alert('${window.curr.detail.replace(/'/g, "\\'")}')" class="mt-4 px-4 py-2 bg-white/20 rounded-xl text-[10px] uppercase font-bold italic">Pourquoi ?</button>`;
                 
                 if(mode === 'survival') { setTimeout(stopGame, 3000); return; }
@@ -193,13 +201,13 @@
             if(timer) clearInterval(timer); 
             showSection('screen-end'); 
             document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
-            const b = parseInt(localStorage.getItem('record_droit') || 0);
-            if (score > b && mode !== 'learning') localStorage.setItem('record_droit', score);
+            const b = parseInt(localStorage.getItem('record_contrats') || 0);
+            if (score > b && mode !== 'learning') localStorage.setItem('record_contrats', score);
         }
 
         function shareScore() {
-            const m = `⚖️ Juriste Master : ${score} pts sur ObjectifDCG ! 🔥\nhttps://bibiquette.github.io/objectif-dscg/`;
-            if (navigator.share) navigator.share({ title: 'Record Droit', text: m, url: 'https://bibiquette.github.io/objectif-dscg/' });
+            const m = `📜 Contrats Master : ${score} pts sur ObjectifDCG ! 🚀\nhttps://bibiquette.github.io/objectif-dscg/`;
+            if (navigator.share) navigator.share({ title: 'Record Contrats', text: m, url: 'https://bibiquette.github.io/objectif-dscg/' });
             else { navigator.clipboard.writeText(m); alert("Copié !"); }
         }
     </script>
