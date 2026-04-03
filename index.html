@@ -40,6 +40,7 @@
             --ue10-grad: linear-gradient(135deg, #7c3aed, #a78bfa);
             --ue12-grad: linear-gradient(135deg, #4f46e5, #6366f1);
             --ue7-grad: linear-gradient(135deg, #10b981, #34d399);
+            --ue1-grad: linear-gradient(135deg, #f43f5e, #fb7185);
         }
 
         .dark {
@@ -52,16 +53,18 @@
             --ue10-grad: linear-gradient(135deg, #a78bfa, #c4b5fd);
             --ue12-grad: linear-gradient(135deg, #818cf8, #a5b4fc);
             --ue7-grad: linear-gradient(135deg, #34d399, #6ee7b7);
+            --ue1-grad: linear-gradient(135deg, #fb7185, #fda4af);
         }
 
         body { background: var(--bg-gradient); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; transition: all 0.5s ease; }
-        .logo-text { color: var(--text-main) !important; }
         .glass { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05); }
+        
         .text-gradient-9 { background: var(--ue9-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .text-gradient-6 { background: var(--ue6-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .text-gradient-10 { background: var(--ue10-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .text-gradient-12 { background: var(--ue12-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .text-gradient-7 { background: var(--ue7-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .text-gradient-1 { background: var(--ue1-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
         .ue-card { transition: all 0.4s ease; border-top: 6px solid transparent; position: relative; overflow: hidden; }
         .ue-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px -15px rgba(0,0,0,0.1); }
@@ -70,10 +73,10 @@
         .ue-10 { border-top-color: #a78bfa; }
         .ue-12 { border-top-color: #6366f1; }
         .ue-7 { border-top-color: #10b981; }
+        .ue-1 { border-top-color: #f43f5e; }
 
         .game-link { transition: all 0.2s; font-weight: 700; color: var(--text-main); opacity: 0.8; }
         .game-link:hover { opacity: 1; padding-left: 0.5rem; background: rgba(0,0,0,0.02); }
-        .dark .game-link:hover { background: rgba(255,255,255,0.05); }
         .streak-badge { background: linear-gradient(45deg, #f59e0b, #ef4444); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3); }
     </style>
 </head>
@@ -81,7 +84,7 @@
 
     <div id="auth-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl hidden">
         <div class="glass p-10 rounded-[3rem] text-center max-w-md w-full italic">
-            <h2 class="text-3xl font-black mb-2 logo-text uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h2>
+            <h2 class="text-3xl font-black mb-2 uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h2>
             <input type="text" id="username-input" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl p-5 text-center font-bold mb-6 text-slate-800 dark:text-white outline-none" placeholder="Ton Pseudo">
             <button onclick="saveUser()" class="w-full py-5 bg-sky-600 text-white rounded-2xl font-black uppercase tracking-widest italic hover:bg-sky-500 transition-all">Lancer l'App</button>
         </div>
@@ -89,7 +92,7 @@
 
     <header class="max-w-6xl mx-auto flex justify-between items-start mb-12 italic font-bold">
         <div>
-            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter logo-text">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h1>
+            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h1>
             <p id="user-greeting" class="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mt-1 italic">La référence des révisions interactives</p>
             <div class="flex items-center gap-2 mt-3">
                 <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
@@ -99,7 +102,7 @@
         
         <div class="flex items-center gap-3">
             <div id="streak-container" class="streak-badge flex items-center gap-2 px-4 py-2 rounded-2xl text-white"><i class="fas fa-fire"></i><span id="streak-count">0</span></div>
-            <button onclick="openFeedback()" class="glass p-3 rounded-xl hover:text-emerald-500 transition-colors shadow-lg group relative"><i class="fa-solid fa-comment-dots"></i><span class="absolute -top-1 -right-1 flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span></span></button>
+            <button onclick="openFeedback()" class="glass p-3 rounded-xl hover:text-emerald-500 transition-colors shadow-lg relative"><i class="fa-solid fa-comment-dots"></i></button>
             <button onclick="toggleTheme()" class="glass p-3 rounded-xl hover:scale-110 transition-transform"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
             <button onclick="clearUser()" class="glass p-3 rounded-xl hover:text-red-500"><i class="fa-solid fa-user-gear"></i></button>
         </div>
@@ -125,6 +128,12 @@
     </section>
 
     <main class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 italic font-bold mb-20">
+        <div class="glass p-6 rounded-[2.5rem] ue-card ue-1">
+            <span class="bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 1 - DCG</span>
+            <h3 class="text-xl font-black uppercase mb-6 text-gradient-1">Droit des Sociétés</h3>
+            <a href="jeu-droit.html" class="game-link flex justify-between items-center p-3 rounded-xl text-xs"><span>Juriste Master</span><span id="rec-droit" class="text-[8px] opacity-40">0 PTS</span></a>
+        </div>
+
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-9">
             <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 9 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6 text-gradient-9">Comptabilité</h3>
@@ -159,28 +168,6 @@
         </div>
     </main>
 
-    <section class="max-w-6xl mx-auto mt-16 italic font-bold pb-20">
-        <h3 class="text-lg font-black uppercase text-slate-400 mb-8">🏆 Succès de Promotion</h3>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div id="badge-bfr" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000"><div class="w-12 h-12 bg-amber-500/20 text-amber-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-crown"></i></div><p class="text-[8px] uppercase font-black">As du BFR</p></div>
-            <div id="badge-survivor" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000"><div class="w-12 h-12 bg-rose-500/20 text-rose-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-skull"></i></div><p class="text-[8px] uppercase font-black">Survivant</p></div>
-            <div id="badge-english" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000"><div class="w-12 h-12 bg-indigo-500/20 text-indigo-500 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-graduation-cap"></i></div><p class="text-[8px] uppercase font-black">Bilingual</p></div>
-            <div id="badge-loyal" class="glass p-6 rounded-[2rem] text-center opacity-10 grayscale transition-all duration-1000"><div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-2 text-xl"><i class="fas fa-fire"></i></div><p class="text-[8px] uppercase font-black">Déterminé</p></div>
-        </div>
-    </section>
-
-    <div id="feedback-modal" class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/80 backdrop-blur-md hidden p-4">
-        <div class="glass p-8 rounded-[2.5rem] max-w-sm w-full border-t-4 border-emerald-500 italic font-bold text-slate-900 dark:text-white text-center">
-            <h3 class="text-xl font-black uppercase mb-2 italic">Ton avis compte 📝</h3><p class="text-[10px] text-slate-500 mb-6 uppercase tracking-widest italic">Aide-moi à améliorer l'app !</p>
-            <div class="space-y-4">
-                <button onclick="sendFeedback('Trop dur')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-emerald-500/10 text-xs text-left">🤯 C'est trop difficile</button>
-                <button onclick="sendFeedback('Bug')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-rose-500/10 text-xs text-left">🐛 J'ai trouvé un bug</button>
-                <button onclick="sendFeedback('Nouvelle UE')" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-sky-500/10 text-xs text-left">🚀 Je veux une autre UE</button>
-            </div>
-            <button onclick="closeFeedback()" class="w-full mt-6 py-3 text-slate-400 text-[10px] uppercase font-black italic tracking-widest">Plus tard</button>
-        </div>
-    </div>
-
     <script>
         let masteryChart;
 
@@ -203,14 +190,15 @@
                 Math.min(100, (parseInt(localStorage.getItem('record_bfr')) || 0) / maxScore * 100),
                 Math.min(100, (parseInt(localStorage.getItem('record_prov')) || 0) / maxScore * 100),
                 Math.min(100, (parseInt(localStorage.getItem('record_anglais')) || 0) / maxScore * 100),
-                Math.min(100, (parseInt(localStorage.getItem('record_theories')) || 0) / maxScore * 100) // Harmonisé à 2000
+                Math.min(100, (parseInt(localStorage.getItem('record_theories')) || 0) / maxScore * 100),
+                Math.min(100, (parseInt(localStorage.getItem('record_droit')) || 0) / maxScore * 100) // UE 1
             ];
             const isDark = document.documentElement.classList.contains('dark');
             const primaryColor = isDark ? '#38bdf8' : '#0284c7';
             masteryChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['UE 9', 'UE 6', 'UE 10', 'UE 12', 'UE 7'],
+                    labels: ['UE 9', 'UE 6', 'UE 10', 'UE 12', 'UE 7', 'UE 1'],
                     datasets: [{ label: 'Maîtrise %', data: dataScores, backgroundColor: isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(2, 132, 199, 0.2)', borderColor: primaryColor, pointBackgroundColor: primaryColor, borderWidth: 2 }]
                 },
                 options: {
@@ -230,31 +218,31 @@
             if (gap > 0) {
                 timerEl.innerHTML = `${d}<span class="text-xs opacity-50">j</span>`;
                 document.getElementById('status-msg').innerText = d < 30 ? "URGENCE : Révise à fond !" : "Focus sur tes points faibles !";
-            } else { timerEl.innerText = "JOUR J"; document.getElementById('status-msg').innerText = "Bonne chance pour tes épreuves !"; }
+            } else { timerEl.innerText = "JOUR J"; document.getElementById('status-msg').innerText = "Bonne chance !"; }
         }
 
         function toggleTheme() {
             document.documentElement.classList.toggle('dark');
             localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-            updateThemeIcon(); location.reload();
+            location.reload();
         }
 
         function updateThemeIcon() { const icon = document.getElementById('theme-icon'); if(icon) icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; }
 
         function saveUser() {
             const name = document.getElementById('username-input').value.trim();
-            if(name.length > 1) { localStorage.setItem('dscg_username', name); gtag('event', 'sign_up', { 'method': 'local_storage' }); location.reload(); }
+            if(name.length > 1) { localStorage.setItem('dscg_username', name); location.reload(); }
         }
 
         function loadRecords() {
-            ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories'].forEach(key => {
+            ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit'].forEach(key => {
                 const el = document.getElementById(`rec-${key}`);
                 if(el) el.innerText = (localStorage.getItem('record_' + key) || 0) + " PTS";
             });
         }
 
         function updateProgression() {
-            const records = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories'];
+            const records = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit'];
             let played = 0;
             records.forEach(k => { if(parseInt(localStorage.getItem('record_' + k)) > 0) played++; });
             let percent = Math.round((played / records.length) * 100);
