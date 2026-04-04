@@ -92,14 +92,38 @@
 
     <script>
         let mode, score=0, timer, timeLeft=60, isProc=false;
-        const db = [
-            {q:"Fonds commercial", r:"INC", w:"Incorporel (20)", detail:"Le fonds commercial est un actif immatériel. Il ne peut être touché physiquement (PCG 20)."},
-            {q:"Logiciels", r:"INC", w:"Incorporel (20)", detail:"Compte 205. Il s'agit d'un droit d'usage immatériel durable."},
-            {q:"Terrains", r:"CORP", w:"Corporel (21)", detail:"Compte 211. Actif physique tangible qui ne s'amortit pas."},
-            {q:"Matériel industriel", r:"CORP", w:"Corporel (21)", detail:"Compte 2154. Biens physiques utilisés pour la production."},
-            {q:"Titres de participation", r:"FIN", w:"Financier (26)", detail:"Titres conservés durablement pour exercer une influence."},
-            {q:"Dépôts et cautionnements", r:"FIN", w:"Financier (275)", detail:"Sommes versées à titre de garantie contractuelle durable."}
-        ];
+const db = [
+    {q:"Fonds de commerce", r:"INC", w:"Incorporel (20)"},
+    {q:"Logiciel de paie", r:"INC", w:"Incorporel (20)"},
+    {q:"Terrain de construction", r:"CORP", w:"Corporel (21)"},
+    {q:"Machine-outil CNC", r:"CORP", w:"Corporel (21)"},
+    {q:"Titres de participation", r:"FIN", w:"Financier (26)"},
+    {q:"Dépôt de garantie loyer", r:"FIN", w:"Financier (27)"},
+    {q:"Brevet de fabrication", r:"INC", w:"Incorporel (20)"},
+    {q:"Aménagements parking", r:"CORP", w:"Corporel (21)"},
+    {q:"Prêt à une filiale", r:"FIN", w:"Financier (27)"},
+    {q:"Camion de livraison", r:"CORP", w:"Corporel (21)"},
+    {q:"Site internet marchand", r:"INC", w:"Incorporel (20)"},
+    {q:"Ordinateur portable", r:"CORP", w:"Corporel (21)"},
+    {q:"Caution électricité", r:"FIN", w:"Financier (27)"},
+    {q:"Frais de développement", r:"INC", w:"Incorporel (20)"},
+    {q:"Immeuble de bureaux", r:"CORP", w:"Corporel (21)"},
+    {q:"Actions pour contrôle", r:"FIN", w:"Financier (26)"},
+    {q:"Logiciel ERP", r:"INC", w:"Incorporel (20)"},
+    {q:"Mobilier de bureau", r:"CORP", w:"Corporel (21)"},
+    {q:"Avances sur immo", r:"FIN", w:"Financier (27)"},
+    {q:"Licence d'exploitation", r:"INC", w:"Incorporel (20)"},
+    {q:"Climatisation fixe", r:"CORP", w:"Corporel (21)"},
+    {q:"Placements long terme", r:"FIN", w:"Financier (27)"},
+    {q:"Droit au bail", r:"INC", w:"Incorporel (20)"},
+    {q:"Matériel de labo", r:"CORP", w:"Corporel (21)"},
+    {q:"Titres immobilisés", r:"FIN", w:"Financier (27)"},
+    {q:"Frais de recherche", r:"INC", w:"Incorporel (20)"},
+    {q:"Installation technique", r:"CORP", w:"Corporel (21)"},
+    {q:"Prêts aux salariés", r:"FIN", w:"Financier (27)"},
+    {q:"Marque déposée", r:"INC", w:"Incorporel (20)"},
+    {q:"Échafaudages mobiles", r:"CORP", w:"Corporel (21)"}
+];
 
         function showSection(id) {
             ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));

@@ -172,10 +172,13 @@
             });
         }
 
-        function check(v) {
-            if(isProc) return; isProc = true;
-            const isOk = (v === window.curr.r);
-            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+function check(v) {
+    if(isProc) return; isProc = true;
+    const isOk = (v === window.curr.r);
+    const f = document.getElementById('feedback'); f.classList.remove('hidden');
+    
+    // Ajout des vibrations haptiques
+    if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
             
             if(isOk) {
                 if(mode !== 'learning') { score += 100; document.getElementById('score-ui').innerText = score; }

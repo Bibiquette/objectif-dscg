@@ -147,33 +147,41 @@
             document.getElementById('event-icon').className = `w-20 h-20 bg-white/5 rounded-3xl flex items-center justify-center text-3xl mx-auto mb-6 ${ev.color}`;
         }
 
-        function decide(accept) {
-            if(isProc) return; isProc = true;
-            const ev = window.currentEv;
-            const f = document.getElementById('feedback');
+function decide(accept) {
+    if(isProc) return; isProc = true;
+    const ev = window.currentEv;
+    const f = document.getElementById('feedback');
+    
+    if(accept) {
+        // AJOUT VIBRATION COURTE POUR L'ACCEPTATION
+        if ("vibrate" in navigator) navigator.vibrate(30);
+
+        const bonus = (cash >= 40 && cash <= 70) ? 2 : 1;
+        cash += ev.impact;
+        score += (ev.pts * bonus);
+        updateUI();
+        
+        if(cash <= 0 || cash > 100) { 
+            // AJOUT VIBRATION LONGUE POUR LA FAILLITE
+            if ("vibrate" in navigator) navigator.vibrate([100, 50, 100]);
             
-            if(accept) {
-                const bonus = (cash >= 40 && cash <= 70) ? 2 : 1;
-                cash += ev.impact;
-                score += (ev.pts * bonus);
-                updateUI();
-                
-                if(cash <= 0 || cash > 100) { 
-                    f.classList.remove('hidden');
-                    f.className = "feedback-overlay bg-red-600/95 p-6 text-white";
-                    f.innerHTML = `<i class='fas fa-times text-5xl mb-2'></i><p class='text-sm uppercase'>Mauvaise Gestion</p>
-                    <button onclick="alert('${ev.detail}')" class="mt-4 px-4 py-2 bg-white/20 rounded-xl text-[10px] uppercase">Pourquoi ?</button>`;
-                    setTimeout(() => stopGame(cash <= 0 ? "Faillite." : "Excès de liquidités."), 4000);
-                } else {
-                    f.classList.remove('hidden');
-                    f.className = "feedback-overlay bg-emerald-500/90 text-white text-6xl";
-                    f.innerHTML = bonus > 1 ? "<span class='text-2xl font-black'>BONUS X2 🏆</span>" : "<i class='fas fa-check'></i>";
-                    setTimeout(nextEvent, 800);
-                }
-            } else {
-                setTimeout(nextEvent, 400);
-            }
+            f.classList.remove('hidden');
+            f.className = "feedback-overlay bg-red-600/95 p-6 text-white";
+            f.innerHTML = `<i class='fas fa-times text-5xl mb-2'></i><p class='text-sm uppercase'>Mauvaise Gestion</p>
+            <button onclick="alert('${ev.detail}')" class="mt-4 px-4 py-2 bg-white/20 rounded-xl text-[10px] uppercase">Pourquoi ?</button>`;
+            setTimeout(() => stopGame(cash <= 0 ? "Faillite." : "Excès de liquidités."), 4000);
+        } else {
+            f.classList.remove('hidden');
+            f.className = "feedback-overlay bg-emerald-500/90 text-white text-6xl";
+            f.innerHTML = bonus > 1 ? "<span class='text-2xl font-black'>BONUS X2 🏆</span>" : "<i class='fas fa-check'></i>";
+            setTimeout(nextEvent, 800);
         }
+    } else {
+        // AJOUT VIBRATION TRÈS COURTE POUR LE REFUS
+        if ("vibrate" in navigator) navigator.vibrate(10);
+        setTimeout(nextEvent, 400);
+    }
+}
 
 function stopGame(reason) { 
             const key = 'bfr';

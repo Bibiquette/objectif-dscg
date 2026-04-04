@@ -286,39 +286,51 @@
             document.getElementById('user-rank').innerText = rank;
         }
 
-        function initDailyMission() {
-            const missions = [
-                { id: 'droit', label: 'en Droit (UE 1)', key: 'record_droit', goal: 1000 },
-                { id: 'contrats', label: 'en Droit Affaires (UE 2)', key: 'record_contrats', goal: 1000 },
-                { id: 'flux', label: 'en Flux Master (UE 9)', key: 'record_flux', goal: 500 },
-                { id: 'bfr', label: 'sur BFR Tycoon (UE 6)', key: 'record_bfr', goal: 1500 },
-                { id: 'prov', label: 'en Compta Appro (UE 10)', key: 'record_prov', goal: 800 },
-                { id: 'anglais', label: 'en Anglais Pro (UE 12)', key: 'record_anglais', goal: 1000 },
-                { id: 'theories', label: 'en Management (UE 7)', key: 'record_theories', goal: 1200 }
-            ];
-            const todaySeed = new Date().toISOString().slice(0, 10); 
-            const missionIndex = Math.abs(todaySeed.split('-').join('') % missions.length);
-            const daily = missions[missionIndex];
-            const container = document.getElementById('daily-mission-container');
-            const textEl = document.getElementById('mission-text');
-            const badgeEl = document.getElementById('mission-badge');
-            container.classList.remove('hidden');
-            textEl.innerText = `Atteindre ${daily.goal} pts ${daily.label}`;
-            const currentScore = parseInt(localStorage.getItem(daily.key) || 0);
-            const lastCompleted = localStorage.getItem('last_mission_completed');
-            if (currentScore >= daily.goal) {
-                textEl.classList.add('line-through', 'opacity-50');
-                container.classList.add('mission-complete');
-                badgeEl.innerHTML = '<i class="fas fa-check-double text-emerald-500 animate-bounce"></i>';
-                badgeEl.className = "w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-xl";
-                if (lastCompleted !== todaySeed) {
-                    localStorage.setItem('last_mission_completed', todaySeed);
-                    bonusStreak();
-                }
-            }
-        }
+ function initDailyMission() {
+    const missions = [
+        { id: 'droit', label: 'en Droit (UE 1)', key: 'today_score_droit', goal: 1000 },
+        { id: 'contrats', label: 'en Droit Affaires (UE 2)', key: 'today_score_contrats', goal: 1000 },
+        { id: 'flux', label: 'en Flux Master (UE 9)', key: 'today_score_flux', goal: 500 },
+        { id: 'bfr', label: 'sur BFR Tycoon (UE 6)', key: 'today_score_bfr', goal: 1500 },
+        { id: 'prov', label: 'en Compta Appro (UE 10)', key: 'today_score_prov', goal: 800 },
+        { id: 'anglais', label: 'en Anglais Pro (UE 12)', key: 'today_score_anglais', goal: 1000 },
+        { id: 'theories', label: 'en Management (UE 7)', key: 'today_score_theories', goal: 1200 }
+    ];
 
-        function bonusStreak() {
+    const todaySeed = new Date().toISOString().slice(0, 10);
+    const lastAppLaunch = localStorage.getItem('last_app_launch_date');
+
+    // Réinitialisation des scores quotidiens si on change de jour
+    if (lastAppLaunch !== todaySeed) {
+        missions.forEach(m => localStorage.setItem(m.key, "0"));
+        localStorage.setItem('last_app_launch_date', todaySeed);
+    }
+
+    const missionIndex = Math.abs(todaySeed.split('-').join('') % missions.length);
+    const daily = missions[missionIndex];
+    const container = document.getElementById('daily-mission-container');
+    const textEl = document.getElementById('mission-text');
+    const badgeEl = document.getElementById('mission-badge');
+    
+    container.classList.remove('hidden');
+    
+    const currentTodayScore = parseInt(localStorage.getItem(daily.key) || 0);
+    textEl.innerText = `Atteindre ${daily.goal} pts ${daily.label} (${currentTodayScore}/${daily.goal})`;
+
+    const lastCompleted = localStorage.getItem('last_mission_completed');
+
+    if (currentTodayScore >= daily.goal) {
+        textEl.classList.add('line-through', 'opacity-50');
+        container.classList.add('mission-complete');
+        badgeEl.innerHTML = '<i class="fas fa-check-double text-emerald-500 animate-bounce"></i>';
+        badgeEl.className = "w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-xl";
+        
+        if (lastCompleted !== todaySeed) {
+            localStorage.setItem('last_mission_completed', todaySeed);
+            bonusStreak();
+        }
+    }
+}        function bonusStreak() {
             let streak = parseInt(localStorage.getItem('user_streak')) || 0;
             streak++; localStorage.setItem('user_streak', streak);
             const today = new Date().toISOString().slice(0, 10);
@@ -358,7 +370,7 @@
             }
         }
 
-        function initMasteryChart() {
+function initMasteryChart() {
             const ctx = document.getElementById('masteryChart').getContext('2d');
             const maxScore = 2000;
             const dataScores = [
@@ -378,19 +390,32 @@
                 type: 'radar',
                 data: {
                     labels: ['UE 9', 'UE 6', 'UE 10', 'UE 12', 'UE 7', 'UE 1', 'UE 2'],
-                    datasets: [{ 
-                        label: 'Maîtrise %', 
-                        data: dataScores, 
-                        backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(2, 132, 199, 0.1)', 
-                        borderColor: accentColor, 
-                        pointBackgroundColor: accentColor,
-                        pointBorderColor: '#fff',
-                        pointHoverBackgroundColor: '#fff',
-                        pointHoverBorderColor: accentColor,
-                        borderWidth: 4,
-                        pointRadius: 4,
-                        tension: 0.2
-                    }]
+                    datasets: [
+                        { 
+                            label: 'Maîtrise %', 
+                            data: dataScores, 
+                            backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(2, 132, 199, 0.1)', 
+                            borderColor: accentColor, 
+                            pointBackgroundColor: accentColor,
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: accentColor,
+                            borderWidth: 4,
+                            pointRadius: 4,
+                            tension: 0.2,
+                            zIndex: 2
+                        },
+                        { 
+                            label: 'Moyenne DCG', 
+                            data: [45, 50, 40, 60, 55, 48, 52], // Valeurs de référence fictives
+                            borderColor: isDark ? 'rgba(148, 163, 184, 0.4)' : 'rgba(100, 116, 139, 0.3)',
+                            borderDash: [5, 5], // Ligne pointillée pour distinguer
+                            fill: false,
+                            pointRadius: 0, // On cache les points pour la moyenne pour ne pas surcharger
+                            borderWidth: 2,
+                            zIndex: 1
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -405,10 +430,21 @@
                                 padding: 15
                             }, 
                             ticks: { display: false }, 
-                            suggestedMin: 0, suggestedMax: 100 
+                            suggestedMin: 0, 
+                            suggestedMax: 100 
                         } 
                     },
-                    plugins: { legend: { display: false } }
+                    plugins: { 
+                        legend: { 
+                            display: true, // On affiche la légende pour que l'utilisateur comprenne la comparaison
+                            position: 'bottom',
+                            labels: {
+                                color: isDark ? '#f8fafc' : '#1e293b',
+                                font: { size: 10, weight: 'bold' },
+                                boxWidth: 12
+                            }
+                        }
+                    }
                 }
             });
         }

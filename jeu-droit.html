@@ -164,10 +164,13 @@
             window.curr = item; document.getElementById('question-text').innerText = item.q;
         }
 
-        function check(v) {
-            if(isProc) return; isProc = true;
-            const isOk = (v === window.curr.r);
-            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+function check(v) {
+    if(isProc) return; isProc = true;
+    const isOk = (v === window.curr.r);
+    const f = document.getElementById('feedback'); f.classList.remove('hidden');
+    
+    // Ajout des vibrations haptiques
+    if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
             
             if(isOk) {
                 if(mode !== 'learning') { score += 100; document.getElementById('score-ui').innerText = score; }
@@ -190,14 +193,20 @@
         }
 
 function stopGame() { 
-            if(timer) clearInterval(timer); 
-            showSection('screen-end'); 
-            document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
-            if (mode !== 'learning') {
-                const key = 'droit';
-                const b = parseInt(localStorage.getItem('record_' + key) || 0);
-                if (score > b) localStorage.setItem('record_' + key, score);
+    if(timer) clearInterval(timer); 
+    showSection('screen-end'); 
+    document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
+    
+    if (mode !== 'learning') {
+        const key = 'droit';
+        
+        // 1. Mise à jour du record historique
+        const b = parseInt(localStorage.getItem('record_' + key) || 0);
+        if (score > b) localStorage.setItem('record_' + key, score);
 
+        // 2. NOUVEAU : Mise à jour du score quotidien pour la mission
+        const todayScore = parseInt(localStorage.getItem('today_score_' + key) || 0);
+        if (score > todayScore) localStorage.setItem('today_score_' + key, score);
                 // LOGIQUE TOP 3
                 let history = JSON.parse(localStorage.getItem('history_' + key) || "[]");
                 history.push(score);

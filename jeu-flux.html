@@ -90,14 +90,38 @@
 
     <script>
         let mode, score=0, timer, timeLeft=60, isProc=false;
-        const fluxDB = [
-            {q:"Achat marchandises",r:"D",w:"Achat = Charge = Débit", detail:"PCG : Les comptes de charges (6) sont débités par le montant des achats."},
-            {q:"Vente produits",r:"C",w:"Vente = Produit = Crédit", detail:"PCG : Les comptes de produits (7) sont crédités par le montant des ventes."},
-            {q:"TVA Déductible",r:"D",w:"TVA Déductible = Actif = Débit", detail:"L'entreprise détient une créance sur l'État. L'augmentation d'un actif se fait au débit."},
-            {q:"Emprunt bancaire",r:"C",w:"Emprunt = Passif = Crédit", detail:"L'emprunt augmente la dette de l'entreprise. L'augmentation d'un passif se fait au crédit."},
-            {q:"Règlement fournisseur",r:"D",w:"Diminution Dette = Débit", detail:"Payer un fournisseur réduit la dette au passif. Une diminution de passif s'enregistre au débit."},
-            {q:"Paiement client",r:"C",w:"Diminution Créance = Crédit", detail:"Le client règle sa dette, la créance à l'actif diminue. Une diminution d'actif s'enregistre au crédit."}
-        ];
+const fluxDB = [
+    {q:"Achat marchandises", r:"D", w:"Charge = Débit"},
+    {q:"Vente produits finis", r:"C", w:"Produit = Crédit"},
+    {q:"Encaissement Client", r:"C", w:"Baisse Actif = Crédit"},
+    {q:"Décaissement Fournisseur", r:"D", w:"Baisse Passif = Débit"},
+    {q:"TVA Déductible sur ABS", r:"D", w:"Actif = Débit"},
+    {q:"TVA Collectée", r:"C", w:"Passif = Crédit"},
+    {q:"Emprunt Bancaire reçu", r:"C", w:"Augmentation Passif = Crédit"},
+    {q:"Remboursement Capital Emprunt", r:"D", w:"Baisse Passif = Débit"},
+    {q:"Intérêts de l'emprunt (661)", r:"D", w:"Charge = Débit"},
+    {q:"Dotation aux amortissements", r:"D", w:"Charge = Débit"},
+    {q:"Prélèvement de l'exploitant", r:"D", w:"Baisse Capitaux = Débit"},
+    {q:"Apport en capital (numéraire)", r:"C", w:"Augmentation Capitaux = Crédit"},
+    {q:"Virement interne (58)", r:"D", w:"Flux technique = Débit/Crédit"},
+    {q:"Subvention d'exploitation", r:"C", w:"Produit = Crédit"},
+    {q:"Rabais obtenu sur achat", r:"C", w:"Soustraction charge = Crédit"},
+    {q:"Remise accordée sur vente", r:"D", w:"Soustraction produit = Débit"},
+    {q:"Achat fournitures bureau", r:"D", w:"Charge = Débit"},
+    {q:"Paiement salaires nets", r:"C", w:"Sortie Banque = Crédit"},
+    {q:"Charges sociales patronales", r:"D", w:"Charge = Débit"},
+    {q:"TVA à décaisser", r:"C", w:"Dette État = Crédit"},
+    {q:"Crédit de TVA (44567)", r:"D", w:"Créance État = Débit"},
+    {q:"Escompte obtenu", r:"C", w:"Produit financier = Crédit"},
+    {q:"Escompte accordé", r:"D", w:"Charge financière = Débit"},
+    {q:"Achat matériel transport", r:"D", w:"Entrée Actif = Débit"},
+    {q:"Cession immobilisation (775)", r:"C", w:"Produit exceptionnel = Crédit"},
+    {q:"VNC des actifs cédés (675)", r:"D", w:"Charge exceptionnelle = Débit"},
+    {q:"Caution versée (275)", r:"D", w:"Entrée Actif = Débit"},
+    {q:"Revenus VMP (764)", r:"C", w:"Produit financier = Crédit"},
+    {q:"Frais postaux (626)", r:"D", w:"Charge = Débit"},
+    {q:"Honoraires expert-comptable", r:"D", w:"Charge = Débit"}
+];
 
         function showSection(id) {
             ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));

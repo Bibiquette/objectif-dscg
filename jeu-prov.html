@@ -90,13 +90,38 @@
 
     <script>
         let mode, score=0, timer, timeLeft=60, isProc=false;
-        const db = [
-            {q:"Baisse valeur Terrain", r:"DEP", w:"Dépréciation (Actif)", detail:"Le terrain perd de sa valeur mais l'actif reste en place. On constate une dépréciation réversible (compte 291)."},
-            {q:"Client douteux", r:"DEP", w:"Dépréciation (Actif)", detail:"Risque de non-recouvrement d'une créance. Perte de valeur d'un actif."},
-            {q:"Litige Prud'hommes", r:"PRC", w:"Provision R&C (Passif)", detail:"Dette probable envers un salarié dont l'échéance ou le montant n'est pas fixé (compte 15)."},
-            {q:"Stock obsolète", r:"DEP", w:"Dépréciation (Actif)", detail:"Les stocks perdent de leur valeur marchande. On réduit la valeur nette de l'actif (compte 39)."}
-        ];
-
+const db = [
+    {q:"Baisse valeur Terrain (non bâtis)", r:"DEP", w:"Dépréciation (Actif)", detail:"PCG 291. Actif physique tangible qui ne s'amortit pas."},
+    {q:"Client douteux (procédure collective)", r:"DEP", w:"Dépréciation (Actif)", detail:"Risque de non-recouvrement d'une créance. Compte 491."},
+    {q:"Litige Prud'hommes (licenciement)", r:"PRC", w:"Provision R&C (Passif)", detail:"Dette probable envers un salarié. Compte 1511."},
+    {q:"Stock de produits finis obsolètes", r:"DEP", w:"Dépréciation (Actif)", detail:"Valeur actuelle inférieure au coût de production. Compte 39."},
+    {q:"Garantie décennale donnée aux clients", r:"PRC", w:"Provision R&C (Passif)", detail:"Charge probable liée aux réparations futures. Compte 1511."},
+    {q:"Titres de placement (VMP) en moins-value", r:"DEP", w:"Dépréciation (Actif)", detail:"Cours de bourse < Valeur d'achat. Compte 590."},
+    {q:"Gros entretien programmé (Révision)", r:"PRC", w:"Provision R&C (Passif)", detail:"Si l'entreprise n'utilise pas la méthode par composants. Compte 1572."},
+    {q:"Contrôle fiscal notifié (amende)", r:"PRC", w:"Provision R&C (Passif)", detail:"Risque de sortie de ressources hautement probable."},
+    {q:"Baisse de valeur d'une marque acquise", r:"DEP", w:"Dépréciation (Actif)", detail:"Actif incorporel. Compte 290."},
+    {q:"Indemnités de départ à la retraite", r:"PRC", w:"Provision R&C (Passif)", detail:"Engagement social de l'entreprise. Compte 153."},
+    {q:"Litige avec un fournisseur (dommages)", r:"PRC", w:"Provision R&C (Passif)", detail:"Somme probable à verser suite à un contentieux."},
+    {q:"Fonds commercial (test de dépréciation)", r:"DEP", w:"Dépréciation (Actif)", detail:"Si la valeur actuelle est < VNC."},
+    {q:"Matières premières périmées", r:"DEP", w:"Dépréciation (Actif)", detail:"Réduction de la valeur de l'actif circulant."},
+    {q:"Restructuration (plan annoncé)", r:"PRC", w:"Provision R&C (Passif)", detail:"Charges de licenciement et fermeture. Compte 158."},
+    {q:"Garantie de passif (cession)", r:"PRC", w:"Provision R&C (Passif)", detail:"Engagement lié à la vente d'une filiale."},
+    {q:"Titres de participation en baisse", r:"DEP", w:"Dépréciation (Actif)", detail:"Valeur d'utilité < Valeur d'entrée. Compte 296."},
+    {q:"Travaux de désamiantage obligatoires", r:"PRC", w:"Provision R&C (Passif)", detail:"Obligation légale de remise en état."},
+    {q:"Droit au bail (baisse de fréquentation)", r:"DEP", w:"Dépréciation (Actif)", detail:"L'actif incorporel a perdu de sa valeur."},
+    {q:"Prêts au personnel (risque de non-paiement)", r:"DEP", w:"Dépréciation (Actif)", detail:"Dépréciation de créance immobilisée. Compte 297."},
+    {q:"Amende pour pollution constatée", r:"PRC", w:"Provision R&C (Passif)", detail:"Risque environnemental mesurable."},
+    {q:"Avances versées sur commande annulée", r:"DEP", w:"Dépréciation (Actif)", detail:"Risque de non-récupération de l'avance."},
+    {q:"Renouvellement d'immobilisations (concession)", r:"PRC", w:"Provision R&C (Passif)", detail:"Obligation contractuelle de maintien de l'outil."},
+    {q:"Logiciel obsolète suite à nouvelle loi", r:"DEP", w:"Dépréciation (Actif)", detail:"Perte de valeur exceptionnelle d'un incorporel."},
+    {q:"Différend avec l'URSSAF", r:"PRC", w:"Provision R&C (Passif)", detail:"Risque de redressement social."},
+    {q:"Caution donnée à un tiers (appelée)", r:"PRC", w:"Provision R&C (Passif)", detail:"Sortie de ressources probable suite à un engagement de hors-bilan."},
+    {q:"Ventes à perte programmées", r:"DEP", w:"Dépréciation (Actif)", detail:"Dépréciation du stock pour s'aligner sur le prix de sortie."},
+    {q:"Perte de change latente", r:"PRC", w:"Provision R&C (Passif)", detail:"Risque de perte sur une dette en devise. Compte 1515."},
+    {q:"Incendie partiel non assuré", r:"DEP", w:"Dépréciation (Actif)", detail:"Baisse de valeur de l'immobilisation endommagée."},
+    {q:"Malfaçon sur chantier en cours", r:"PRC", w:"Provision R&C (Passif)", detail:"Coûts de remise aux normes futurs."},
+    {q:"Droit à l'image contesté", r:"PRC", w:"Provision R&C (Passif)", detail:"Risque juridique sur actif immatériel."}
+];
         function showSection(id) {
             ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
             document.getElementById(id).classList.remove('hidden');
@@ -132,10 +157,13 @@
             document.getElementById('item-name').innerText = item.q;
         }
 
-        function check(v) {
-            if(isProc) return; isProc = true;
-            const isOk = (v === window.curr.r);
-            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+function check(v) {
+    if(isProc) return; isProc = true;
+    const isOk = (v === window.curr.r);
+    const f = document.getElementById('feedback'); f.classList.remove('hidden');
+    
+    // Ajout des vibrations haptiques
+    if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
             
             if(isOk) {
                 if(mode !== 'learning') { score += 150; document.getElementById('score-ui').innerText = score; }
