@@ -197,12 +197,21 @@
             }
         }
 
-        function stopGame() { 
+function stopGame() { 
             if(timer) clearInterval(timer); 
             showSection('screen-end'); 
             document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
-            const b = parseInt(localStorage.getItem('record_contrats') || 0);
-            if (score > b && mode !== 'learning') localStorage.setItem('record_contrats', score);
+            if (mode !== 'learning') {
+                const key = 'contrats';
+                const b = parseInt(localStorage.getItem('record_' + key) || 0);
+                if (score > b) localStorage.setItem('record_' + key, score);
+
+                // LOGIQUE TOP 3
+                let history = JSON.parse(localStorage.getItem('history_' + key) || "[]");
+                history.push(score);
+                history.sort((a, b) => b - a);
+                localStorage.setItem('history_' + key, JSON.stringify(history.slice(0, 3)));
+            }
         }
 
         function shareScore() {

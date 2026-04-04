@@ -203,13 +203,23 @@
             }
         }
 
-        function stopGame() { 
+function stopGame() { 
             if(timer) clearInterval(timer); 
             showSection('screen-end'); 
             document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
-            const b = parseInt(localStorage.getItem('record_theories') || 0);
-            if (score > b && mode !== 'learning') localStorage.setItem('record_theories', score);
-            gtag('event', 'game_finish', { 'game_name': 'Theories Master', 'score': score });
+            if (mode !== 'learning') {
+                const key = 'theories';
+                const b = parseInt(localStorage.getItem('record_' + key) || 0);
+                if (score > b) localStorage.setItem('record_' + key, score);
+
+                // LOGIQUE TOP 3
+                let history = JSON.parse(localStorage.getItem('history_' + key) || "[]");
+                history.push(score);
+                history.sort((a, b) => b - a);
+                localStorage.setItem('history_' + key, JSON.stringify(history.slice(0, 3)));
+
+                gtag('event', 'game_finish', { 'game_name': 'Theories Master', 'score': score });
+            }
         }
 
         function shareScore() {
