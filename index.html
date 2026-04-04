@@ -73,20 +73,25 @@
 
         .game-link { transition: all 0.2s; font-weight: 700; color: var(--text-main); opacity: 0.8; }
         .game-link:hover { opacity: 1; padding-left: 0.5rem; background: rgba(0,0,0,0.02); }
+        
+        /* Correction visibilité mode sombre */
+        .dark .game-link { color: #ffffff !important; opacity: 1; }
+        .dark #mission-text { color: #ffffff !important; }
+        .dark #countdown-timer { color: #ffffff !important; }
+
         .streak-badge { background: linear-gradient(45deg, #f59e0b, #ef4444); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3); }
         
         .top-scores { font-size: 7px; text-transform: uppercase; margin-top: 4px; display: flex; gap: 6px; opacity: 0.6; }
         .mission-complete { border-left-color: #10b981 !important; }
 
-        /* --- NOUVEAUTÉS VISUELLES --- */
         .rank-badge { background: linear-gradient(135deg, #0ea5e9, #10b981); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
         
         @keyframes pulse-today {
             0% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0.4); }
-            70% { box-shadow: 0 0 0 8px rgba(14, 165, 233, 0); }
+            70% { box-shadow: 0 0 0 10px rgba(14, 165, 233, 0); }
             100% { box-shadow: 0 0 0 0 rgba(14, 165, 233, 0); }
         }
-        .today-ring { animation: pulse-today 2s infinite; }
+        .today-ring { animation: pulse-today 2s infinite; border: 3px solid #0ea5e9 !important; }
         .bg-success-gradient { background: linear-gradient(135deg, #10b981, #059669); }
     </style>
 </head>
@@ -94,7 +99,7 @@
 
     <div id="auth-modal" class="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/90 backdrop-blur-xl hidden">
         <div class="glass p-10 rounded-[3rem] text-center max-w-md w-full italic">
-            <h2 class="text-3xl font-black mb-2 uppercase tracking-tighter italic">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h2>
+            <h2 class="text-3xl font-black mb-2 uppercase tracking-tighter italic text-white">Objectif<span class="text-sky-500">DCG</span></h2>
             <input type="text" id="username-input" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-2xl p-5 text-center font-bold mb-6 text-slate-800 dark:text-white outline-none" placeholder="Ton Pseudo">
             <button onclick="saveUser()" class="w-full py-5 bg-sky-600 text-white rounded-2xl font-black uppercase tracking-widest italic hover:bg-sky-500 transition-all">Lancer l'App</button>
         </div>
@@ -102,23 +107,18 @@
 
     <header class="max-w-6xl mx-auto flex justify-between items-start mb-12 italic font-bold">
         <div>
-            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h1>
+            <h1 class="text-2xl md:text-4xl font-black uppercase tracking-tighter dark:text-white">Objectif<span class="text-sky-500">DCG</span><span class="text-emerald-500">/DSCG</span></h1>
             <div class="flex items-center gap-2 mt-1">
                 <p id="user-rank" class="rank-badge text-xs uppercase tracking-widest">🐣 Stagiaire</p>
                 <span class="text-slate-300 dark:text-slate-600">|</span>
                 <p id="total-points" class="text-[10px] text-slate-500 uppercase tracking-widest">0 PTS TOTAL</p>
             </div>
-            <div class="flex items-center gap-2 mt-3">
-                <span class="relative flex h-2 w-2"><span class="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span></span>
-                <p class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold uppercase tracking-widest"><span id="online-count">14</span> Étudiants en ligne</p>
-            </div>
         </div>
         
         <div class="flex items-center gap-3">
             <div id="streak-container" class="streak-badge flex items-center gap-2 px-4 py-2 rounded-2xl text-white"><i class="fas fa-fire"></i><span id="streak-count">0</span></div>
-            <button onclick="openFeedback()" class="glass p-3 rounded-xl hover:text-emerald-500 shadow-lg"><i class="fa-solid fa-comment-dots"></i></button>
-            <button onclick="toggleTheme()" class="glass p-3 rounded-xl hover:scale-110 transition-transform"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
-            <button onclick="clearUser()" class="glass p-3 rounded-xl hover:text-red-500"><i class="fa-solid fa-user-gear"></i></button>
+            <button onclick="toggleTheme()" class="glass p-3 rounded-xl hover:scale-110 transition-transform dark:text-white"><i id="theme-icon" class="fa-solid fa-moon"></i></button>
+            <button onclick="clearUser()" class="glass p-3 rounded-xl hover:text-red-500 dark:text-white"><i class="fa-solid fa-user-gear"></i></button>
         </div>
     </header>
 
@@ -138,14 +138,14 @@
             </div>
         </div>
 
-        <div class="lg:col-span-2 glass p-6 rounded-[2.5rem] border border-white/10 min-h-[350px] flex flex-col items-center justify-center relative">
+        <div class="lg:col-span-2 glass p-6 rounded-[2.5rem] flex flex-col items-center justify-center relative min-h-[350px]">
             <h3 class="text-[10px] uppercase text-slate-500 mb-4 tracking-widest">Radar de Maîtrise par UE</h3>
             <div class="w-full h-full max-w-[320px]"><canvas id="masteryChart"></canvas></div>
         </div>
 
         <div class="glass p-8 rounded-[3.5rem] border-t-4 border-rose-500 flex flex-col justify-center text-center shadow-xl">
             <h3 class="text-[10px] uppercase text-rose-500 mb-2 tracking-widest">Objectif Examens DCG</h3>
-            <div id="countdown-timer" class="text-5xl font-black text-slate-900 dark:text-white mb-2 tracking-tighter">00<span class="text-xs opacity-50">j</span></div>
+            <div id="countdown-timer" class="text-5xl font-black text-slate-900 mb-2 tracking-tighter">00<span class="text-xs opacity-50">j</span></div>
             <p class="text-[9px] text-slate-500 uppercase italic">Avant le début des épreuves</p>
             <div class="mt-6 p-4 bg-rose-500/10 rounded-2xl"><p id="status-msg" class="text-[10px] text-rose-600 dark:text-rose-400 uppercase font-black italic">Focus sur tes points faibles !</p></div>
         </div>
@@ -156,8 +156,7 @@
             <h3 class="text-[10px] uppercase text-slate-500 mb-6 tracking-[0.2em] flex items-center gap-2">
                 <i class="fas fa-calendar-check text-emerald-500"></i> Planning de Révision
             </h3>
-            <div id="calendar-grid" class="flex justify-between items-center gap-2">
-                </div>
+            <div id="calendar-grid" class="flex justify-between items-center gap-2"></div>
         </div>
     </section>
 
@@ -168,70 +167,70 @@
 
     <main class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 italic font-bold mb-20 text-left">
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-1">
-            <span class="bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 1 - DCG</span>
+            <span class="bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 1 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue1-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Droit Sociétés</h3>
             <a href="jeu-droit.html" class="game-link flex flex-col p-3 rounded-xl">
-                <div class="flex justify-between items-center w-full"><span>Juriste Master</span><span id="rec-droit" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Juriste Master</span><span id="rec-droit" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                 <div id="top-droit" class="top-scores italic"></div>
             </a>
         </div>
 
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-2">
-            <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 2 - DCG</span>
+            <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 2 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue2-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Droit Affaires</h3>
             <a href="jeu-contrats.html" class="game-link flex flex-col p-3 rounded-xl">
-                <div class="flex justify-between items-center w-full"><span>Contrats Master</span><span id="rec-contrats" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Contrats Master</span><span id="rec-contrats" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                 <div id="top-contrats" class="top-scores italic"></div>
             </a>
         </div>
 
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-9">
-            <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 9 - DCG</span>
+            <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 9 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue9-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Comptabilité</h3>
             <div class="space-y-2">
                 <a href="jeu-flux.html" class="game-link flex flex-col p-3 rounded-xl">
-                    <div class="flex justify-between items-center w-full"><span>Flux Master</span><span id="rec-flux" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                    <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Flux Master</span><span id="rec-flux" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                     <div id="top-flux" class="top-scores italic"></div>
                 </a>
                 <a href="jeu-immo.html" class="game-link flex flex-col p-3 rounded-xl">
-                    <div class="flex justify-between items-center w-full"><span>Tri d'Immo</span><span id="rec-immo" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                    <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Tri d'Immo</span><span id="rec-immo" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                     <div id="top-immo" class="top-scores italic"></div>
                 </a>
             </div>
         </div>
 
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-6">
-            <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 6 - DCG</span>
+            <span class="bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 6 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue6-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Finance</h3>
             <a href="jeu-bfr-tycoon.html" class="game-link flex flex-col p-3 rounded-xl">
-                <div class="flex justify-between items-center w-full"><span>BFR Tycoon</span><span id="rec-bfr" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>BFR Tycoon</span><span id="rec-bfr" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                 <div id="top-bfr" class="top-scores italic"></div>
             </a>
         </div>
 
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-10">
-            <span class="bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 10 - DCG</span>
+            <span class="bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 10 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue10-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Compta. Appro</h3>
             <a href="jeu-prov.html" class="game-link flex flex-col p-3 rounded-xl">
-                <div class="flex justify-between items-center w-full"><span>Provisions Master</span><span id="rec-prov" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Provisions Master</span><span id="rec-prov" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                 <div id="top-prov" class="top-scores italic"></div>
             </a>
         </div>
 
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-12">
-            <span class="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 12 - DCG</span>
+            <span class="bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 12 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue12-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">English Pro</h3>
             <a href="jeu-anglais.html" class="game-link flex flex-col p-3 rounded-xl">
-                <div class="flex justify-between items-center w-full"><span>Lexique Pro</span><span id="rec-anglais" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Lexique Pro</span><span id="rec-anglais" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                 <div id="top-anglais" class="top-scores italic"></div>
             </a>
         </div>
 
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-7">
-            <span class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block">UE 7 - DCG</span>
+            <span class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 7 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue7-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Management</h3>
             <a href="jeu-theories.html" class="game-link flex flex-col p-3 rounded-xl">
-                <div class="flex justify-between items-center w-full"><span>Theories Master</span><span id="rec-theories" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Theories Master</span><span id="rec-theories" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                 <div id="top-theories" class="top-scores italic"></div>
             </a>
         </div>
@@ -242,8 +241,9 @@
 
         window.onload = () => {
             const user = localStorage.getItem('dscg_username');
-            if(!user) document.getElementById('auth-modal').classList.remove('hidden');
-            else {
+            if(!user) {
+                document.getElementById('auth-modal').classList.remove('hidden');
+            } else {
                 updateStreak(); 
                 loadRecords(); 
                 updateRank(); 
@@ -255,8 +255,24 @@
                 renderCalendar(); 
             }
             setInterval(updateCountdown, 60000);
-            setInterval(updateOnlineCount, 5000);
         };
+
+        function saveUser() {
+            const input = document.getElementById('username-input');
+            const name = input.value.trim();
+            if(name.length >= 2) { 
+                localStorage.setItem('dscg_username', name); 
+                location.reload(); 
+            } else {
+                alert("Choisis un pseudo d'au moins 2 caractères !");
+            }
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
+            location.reload();
+        }
 
         function updateRank() {
             const keys = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats'];
@@ -331,15 +347,14 @@
                 const completed = history.includes(dateStr);
                 grid.innerHTML += `
                     <div class="flex flex-col items-center flex-1">
-                        <span class="text-[8px] mb-3 font-black tracking-widest ${isToday ? 'text-sky-500 opacity-100' : 'opacity-40'}">${dayName}</span>
-                        <div class="relative w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all duration-500 
-                            ${completed ? 'bg-success-gradient border-transparent text-white shadow-lg' : 'border-slate-200 dark:border-slate-800 bg-white/5'} 
+                        <span class="text-[8px] mb-3 font-black tracking-widest ${isToday ? 'text-sky-500 opacity-100' : 'opacity-40 dark:text-white'}">${dayName}</span>
+                        <div class="relative w-10 h-10 md:w-12 md:h-12 rounded-2xl flex items-center justify-center border-2 transition-all 
+                            ${completed ? 'bg-success-gradient border-transparent shadow-lg' : 'border-slate-300 dark:border-slate-700 bg-white/5'} 
                             ${isToday && !completed ? 'today-ring border-sky-500 bg-sky-500/5' : ''}">
                             ${completed ? '<i class="fas fa-check-double text-xs animate-bounce"></i>' : `<span class="text-[10px] font-bold ${isToday ? 'text-sky-500' : 'opacity-20'}">${d.getDate()}</span>`}
                             ${isToday ? '<span class="absolute -bottom-1 w-1 h-1 bg-sky-500 rounded-full"></span>' : ''}
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }
         }
 
@@ -355,16 +370,44 @@
                 Math.min(100, (parseInt(localStorage.getItem('record_droit')) || 0) / maxScore * 100),
                 Math.min(100, (parseInt(localStorage.getItem('record_contrats')) || 0) / maxScore * 100)
             ];
+
             const isDark = document.documentElement.classList.contains('dark');
-            const primaryColor = isDark ? '#38bdf8' : '#0284c7';
+            const accentColor = isDark ? '#38bdf8' : '#0284c7';
+            
             masteryChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: ['UE 9', 'UE 6', 'UE 10', 'UE 12', 'UE 7', 'UE 1', 'UE 2'],
-                    datasets: [{ label: 'Maîtrise %', data: dataScores, backgroundColor: isDark ? 'rgba(56, 189, 248, 0.2)' : 'rgba(2, 132, 199, 0.2)', borderColor: primaryColor, pointBackgroundColor: primaryColor, borderWidth: 2 }]
+                    datasets: [{ 
+                        label: 'Maîtrise %', 
+                        data: dataScores, 
+                        backgroundColor: isDark ? 'rgba(56, 189, 248, 0.15)' : 'rgba(2, 132, 199, 0.1)', 
+                        borderColor: accentColor, 
+                        pointBackgroundColor: accentColor,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: accentColor,
+                        borderWidth: 4,
+                        pointRadius: 4,
+                        tension: 0.2
+                    }]
                 },
                 options: {
-                    scales: { r: { angleLines: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }, pointLabels: { color: isDark ? '#94a3b8' : '#64748b', font: { weight: 'bold', size: 10 } }, ticks: { display: false }, suggestedMin: 0, suggestedMax: 100 } },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: { 
+                        r: { 
+                            angleLines: { color: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)' }, 
+                            grid: { color: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)', circular: true }, 
+                            pointLabels: { 
+                                color: isDark ? '#94a3b8' : '#64748b', 
+                                font: { weight: '900', size: 10, family: 'Plus Jakarta Sans' },
+                                padding: 15
+                            }, 
+                            ticks: { display: false }, 
+                            suggestedMin: 0, suggestedMax: 100 
+                        } 
+                    },
                     plugins: { legend: { display: false } }
                 }
             });
@@ -372,31 +415,14 @@
 
         function updateCountdown() {
             const examDate = new Date('May 18, 2026 09:00:00').getTime();
-            const now = new Date().getTime();
-            const gap = examDate - now;
-            const d = Math.floor(gap / (1000 * 60 * 60 * 24));
+            const d = Math.floor((examDate - new Date().getTime()) / (1000 * 60 * 60 * 24));
             const timerEl = document.getElementById('countdown-timer');
-            if (gap > 0) {
+            if (d > 0) {
                 timerEl.innerHTML = `${d}<span class="text-xs opacity-50">j</span>`;
-                document.getElementById('status-msg').innerText = d < 30 ? "URGENCE : Révise à fond !" : "Focus sur tes points faibles !";
-            } else { timerEl.innerText = "JOUR J"; document.getElementById('status-msg').innerText = "Bonne chance !"; }
+            } else { timerEl.innerText = "JOUR J"; }
         }
 
-        function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            localStorage.setItem('color-theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-            location.reload();
-        }
-
-        function updateThemeIcon() { 
-            const icon = document.getElementById('theme-icon'); 
-            if(icon) icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; 
-        }
-
-        function saveUser() {
-            const name = document.getElementById('username-input').value.trim();
-            if(name.length > 1) { localStorage.setItem('dscg_username', name); location.reload(); }
-        }
+        function updateThemeIcon() { const icon = document.getElementById('theme-icon'); if(icon) icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; }
 
         function loadRecords() {
             ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats'].forEach(key => {
@@ -423,17 +449,12 @@
             const today = new Date().toDateString();
             const last = localStorage.getItem('last_visit');
             let streak = parseInt(localStorage.getItem('user_streak')) || 0;
-            if(last !== today) { streak++; localStorage.setItem('last_visit', today); }
-            localStorage.setItem('user_streak', streak);
+            if(last !== today) { localStorage.setItem('last_visit', today); }
             document.getElementById('streak-count').innerText = streak;
         }
 
-        function openFeedback() { alert("Merci de ton intérêt ! Contacte bibiquettejeux@gmail.com pour toute suggestion."); }
+        function openFeedback() { alert("Suggestions ? bibiquettejeux@gmail.com"); }
         function clearUser() { if(confirm('Réinitialiser ton profil ?')) { localStorage.clear(); location.reload(); } }
-        function updateOnlineCount() {
-            const el = document.getElementById('online-count');
-            if(el) { let curr = parseInt(el.innerText); el.innerText = Math.max(8, Math.min(50, curr + (Math.floor(Math.random() * 3) - 1))); }
-        }
     </script>
 </body>
 </html>
