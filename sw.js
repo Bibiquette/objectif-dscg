@@ -1,4 +1,4 @@
-const CACHE_NAME = 'objectif-dcg-v4'; // Changement de version pour forcer la mise à jour
+const CACHE_NAME = 'objectif-dcg-v6'; // Mise à jour de la version pour inclure l'UE 4
 const ASSETS = [
   './',
   'index.html',
@@ -8,8 +8,10 @@ const ASSETS = [
   'jeu-prov.html',
   'jeu-anglais.html',
   'jeu-theories.html',
-  'jeu-droit.html',    // Ajout UE 1
-  'jeu-contrats.html', // Ajout UE 2
+  'jeu-droit.html',
+  'jeu-contrats.html',
+  'jeu-social.html',
+  'jeu-tva.html',       // Ajout UE 4 - Droit Fiscal
   'manifest.json',
   'https://cdn.tailwindcss.com',
   'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
@@ -20,7 +22,7 @@ const ASSETS = [
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      console.log('Mise en cache v4 des modules de révision...');
+      console.log('Mise en cache v6 des modules de révision...');
       return cache.addAll(ASSETS);
     })
   );
@@ -28,7 +30,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activation et nettoyage des anciens caches (v1, v2, v3...)
+// Activation et nettoyage des anciens caches (v1 à v5)
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {

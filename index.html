@@ -42,6 +42,8 @@
             --ue7-grad: linear-gradient(135deg, #10b981, #34d399);
             --ue1-grad: linear-gradient(135deg, #f43f5e, #fb7185);
             --ue2-grad: linear-gradient(135deg, #f59e0b, #fbbf24);
+            --ue3-grad: linear-gradient(135deg, #f43f5e, #e11d48);
+            --ue4-grad: linear-gradient(135deg, #10b981, #059669);
         }
 
         .dark {
@@ -56,6 +58,8 @@
             --ue7-grad: linear-gradient(135deg, #34d399, #6ee7b7);
             --ue1-grad: linear-gradient(135deg, #fb7185, #fda4af);
             --ue2-grad: linear-gradient(135deg, #fcd34d, #fde68a);
+            --ue3-grad: linear-gradient(135deg, #fb7185, #e11d48);
+            --ue4-grad: linear-gradient(135deg, #34d399, #6ee7b7);
         }
 
         body { background: var(--bg-gradient); color: var(--text-main); font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; transition: all 0.5s ease; }
@@ -70,6 +74,8 @@
         .ue-7 { border-top-color: #10b981; }
         .ue-1 { border-top-color: #f43f5e; }
         .ue-2 { border-top-color: #fbbf24; }
+        .ue-3 { border-top-color: #e11d48; }
+        .ue-4 { border-top-color: #10b981; }
 
         .game-link { transition: all 0.2s; font-weight: 700; color: var(--text-main); opacity: 0.8; }
         .game-link:hover { opacity: 1; padding-left: 0.5rem; background: rgba(0,0,0,0.02); }
@@ -184,6 +190,24 @@
             </a>
         </div>
 
+        <div class="glass p-6 rounded-[2.5rem] ue-card ue-3">
+            <span class="bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 3 - DCG</span>
+            <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue3-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Droit Social</h3>
+            <a href="jeu-social.html" class="game-link flex flex-col p-3 rounded-xl">
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Inspecteur Master</span><span id="rec-social" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div id="top-social" class="top-scores italic"></div>
+            </a>
+        </div>
+
+        <div class="glass p-6 rounded-[2.5rem] ue-card ue-4">
+            <span class="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 4 - DCG</span>
+            <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue4-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Droit Fiscal</h3>
+            <a href="jeu-tva.html" class="game-link flex flex-col p-3 rounded-xl">
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>TVA Master</span><span id="rec-tva" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div id="top-tva" class="top-scores italic"></div>
+            </a>
+        </div>
+
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-9">
             <span class="bg-sky-500/10 text-sky-600 dark:text-sky-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 9 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue9-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Comptabilité</h3>
@@ -275,7 +299,7 @@
         }
 
         function updateRank() {
-            const keys = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats'];
+            const keys = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva'];
             let total = 0;
             keys.forEach(k => total += parseInt(localStorage.getItem('record_' + k) || 0));
             document.getElementById('total-points').innerText = total + " PTS TOTAL";
@@ -286,51 +310,54 @@
             document.getElementById('user-rank').innerText = rank;
         }
 
- function initDailyMission() {
-    const missions = [
-        { id: 'droit', label: 'en Droit (UE 1)', key: 'today_score_droit', goal: 1000 },
-        { id: 'contrats', label: 'en Droit Affaires (UE 2)', key: 'today_score_contrats', goal: 1000 },
-        { id: 'flux', label: 'en Flux Master (UE 9)', key: 'today_score_flux', goal: 500 },
-        { id: 'bfr', label: 'sur BFR Tycoon (UE 6)', key: 'today_score_bfr', goal: 1500 },
-        { id: 'prov', label: 'en Compta Appro (UE 10)', key: 'today_score_prov', goal: 800 },
-        { id: 'anglais', label: 'en Anglais Pro (UE 12)', key: 'today_score_anglais', goal: 1000 },
-        { id: 'theories', label: 'en Management (UE 7)', key: 'today_score_theories', goal: 1200 }
-    ];
+        function initDailyMission() {
+            const missions = [
+                { id: 'droit', label: 'en Droit (UE 1)', key: 'today_score_droit', goal: 1000 },
+                { id: 'contrats', label: 'en Droit Affaires (UE 2)', key: 'today_score_contrats', goal: 1000 },
+                { id: 'social', label: 'en Droit Social (UE 3)', key: 'today_score_social', goal: 1000 },
+                { id: 'tva', label: 'en Droit Fiscal (UE 4)', key: 'today_score_tva', goal: 1000 },
+                { id: 'flux', label: 'en Flux Master (UE 9)', key: 'today_score_flux', goal: 500 },
+                { id: 'bfr', label: 'sur BFR Tycoon (UE 6)', key: 'today_score_bfr', goal: 1500 },
+                { id: 'prov', label: 'en Compta Appro (UE 10)', key: 'today_score_prov', goal: 800 },
+                { id: 'anglais', label: 'en Anglais Pro (UE 12)', key: 'today_score_anglais', goal: 1000 },
+                { id: 'theories', label: 'en Management (UE 7)', key: 'today_score_theories', goal: 1200 }
+            ];
 
-    const todaySeed = new Date().toISOString().slice(0, 10);
-    const lastAppLaunch = localStorage.getItem('last_app_launch_date');
+            const todaySeed = new Date().toISOString().slice(0, 10);
+            const lastAppLaunch = localStorage.getItem('last_app_launch_date');
 
-    // Réinitialisation des scores quotidiens si on change de jour
-    if (lastAppLaunch !== todaySeed) {
-        missions.forEach(m => localStorage.setItem(m.key, "0"));
-        localStorage.setItem('last_app_launch_date', todaySeed);
-    }
+            if (lastAppLaunch !== todaySeed) {
+                missions.forEach(m => localStorage.setItem(m.key, "0"));
+                localStorage.setItem('last_app_launch_date', todaySeed);
+            }
 
-    const missionIndex = Math.abs(todaySeed.split('-').join('') % missions.length);
-    const daily = missions[missionIndex];
-    const container = document.getElementById('daily-mission-container');
-    const textEl = document.getElementById('mission-text');
-    const badgeEl = document.getElementById('mission-badge');
-    
-    container.classList.remove('hidden');
-    
-    const currentTodayScore = parseInt(localStorage.getItem(daily.key) || 0);
-    textEl.innerText = `Atteindre ${daily.goal} pts ${daily.label} (${currentTodayScore}/${daily.goal})`;
+            const missionIndex = Math.abs(todaySeed.split('-').join('') % missions.length);
+            const daily = missions[missionIndex];
+            const container = document.getElementById('daily-mission-container');
+            const textEl = document.getElementById('mission-text');
+            const badgeEl = document.getElementById('mission-badge');
+            
+            container.classList.remove('hidden');
+            
+            const currentTodayScore = parseInt(localStorage.getItem(daily.key) || 0);
+            textEl.innerText = `Atteindre ${daily.goal} pts ${daily.label} (${currentTodayScore}/${daily.goal})`;
 
-    const lastCompleted = localStorage.getItem('last_mission_completed');
+            const lastCompleted = localStorage.getItem('last_mission_completed');
 
-    if (currentTodayScore >= daily.goal) {
-        textEl.classList.add('line-through', 'opacity-50');
-        container.classList.add('mission-complete');
-        badgeEl.innerHTML = '<i class="fas fa-check-double text-emerald-500 animate-bounce"></i>';
-        badgeEl.className = "w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-xl";
-        
-        if (lastCompleted !== todaySeed) {
-            localStorage.setItem('last_mission_completed', todaySeed);
-            bonusStreak();
+            if (currentTodayScore >= daily.goal) {
+                textEl.classList.add('line-through', 'opacity-50');
+                container.classList.add('mission-complete');
+                badgeEl.innerHTML = '<i class="fas fa-check-double text-emerald-500 animate-bounce"></i>';
+                badgeEl.className = "w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-xl";
+                
+                if (lastCompleted !== todaySeed) {
+                    localStorage.setItem('last_mission_completed', todaySeed);
+                    bonusStreak();
+                }
+            }
         }
-    }
-}        function bonusStreak() {
+
+        function bonusStreak() {
             let streak = parseInt(localStorage.getItem('user_streak')) || 0;
             streak++; localStorage.setItem('user_streak', streak);
             const today = new Date().toISOString().slice(0, 10);
@@ -370,7 +397,7 @@
             }
         }
 
-function initMasteryChart() {
+        function initMasteryChart() {
             const ctx = document.getElementById('masteryChart').getContext('2d');
             const maxScore = 2000;
             const dataScores = [
@@ -380,7 +407,9 @@ function initMasteryChart() {
                 Math.min(100, (parseInt(localStorage.getItem('record_anglais')) || 0) / maxScore * 100),
                 Math.min(100, (parseInt(localStorage.getItem('record_theories')) || 0) / maxScore * 100),
                 Math.min(100, (parseInt(localStorage.getItem('record_droit')) || 0) / maxScore * 100),
-                Math.min(100, (parseInt(localStorage.getItem('record_contrats')) || 0) / maxScore * 100)
+                Math.min(100, (parseInt(localStorage.getItem('record_contrats')) || 0) / maxScore * 100),
+                Math.min(100, (parseInt(localStorage.getItem('record_social')) || 0) / maxScore * 100),
+                Math.min(100, (parseInt(localStorage.getItem('record_tva')) || 0) / maxScore * 100)
             ];
 
             const isDark = document.documentElement.classList.contains('dark');
@@ -389,7 +418,7 @@ function initMasteryChart() {
             masteryChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
-                    labels: ['UE 9', 'UE 6', 'UE 10', 'UE 12', 'UE 7', 'UE 1', 'UE 2'],
+                    labels: ['UE 9', 'UE 6', 'UE 10', 'UE 12', 'UE 7', 'UE 1', 'UE 2', 'UE 3', 'UE 4'],
                     datasets: [
                         { 
                             label: 'Maîtrise %', 
@@ -407,11 +436,11 @@ function initMasteryChart() {
                         },
                         { 
                             label: 'Moyenne DCG', 
-                            data: [45, 50, 40, 60, 55, 48, 52], // Valeurs de référence fictives
+                            data: [45, 50, 40, 60, 55, 48, 52, 50, 45], 
                             borderColor: isDark ? 'rgba(148, 163, 184, 0.4)' : 'rgba(100, 116, 139, 0.3)',
-                            borderDash: [5, 5], // Ligne pointillée pour distinguer
+                            borderDash: [5, 5], 
                             fill: false,
-                            pointRadius: 0, // On cache les points pour la moyenne pour ne pas surcharger
+                            pointRadius: 0, 
                             borderWidth: 2,
                             zIndex: 1
                         }
@@ -436,7 +465,7 @@ function initMasteryChart() {
                     },
                     plugins: { 
                         legend: { 
-                            display: true, // On affiche la légende pour que l'utilisateur comprenne la comparaison
+                            display: true, 
                             position: 'bottom',
                             labels: {
                                 color: isDark ? '#f8fafc' : '#1e293b',
@@ -461,9 +490,10 @@ function initMasteryChart() {
         function updateThemeIcon() { const icon = document.getElementById('theme-icon'); if(icon) icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; }
 
         function loadRecords() {
-            ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats'].forEach(key => {
+            ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva'].forEach(key => {
                 const best = localStorage.getItem('record_' + key) || 0;
-                document.getElementById(`rec-${key}`).innerText = best + " PTS";
+                const el = document.getElementById(`rec-${key}`);
+                if(el) el.innerText = best + " PTS";
                 const topScores = JSON.parse(localStorage.getItem('history_' + key) || "[]");
                 const topEl = document.getElementById(`top-${key}`);
                 if(topEl && topScores.length > 0) {
@@ -473,7 +503,7 @@ function initMasteryChart() {
         }
 
         function updateProgression() {
-            const records = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats'];
+            const records = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva'];
             let played = 0;
             records.forEach(k => { if(parseInt(localStorage.getItem('record_' + k)) > 0) played++; });
             let percent = Math.round((played / records.length) * 100);
@@ -489,7 +519,6 @@ function initMasteryChart() {
             document.getElementById('streak-count').innerText = streak;
         }
 
-        function openFeedback() { alert("Suggestions ? bibiquettejeux@gmail.com"); }
         function clearUser() { if(confirm('Réinitialiser ton profil ?')) { localStorage.clear(); location.reload(); } }
     </script>
 </body>

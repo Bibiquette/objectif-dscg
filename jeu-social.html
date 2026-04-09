@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V2428KVLEB"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-V2428KVLEB');
+    </script>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>L'Inspecteur du Travail | ObjectifDCG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        body { background: #020617; color: white; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; overflow-x: hidden; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .feedback-overlay { position: absolute; inset: 0; z-index: 100; border-radius: 3.5rem; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(10px); text-align: center; flex-direction: column; }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .law-card { background: rgba(255,255,255,0.03); border-radius: 1.5rem; padding: 1.5rem; border-left: 4px solid; margin-bottom: 1.5rem; }
+    </style>
+</head>
+<body class="p-4 flex flex-col items-center italic font-bold">
+    <div class="w-full max-w-lg">
+        <header class="flex justify-between items-center mb-6 h-16 w-full text-left">
+            <button id="btn-main-back" onclick="location.href='index.html'" class="w-12 h-12 glass rounded-2xl flex items-center justify-center text-slate-400 border-2 border-rose-500/30"><i class="fas fa-arrow-left"></i></button>
+            <button id="btn-mode-back" onclick="showSection('screen-menu')" class="hidden w-12 h-12 glass rounded-2xl flex items-center justify-center text-rose-400 border-2 border-rose-500/50"><i class="fas fa-chevron-left text-xl"></i></button>
+            <div id="game-info" class="hidden flex-1 ml-4 flex justify-between items-center glass px-6 py-2 rounded-2xl border-2 border-rose-500/50">
+                <div class="text-left"><p class="text-[8px] uppercase font-black text-rose-400">Score</p><p id="score-ui" class="text-lg font-extrabold text-white">0</p></div>
+                <div id="timer-container" class="text-right font-mono"><p class="text-[8px] uppercase font-black text-slate-500">Timer</p><p id="timer-ui" class="text-lg font-extrabold text-white">60s</p></div>
+            </div>
+        </header>
+
+        <div id="screen-menu" class="glass rounded-[3.5rem] p-10 text-center border-2 border-rose-500/20 shadow-2xl">
+            <h1 class="text-3xl font-black uppercase mb-8 text-rose-500 tracking-tighter italic">L'Inspecteur du Travail</h1>
+            <div class="grid grid-cols-1 gap-3 text-left">
+                <button onclick="showSection('screen-cours')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-amber-500/30 text-amber-400">
+                    <div class="w-10 h-10 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center"><i class="fas fa-gavel"></i></div>
+                    <div><p class="text-xs uppercase">Cours Complet</p><p class="text-[9px] text-slate-500">Tous les contrats UE 3</p></div>
+                </button>
+                <button onclick="startGame('learning')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-emerald-500/30 text-emerald-400">
+                    <div class="w-10 h-10 bg-emerald-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-user-shield"></i></div>
+                    <div><p class="text-xs uppercase">Apprendre</p><p class="text-[9px] text-slate-500">ZEN + Justifications</p></div>
+                </button>
+                <button onclick="startGame('competition')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-sky-500/30 text-sky-400">
+                    <div class="w-10 h-10 bg-sky-500/10 text-sky-400 rounded-xl flex items-center justify-center"><i class="fas fa-stopwatch"></i></div>
+                    <div><p class="text-xs uppercase">Défier</p><p class="text-[9px] text-slate-500">Contrôle Express</p></div>
+                </button>
+                <button onclick="startGame('survival')" class="glass p-5 rounded-2xl flex items-center gap-4 border-2 border-rose-500/30 text-rose-400">
+                    <div class="w-10 h-10 bg-rose-500/10 rounded-xl flex items-center justify-center"><i class="fas fa-biohazard"></i></div>
+                    <div><p class="text-xs uppercase">Survie</p><p class="text-[9px] text-slate-500">Zéro Faute</p></div>
+                </button>
+            </div>
+        </div>
+
+        <div id="screen-cours" class="hidden glass rounded-[3.5rem] p-8 max-h-[75vh] overflow-y-auto custom-scrollbar italic text-left border-2 border-amber-500/50">
+            <h2 class="text-xl font-black mb-8 text-amber-500 uppercase text-center italic tracking-widest">📚 Guide des Contrats (UE 3)</h2>
+            <div class="space-y-6">
+                <div class="law-card border-emerald-500">
+                    <h3 class="text-emerald-500 text-xs uppercase font-black">🟢 Le CDI (Droit Commun)</h3>
+                    <div class="text-[10px] text-slate-300 mt-2 space-y-1">
+                        <p>• <b>Forme :</b> Oral possible (TP), écrit obligatoire (TPartiel).</p>
+                        <p>• <b>Essai :</b> Ouvrier (2m), ETAM (3m), Cadre (4m). Renouvelable 1 fois.</p>
+                        <p>• <b>Fin :</b> Démission, Licenciement, Rupture Conventionnelle.</p>
+                    </div>
+                </div>
+                <div class="law-card border-rose-500">
+                    <h3 class="text-rose-500 text-xs uppercase font-black">🔴 Le CDD (Précaire)</h3>
+                    <div class="text-[10px] text-slate-300 mt-2 space-y-1">
+                        <p>• <b>Motifs :</b> Remplacement, accroissement d'activité. Interdit pour grève.</p>
+                        <p>• <b>Indemnités :</b> 10% précarité + 10% congés payés.</p>
+                        <p>• <b>Carence :</b> 1/3 de la durée du contrat si > 14 jours.</p>
+                    </div>
+                </div>
+                <div class="law-card border-sky-500">
+                    <h3 class="text-sky-500 text-xs uppercase font-black">🔵 L'Intérim (CTT)</h3>
+                    <div class="text-[10px] text-slate-300 mt-2 space-y-1">
+                        <p>• <b>Signatures :</b> Contrat de mission sous 2 jours ouvrables.</p>
+                        <p>• <b>Tripartite :</b> Agence (ETT) / Entreprise (EU) / Salarié.</p>
+                        <p>• <b>Souplesse :</b> Aménagement du terme (avancer 2j ou reporter).</p>
+                    </div>
+                </div>
+                <div class="law-card border-purple-500">
+                    <h3 class="text-purple-500 text-xs uppercase font-black">🟣 Alternance & Partiel</h3>
+                    <div class="text-[10px] text-slate-300 mt-2 space-y-1">
+                        <p>• <b>Apprentissage :</b> 45 jours d'essai en entreprise pour rompre librement.</p>
+                        <p>• <b>Temps Partiel :</b> Minimum 24h/semaine (sauf dérogations).</p>
+                    </div>
+                </div>
+            </div>
+            <button onclick="showSection('screen-menu')" class="w-full mt-10 bg-amber-500 text-black py-4 rounded-xl font-black uppercase shadow-lg italic">Retour</button>
+        </div>
+
+        <div id="screen-game" class="hidden relative text-center">
+            <div class="glass rounded-[3.5rem] p-10 min-h-[320px] flex flex-col justify-center items-center relative border border-white/5 shadow-inner">
+                <div id="feedback" class="hidden feedback-overlay italic font-bold"></div>
+                <p class="text-[9px] uppercase font-black text-rose-400 absolute top-8 tracking-widest italic">Cas à inspecter</p>
+                <h2 id="question-text" class="text-lg font-black uppercase mb-4 tracking-tighter italic leading-snug">---</h2>
+            </div>
+            <div class="grid grid-cols-2 gap-6 mt-8">
+                <button onclick="check('L')" class="bg-emerald-600 py-6 rounded-3xl font-black uppercase text-white shadow-lg active:scale-95 transition-all">LÉGAL</button>
+                <button onclick="check('I')" class="bg-rose-600 py-6 rounded-3xl font-black uppercase text-white shadow-lg active:scale-95 transition-all">ILLÉGAL</button>
+            </div>
+        </div>
+
+        <div id="screen-end" class="hidden glass rounded-[3.5rem] p-12 text-center border-2 border-rose-500/30">
+            <div id="end-visual" class="text-7xl font-black text-rose-400 mb-4 italic tracking-tighter">0</div>
+            <p class="text-xs text-slate-400 uppercase mb-8">Points</p>
+            <button onclick="shareScore()" class="w-full bg-sky-600 py-5 rounded-2xl font-black uppercase text-white mb-4 shadow-xl"><i class="fas fa-share-nodes"></i> Partager</button>
+            <button onclick="location.reload()" class="w-full bg-white/10 py-5 rounded-2xl font-black uppercase italic">Rejouer</button>
+        </div>
+    </div>
+
+    <script>
+        let mode, score=0, timer, timeLeft=60, isProc=false;
+        
+        const db = [
+            {q: "Embauche en CDI sans contrat écrit (temps plein).", r: "L", detail: "Le CDI à temps plein peut être oral, l'écrit est facultatif mais conseillé."},
+            {q: "Rupture unilatérale de l'apprentissage après 45 jours (hors faute).", r: "I", detail: "Passé 45 jours en entreprise, la rupture nécessite un accord ou faute grave."},
+            {q: "Période d'essai de 8 mois pour un cadre en CDI (renouvellement inclus).", r: "L", detail: "Durée max : 4 mois initial + 4 mois de renouvellement."},
+            {q: "CDD conclu pour remplacer un salarié gréviste.", r: "I", detail: "Interdiction absolue de remplacer un gréviste par un contrat précaire."},
+            {q: "CDD de 12 mois sans terme précis (remplacement maladie).", r: "L", detail: "Légal si le contrat prévoit une durée minimale."},
+            {q: "Succession de CDD sans respecter le délai de carence.", r: "I", detail: "Un délai de 1/3 du contrat précédent est requis pour le même poste."},
+            {q: "Non-paiement des 10% de précarité en fin de CDD classique.", r: "I", detail: "Indemnité obligatoire sauf si embauche en CDI immédiate."},
+            {q: "Signature du contrat d'intérim 5 jours après le début.", r: "I", detail: "Le contrat de mission doit être transmis sous 48h maximum."},
+            {q: "CDD de 24 mois pour accroissement temporaire d'activité.", r: "I", detail: "La durée maximale pour ce motif est de 18 mois."},
+            {q: "Période d'essai de 6 mois pour un ouvrier en CDI.", r: "I", detail: "Max : 2 mois + 2 mois de renouvellement."},
+            {q: "Payer un stagiaire 200€ pour 3 mois de stage.", r: "I", detail: "Gratification obligatoire dès 2 mois (~4,35€/h)."},
+            {q: "Temps partiel de 15h/semaine sans demande du salarié.", r: "I", detail: "Minimum légal de 24h/semaine (sauf exceptions conventionnelles)."},
+            {q: "CDD de 3 mois pour surcroît d'activité.", r: "L", detail: "Motif légal classique pour les CDD de courte durée."},
+            {q: "Licencier une salariée enceinte pour motif économique.", r: "I", detail: "Protection absolue contre le licenciement éco pendant la grossesse."},
+            {q: "Mise à pied de 15 jours non prévue au Règlement Intérieur.", r: "I", detail: "La durée maximale doit figurer dans le RI pour être valide."},
+            {q: "Refuser les dates de congés payés d'un salarié.", r: "L", detail: "L'employeur garde le pouvoir de direction sur l'ordre des départs."},
+            {q: "Clause de non-concurrence sans contrepartie financière.", r: "I", detail: "Elle est nulle sans indemnité compensatrice pécuniaire."},
+            {q: "Travailler 50h sur une seule semaine.", r: "I", detail: "La limite hebdomadaire absolue est de 48h."},
+            {q: "Repos quotidien de 9 heures consécutives.", r: "I", detail: "Le repos quotidien minimal est de 11 heures."},
+            {q: "Heures suppl. payées à +10% par accord d'entreprise.", r: "L", detail: "Un accord peut descendre à 10% (vs 25% par défaut)."},
+            {q: "Sanctionner un salarié témoin de harcèlement.", r: "I", detail: "Le témoin bénéficie d'une protection légale contre les sanctions."},
+            {q: "Contrat de professionnalisation de 24 mois.", r: "L", detail: "Possible selon le diplôme et l'accord de branche."},
+            {q: "Rupture de période d'essai sans motif après 10 jours.", r: "L", detail: "L'essai permet une rupture libre (sans procédure ni motif)."},
+            {q: "Faire travailler un apprenti mineur 39h/semaine.", r: "I", detail: "Limite de 35h/semaine pour les mineurs."},
+            {q: "Démission donnée par SMS uniquement.", r: "I", detail: "Doit être claire et non équivoque ; le SMS est une preuve fragile."},
+            {q: "Prise d'acte pour non-paiement répété des salaires.", r: "L", detail: "Justifie la rupture aux torts de l'employeur."},
+            {q: "Mise à pied conservatoire avant licenciement faute grave.", r: "L", detail: "Mesure autorisée pour écarter le salarié pendant la procédure."},
+            {q: "Caméras dans les vestiaires sans prévenir les salariés.", r: "I", detail: "Atteinte illicite à la vie privée."},
+            {q: "Licenciement faute grave sans indemnité de préavis.", r: "L", detail: "La faute grave prive de préavis et d'indemnité légale."},
+            {q: "Avenant au contrat pour changer le lieu de travail (secteur différent).", r: "L", detail: "Nécessaire si modification d'un élément essentiel."},
+            {q: "CDD saisonnier renouvelé 4 ans de suite.", r: "L", detail: "Le caractère saisonnier autorise la répétition."},
+            {q: "Contrat de chantier (CDI) fini après livraison du projet.", r: "L", detail: "C'est l'essence même du contrat de chantier."},
+            {q: "Supprimer une prime contractuelle sans accord écrit.", r: "I", detail: "Toute modif du salaire nécessite l'accord du salarié."},
+            {q: "Embaucher un jeune de 15 ans l'été.", r: "L", detail: "Possible (travaux légers + accord parental)."},
+            {q: "Entretien pro tous les 2 ans.", r: "L", detail: "Obligation légale de suivi de carrière."},
+            {q: "Interdire de manger à son bureau.", r: "L", detail: "Légal pour raisons d'hygiène/sécurité."},
+            {q: "Salarié qui refuse ses EPI : licenciement possible.", r: "L", detail: "Faute disciplinaire liée à la sécurité."},
+            {q: "CDD de 18 mois pour remplacement.", r: "L", detail: "Durée maximale standard respectée."},
+            {q: "Période d'essai de 1 mois pour CDD de 9 mois.", r: "L", detail: "Max 1 mois pour les CDD > 6 mois."},
+            {q: "6 mois de CDD renouvelé 3 fois.", r: "I", detail: "Max 2 renouvellements autorisés."}
+        ];
+
+        function showSection(id) {
+            ['screen-menu', 'screen-game', 'screen-end', 'screen-cours'].forEach(s => document.getElementById(s).classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+            const isMenu = id === 'screen-menu';
+            document.getElementById('btn-main-back').classList.toggle('hidden', !isMenu);
+            document.getElementById('btn-mode-back').classList.toggle('hidden', isMenu);
+            if(isMenu && timer) clearInterval(timer);
+        }
+
+        function startGame(m) {
+            mode = m; score = 0; timeLeft = 60; showSection('screen-game');
+            document.getElementById('game-info').classList.remove('hidden');
+            document.getElementById('score-ui').innerText = "0";
+            if(mode === 'competition') {
+                document.getElementById('timer-container').classList.remove('hidden');
+                startTimer();
+            } else { document.getElementById('timer-container').classList.add('hidden'); }
+            next();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => { timeLeft--; document.getElementById('timer-ui').innerText = timeLeft+"s"; if(timeLeft <= 0) stopGame(); }, 1000);
+        }
+
+        function next() {
+            isProc = false; document.getElementById('feedback').classList.add('hidden');
+            const item = db[Math.floor(Math.random()*db.length)];
+            window.curr = item; document.getElementById('question-text').innerText = item.q;
+        }
+
+        function check(v) {
+            if(isProc) return; isProc = true;
+            const isOk = (v === window.curr.r);
+            const f = document.getElementById('feedback'); f.classList.remove('hidden');
+            if ("vibrate" in navigator) isOk ? navigator.vibrate(30) : navigator.vibrate([50, 30, 50]);
+            
+            if(isOk) {
+                if(mode !== 'learning') { score += 100; document.getElementById('score-ui').innerText = score; }
+                f.className="feedback-overlay bg-emerald-500/90 text-white text-6xl"; f.innerHTML="<i class='fas fa-check'></i>";
+                setTimeout(next, 300);
+            } else {
+                if(timer) clearInterval(timer);
+                f.className="feedback-overlay bg-red-600/95 flex-col text-white p-6";
+                f.innerHTML=`<i class='fas fa-times text-6xl mb-2'></i><p class='text-xs uppercase font-bold'>${window.curr.r === 'L' ? 'Légal' : 'Illégal'}</p>
+                <button onclick="alert('${window.curr.detail.replace(/'/g, "\\'")}')" class="mt-4 px-4 py-2 bg-white/20 rounded-xl text-[10px] uppercase font-bold italic">Justification</button>`;
+                if(mode === 'survival') { setTimeout(stopGame, 3000); return; }
+                if(mode === 'competition') { score = Math.max(0, score-50); timeLeft -= 3; document.getElementById('score-ui').innerText = score; }
+                setTimeout(() => { next(); if(mode === 'competition') startTimer(); }, 2000);
+            }
+        }
+
+        function stopGame() { 
+            if(timer) clearInterval(timer); 
+            showSection('screen-end'); 
+            document.getElementById('end-visual').innerText = mode === 'learning' ? "ZEN" : score;
+            if (mode !== 'learning') {
+                const key = 'social';
+                const b = parseInt(localStorage.getItem('record_' + key) || 0);
+                if (score > b) localStorage.setItem('record_' + key, score);
+                const todayS = parseInt(localStorage.getItem('today_score_' + key) || 0);
+                if(score > todayS) localStorage.setItem('today_score_' + key, score);
+                let history = JSON.parse(localStorage.getItem('history_' + key) || "[]");
+                history.push(score);
+                history.sort((a, b) => b - a);
+                localStorage.setItem('history_' + key, JSON.stringify(history.slice(0, 3)));
+            }
+        }
+
+        function shareScore() {
+            const m = `👮 Inspecteur du Travail : ${score} pts ! Je maîtrise l'UE 3 sur ObjectifDCG. 🔥\nhttps://bibiquette.github.io/objectif-dscg/`;
+            if (navigator.share) navigator.share({ title: 'Record Social', text: m, url: 'https://bibiquette.github.io/objectif-dscg/' });
+            else { navigator.clipboard.writeText(m); alert("Copié !"); }
+        }
+    </script>
+</body>
+</html>
