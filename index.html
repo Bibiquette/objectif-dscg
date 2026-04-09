@@ -235,6 +235,10 @@
         <div class="glass p-6 rounded-[2.5rem] ue-card ue-10">
             <span class="bg-purple-500/10 text-purple-600 dark:text-purple-400 text-[9px] font-black px-3 py-1 rounded-full uppercase mb-4 inline-block font-black">UE 10 - DCG</span>
             <h3 class="text-xl font-black uppercase mb-6" style="background: var(--ue10-grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Compta. Appro</h3>
+            <a href="jeu-conso.html" class="game-link flex flex-col p-3 rounded-xl">
+                <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Conso-Check</span><span id="rec-conso" class="text-[8px] opacity-40 italic">0 PTS</span></div>
+                <div id="top-conso" class="top-scores italic"></div>
+            </a>
             <a href="jeu-prov.html" class="game-link flex flex-col p-3 rounded-xl">
                 <div class="flex justify-between items-center w-full font-black text-xs uppercase"><span>Provisions Master</span><span id="rec-prov" class="text-[8px] opacity-40 italic">0 PTS</span></div>
                 <div id="top-prov" class="top-scores italic"></div>
@@ -299,7 +303,7 @@
         }
 
         function updateRank() {
-            const keys = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva'];
+            const keys = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva', 'conso'];
             let total = 0;
             keys.forEach(k => total += parseInt(localStorage.getItem('record_' + k) || 0));
             document.getElementById('total-points').innerText = total + " PTS TOTAL";
@@ -316,6 +320,7 @@
                 { id: 'contrats', label: 'en Droit Affaires (UE 2)', key: 'today_score_contrats', goal: 1000 },
                 { id: 'social', label: 'en Droit Social (UE 3)', key: 'today_score_social', goal: 1000 },
                 { id: 'tva', label: 'en Droit Fiscal (UE 4)', key: 'today_score_tva', goal: 1000 },
+                { id: 'conso', label: 'en Conso (UE 10/4)', key: 'today_score_conso', goal: 1000 },
                 { id: 'flux', label: 'en Flux Master (UE 9)', key: 'today_score_flux', goal: 500 },
                 { id: 'bfr', label: 'sur BFR Tycoon (UE 6)', key: 'today_score_bfr', goal: 1500 },
                 { id: 'prov', label: 'en Compta Appro (UE 10)', key: 'today_score_prov', goal: 800 },
@@ -490,7 +495,7 @@
         function updateThemeIcon() { const icon = document.getElementById('theme-icon'); if(icon) icon.className = document.documentElement.classList.contains('dark') ? 'fa-solid fa-sun' : 'fa-solid fa-moon'; }
 
         function loadRecords() {
-            ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva'].forEach(key => {
+            ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva', 'conso'].forEach(key => {
                 const best = localStorage.getItem('record_' + key) || 0;
                 const el = document.getElementById(`rec-${key}`);
                 if(el) el.innerText = best + " PTS";
@@ -503,7 +508,7 @@
         }
 
         function updateProgression() {
-            const records = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva'];
+            const records = ['flux', 'bfr', 'immo', 'prov', 'anglais', 'theories', 'droit', 'contrats', 'social', 'tva', 'conso'];
             let played = 0;
             records.forEach(k => { if(parseInt(localStorage.getItem('record_' + k)) > 0) played++; });
             let percent = Math.round((played / records.length) * 100);
