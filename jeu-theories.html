@@ -10,6 +10,11 @@
     </script>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Theories Master | ObjectifDCG/DSCG</title>
+
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#020617">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -98,36 +103,36 @@
         let mode, score=0, timer, timeLeft=60, isProc=false;
         
         const db = [
-            {q: "Théorie des coûts de transaction (Firme vs Marché).", r: "Coase & Williamson", detail: "La firme réduit les coûts de recherche et négociation du marché[cite: 44, 47]."},
-            {q: "Théorie de l'agence (conflit Principal/Agent).", r: "Jensen & Meckling", detail: "Analyse la séparation propriété/contrôle et l'asymétrie d'info[cite: 68, 73]."},
-            {q: "Théorie des parties prenantes (Stakeholders).", r: "Freeman & Clarkson", detail: "L'entreprise dépend de ses clients, employés et fournisseurs[cite: 96, 101]."},
-            {q: "Organisation Scientifique du Travail (OST).", r: "Taylor", detail: "Optimisation par décomposition des tâches et salaire au rendement[cite: 142, 150]."},
-            {q: "Modèle POCCC (Prévoir, Organiser, Commander...).", r: "Henri Fayol", detail: "Définit 5 fonctions clés et 14 principes de management[cite: 174, 180]."},
-            {q: "Modèle Socio-Technique (équilibre technique/social).", r: "Emery & Trist", detail: "L'efficacité dépend de l'interaction système technique/humain[cite: 193, 202]."},
-            {q: "Théorie évolutionniste et Routines.", r: "Nelson & Winter", detail: "L'entreprise évolue via l'apprentissage et des modèles répétitifs[cite: 219, 223]."},
-            {q: "La structure suit la stratégie (Main visible).", r: "Alfred Chandler", detail: "Les changements stratégiques imposent des refontes structurelles[cite: 263, 264]."},
-            {q: "Compétences clés (Core Competencies).", r: "Hamel & Prahalad", detail: "L'avantage concurrentiel repose sur des capacités distinctives[cite: 289]."},
-            {q: "5 forces concurrentielles & Chaîne de valeur.", r: "Michael Porter", detail: "Analyse des menaces et optimisation créatrice de valeur[cite: 300, 311]."},
-            {q: "Apprentissage organisationnel (Double boucle).", r: "Argyris & Schön", detail: "Passer de la correction d'erreur à la remise en cause des normes[cite: 334]."},
-            {q: "Structures mécanistes (stable) vs organiques (turbulent).", r: "Burns & Stalker", detail: "Adaptation de la structure selon l'environnement[cite: 355]."},
-            {q: "La technologie détermine la structure.", r: "Joan Woodward", detail: "Le mode de production impose le nombre de niveaux hiérarchiques[cite: 361, 364]."},
-            {q: "Les 6 composantes de l'organisation.", r: "Henry Mintzberg", detail: "Analyse via sommet stratégique, technostructure, centre op, etc[cite: 383, 389]."},
-            {q: "Différenciation et Intégration.", r: "Lawrence & Lorsch", detail: "S'adapter à des sous-environnements variés tout en restant cohérent[cite: 409, 411]."},
-            {q: "Rationalité limitée (Modèle IMC).", r: "Herbert Simon", detail: "Le décideur s'arrête à la première solution satisfaisante[cite: 425, 437]."},
-            {q: "Modèle de la poubelle (anarchie organisée).", r: "James March", detail: "Décisions aléatoires dans un flux de problèmes et solutions[cite: 468, 469]."},
-            {q: "3 types d'autorité (Charismatique, Traditionnelle, Rationnelle).", r: "Max Weber", detail: "Fondements de la légitimité au travail[cite: 492]."},
-            {q: "Zones d'incertitude et Pouvoir relationnel.", r: "Crozier & Friedberg", detail: "Le pouvoir appartient à celui qui maîtrise l'imprévu[cite: 526]."},
-            {q: "4 systèmes de management (Autoritaire à Participatif).", r: "Rensis Likert", detail: "Le management participatif est jugé le plus performant[cite: 558, 570]."},
-            {q: "Grille managériale (Production vs Humain).", r: "Blake & Mouton", detail: "Matrice identifiant 5 styles de comportement managérial[cite: 581, 587]."},
-            {q: "Effet Hawthorne : importance du facteur social.", r: "Elton Mayo", detail: "La motivation dépend des relations sociales au sein du groupe[cite: 638, 640]."},
-            {q: "Pyramide des besoins (hiérarchie des 5 niveaux).", r: "Abraham Maslow", detail: "Un besoin supérieur n'apparaît que si l'inférieur est comblé[cite: 652, 660]."},
-            {q: "Facteurs d'hygiène vs Facteurs de motivation.", r: "Frederick Herzberg", detail: "L'hygiène évite l'insatisfaction, le contenu du travail motive[cite: 675, 681]."},
-            {q: "Théorie X (contrainte) vs Théorie Y (autonomie).", r: "Douglas McGregor", detail: "La vision de l'homme par le manager détermine son style[cite: 687, 694]."},
-            {q: "Théorie des attentes (Motivation = Valence x I x E).", r: "Victor Vroom", detail: "La motivation dépend du processus Valence/Instrumentalité/Expectation[cite: 708, 714]."},
-            {q: "Conflit constructif et approche humaniste.", r: "Mary Parker Follett", detail: "Prône le pouvoir partagé et la position gagnant-gagnant[cite: 745, 747]."},
-            {q: "Direction Par Objectifs (DPO).", r: "Peter Drucker", detail: "Fixer des objectifs pour relier autonomie et responsabilité[cite: 121, 125]."},
-            {q: "Standardisation et '5 dollars a day'.", r: "Henry Ford", detail: "Production et consommation de masse (Fordisme)[cite: 862, 875]."},
-            {q: "Distinction activités stratégiques vs opérationnelles.", r: "Igor Ansoff", detail: "Père de la gestion stratégique et inventeur des DAS[cite: 243, 248]."}
+            {q: "Théorie des coûts de transaction (Firme vs Marché).", r: "Coase & Williamson", detail: "La firme réduit les coûts de recherche et négociation du marché."},
+            {q: "Théorie de l'agence (conflit Principal/Agent).", r: "Jensen & Meckling", detail: "Analyse la séparation propriété/contrôle et l'asymétrie d'info."},
+            {q: "Théorie des parties prenantes (Stakeholders).", r: "Freeman & Clarkson", detail: "L'entreprise dépend de ses clients, employés et fournisseurs."},
+            {q: "Organisation Scientifique du Travail (OST).", r: "Taylor", detail: "Optimisation par décomposition des tâches et salaire au rendement."},
+            {q: "Modèle POCCC (Prévoir, Organiser, Commander...).", r: "Henri Fayol", detail: "Définit 5 fonctions clés et 14 principes de management."},
+            {q: "Modèle Socio-Technique (équilibre technique/social).", r: "Emery & Trist", detail: "L'efficacité dépend de l'interaction système technique/humain."},
+            {q: "Théorie évolutionniste et Routines.", r: "Nelson & Winter", detail: "L'entreprise évolue via l'apprentissage et des modèles répétitifs."},
+            {q: "La structure suit la stratégie (Main visible).", r: "Alfred Chandler", detail: "Les changements stratégiques imposent des refontes structurelles."},
+            {q: "Compétences clés (Core Competencies).", r: "Hamel & Prahalad", detail: "L'avantage concurrentiel repose sur des capacités distinctives."},
+            {q: "5 forces concurrentielles & Chaîne de valeur.", r: "Michael Porter", detail: "Analyse des menaces et optimisation créatrice de valeur."},
+            {q: "Apprentissage organisationnel (Double boucle).", r: "Argyris & Schön", detail: "Passer de la correction d'erreur à la remise en cause des normes."},
+            {q: "Structures mécanistes (stable) vs organiques (turbulent).", r: "Burns & Stalker", detail: "Adaptation de la structure selon l'environnement."},
+            {q: "La technologie détermine la structure.", r: "Joan Woodward", detail: "Le mode de production impose le nombre de niveaux hiérarchiques."},
+            {q: "Les 6 composantes de l'organisation.", r: "Henry Mintzberg", detail: "Analyse via sommet stratégique, technostructure, centre op, etc."},
+            {q: "Différenciation et Intégration.", r: "Lawrence & Lorsch", detail: "S'adapter à des sous-environnements variés tout en restant cohérent."},
+            {q: "Rationalité limitée (Modèle IMC).", r: "Herbert Simon", detail: "Le décideur s'arrête à la première solution satisfaisante."},
+            {q: "Modèle de la poubelle (anarchie organisée).", r: "James March", detail: "Décisions aléatoires dans un flux de problèmes et solutions."},
+            {q: "3 types d'autorité (Charismatique, Traditionnelle, Rationnelle).", r: "Max Weber", detail: "Fondements de la légitimité au travail."},
+            {q: "Zones d'incertitude et Pouvoir relationnel.", r: "Crozier & Friedberg", detail: "Le pouvoir appartient à celui qui maîtrise l'imprévu."},
+            {q: "4 systèmes de management (Autoritaire à Participatif).", r: "Rensis Likert", detail: "Le management participatif est jugé le plus performant."},
+            {q: "Grille managériale (Production vs Humain).", r: "Blake & Mouton", detail: "Matrice identifiant 5 styles de comportement managérial."},
+            {q: "Effet Hawthorne : importance du facteur social.", r: "Elton Mayo", detail: "La motivation dépend des relations sociales au sein du groupe."},
+            {q: "Pyramide des besoins (hiérarchie des 5 niveaux).", r: "Abraham Maslow", detail: "Un besoin supérieur n'apparaît que si l'inférieur est comblé."},
+            {q: "Facteurs d'hygiène vs Facteurs de motivation.", r: "Frederick Herzberg", detail: "L'hygiène évite l'insatisfaction, le contenu du travail motive."},
+            {q: "Théorie X (contrainte) vs Théorie Y (autonomie).", r: "Douglas McGregor", detail: "La vision de l'homme par le manager détermine son style."},
+            {q: "Théorie des attentes (Motivation = Valence x I x E).", r: "Victor Vroom", detail: "La motivation dépend du processus Valence/Instrumentalité/Expectation."},
+            {q: "Conflit constructif et approche humaniste.", r: "Mary Parker Follett", detail: "Prône le pouvoir partagé et la position gagnant-gagnant."},
+            {q: "Direction Par Objectifs (DPO).", r: "Peter Drucker", detail: "Fixer des objectifs pour relier autonomie et responsabilité."},
+            {q: "Standardisation et '5 dollars a day'.", r: "Henry Ford", detail: "Production et consommation de masse (Fordisme)."},
+            {q: "Distinction activités stratégiques vs opérationnelles.", r: "Igor Ansoff", detail: "Père de la gestion stratégique et inventeur des DAS."}
         ];
 
         function showSection(id) {
@@ -230,6 +235,20 @@ function stopGame() {
             if (navigator.share) navigator.share({ title: 'Record Theories', text: m, url: 'https://bibiquette.github.io/objectif-dscg/' });
             else { navigator.clipboard.writeText(m); alert("Copié !"); }
         }
+    </script>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+            .then(registration => {
+              console.log('ServiceWorker PWA enregistré !');
+            })
+            .catch(error => {
+              console.log('Erreur ServiceWorker : ', error);
+            });
+        });
+      }
     </script>
 </body>
 </html>
